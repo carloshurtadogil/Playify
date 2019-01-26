@@ -1,15 +1,1 @@
-{
-  "users" : [
-   {
-    "username": "sdfsdf",
-    "password": "sdfsfsf"
-   } ,
-   
-   {
-     "username" : "Random",
-     "password" : "Dude"
-   }
-
-  ]
-  
-}
+{"users":[{"password":"sdfsfsf","username":"sdfsdf"},{"password":"Dude","username":"Random"},{"password":"df","username":"df"},{"password":"sde","username":"sde"}]}

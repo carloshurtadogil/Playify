@@ -5,13 +5,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="application.RegisterController">
+<AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.RegisterController">
    <children>
-      <Button layoutX="168.0" layoutY="321.0" mnemonicParsing="false" text="Register" />
-      <PasswordField layoutX="107.0" layoutY="200.0" promptText="Password" />
-      <PasswordField layoutX="107.0" layoutY="259.0" promptText="Enter password again" />
-      <PasswordField layoutX="107.0" layoutY="145.0" promptText="Username" />
+      <Button layoutX="168.0" layoutY="321.0" mnemonicParsing="false" onAction="#Register" text="Register" />
+      <PasswordField fx:id="passwordField" layoutX="107.0" layoutY="200.0" promptText="Password" />
+      <PasswordField fx:id="confirmPasswordField" layoutX="107.0" layoutY="259.0" promptText="Enter password again" />
+      <TextField fx:id="usernameField" layoutX="107.0" layoutY="138.0" promptText="Username" />
+      <Label fx:id="labelStatus" layoutX="133.0" layoutY="70.0" text="Label" />
    </children>
 </AnchorPane>
-
