@@ -3,10 +3,13 @@ package application;
 
 import java.awt.event.ActionEvent;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -27,10 +30,10 @@ public class CreatePlaylistController {
 			Gson gson = new Gson();
 			
 			//List to hold songs that match search results
-			List<Song> searchResults = null;
+			List<Song> searchResults = new ArrayList<Song>();
 			
 			//List to hold song names
-			List<String> songNames = null;
+			List<String> songNames = new ArrayList<String>();
 		
 			Playlist myPlaylist = gson.fromJson(new FileReader("music.json"), Playlist.class);
 			List<Song> masterSongList = myPlaylist.getSongs();
@@ -42,12 +45,21 @@ public class CreatePlaylistController {
 				}
 			}
 			
-			listOfSongs.getItems().addAll(songNames);
+			listOfSongs.setItems(FXCollections.observableList(songNames));
 			
 		}catch (Exception e) {
 			System.out.println("Search Error");
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void Add(ActionEvent event) {
+		ObservableList<String> selectedSongs;
+		selectedSongs = listOfSongs.getSelectionModel().getSelectedItems();
+		
+		for(String song: selectedSongs) {
+			
+		}
 	}
 }

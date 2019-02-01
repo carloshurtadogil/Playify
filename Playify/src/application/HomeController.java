@@ -124,8 +124,8 @@ public class HomeController {
 							List<Song> songList = new ArrayList<Song>();
 							for(int k = 0; k < songs.size(); k++) {
 								JSONObject song = (JSONObject) songs.get(k);
-								Song songObject = new Song(song.get("songname").toString(), 
-														   song.get("songtype").toString());
+								Song songObject = new Song(song.get("name").toString(), 
+														   song.get("terms").toString());
 								songList.add(songObject);
 							}
 							playlistObject.setSongs(songList);
