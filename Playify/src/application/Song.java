@@ -10,6 +10,11 @@ public class Song {
 	@SerializedName("songtype")
 	@Expose
 	private String songType;
+	
+	public Song(String name, String type) {
+		this.songName = name;
+		this.songType = type;
+	}
 
 	public void setSongName(String sName) {
 		this.songName = sName;
@@ -24,7 +29,7 @@ public class Song {
 	}
 
 	public String getSongType() {
-		return this.getSongType();
+		return this.songType;
 	}
 
 }

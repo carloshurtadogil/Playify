@@ -4,14 +4,24 @@
       "password": "time",
       "playlists": [
         {
+          "playlistname": "favorites",
           "songs": [
             {
               "songname": "Rick Astley",
               "songtype": "drama"
             },
             {
-              "songname": "Rick Astley",
-              "songtype": "drama"
+              "songname": "Bohemian Rhapsody",
+              "songtype": "classic rock"
+            }
+          ]
+        },
+        {
+          "playlistname": "disney",
+          "songs": [
+            {
+              "songname": "It's a Small World",
+              "songtype": "family friendly"
             }
           ]
         }
@@ -25,6 +35,7 @@
     },
     {
       "password": "df",
+      "playlists": [],
       "username": "df"
     },
     {
