@@ -65,6 +65,7 @@ public class LoginController {
 					//mark as found, and assign the recently found user
 					userFound = true;
 					theUser = u;
+					break;
 				}
 			}
 			if (!userFound) {
