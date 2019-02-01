@@ -13,10 +13,19 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class HomeController {
 	
@@ -27,10 +36,7 @@ public class HomeController {
 	private AnchorPane rootPane;
 
 	@FXML
-	private TextField uField;
-	
-	@FXML
-	private TextField uField2;
+	private ListView<Playlist> playlistView;
 	
 	private User selectedUser;
 	
@@ -38,14 +44,13 @@ public class HomeController {
 	//as a logged in user
 	public void setLoggedUser(User theUser) throws FileNotFoundException, IOException, ParseException {
 		this.selectedUser = theUser;
-		uField.setText(selectedUser.getUsername());
-		uField2.setText(selectedUser.getPassword());
 		temporaryLabel.setText("This is a temporary home page");
-		loadPlaylists(theUser);
+		loadPlaylists(selectedUser);
 		
-		if(loadPlaylists(theUser)) {
+		if(loadPlaylists(selectedUser)) {
 			System.out.println("Success: User " + theUser.getUsername() + "'s playlists exists");
-			for(Playlist p: theUser.getPlaylists()) {
+			populatePlaylists(theUser);
+			for(Playlist p: selectedUser.getPlaylists()) {
 				p.printPlaylistDetails();
 			}
 		} else {
@@ -53,6 +58,44 @@ public class HomeController {
 		}
 		
 	}
+	
+	//Populates all of the user's playlists into the ListView of Home.fxml
+	public void populatePlaylists(User someUser) {
+
+		//Populate the list of playlists into the ListView as an observable list
+		playlistView.setItems(FXCollections.observableList(someUser.getPlaylists()));
+		
+		//Sets a mouse clicked event for each of the Playlists
+		playlistView.setOnMouseClicked( event ->{
+			
+			//assign the selected playlist to a Playlist object/variable
+			Playlist selectedPlaylist = playlistView.getSelectionModel().getSelectedItem();
+			
+			try {
+				//Load the Playlist.fxml page for that paricular playlist
+				FXMLLoader playlistLoader = new FXMLLoader();
+				playlistLoader.setLocation(getClass().getResource("/application/Playlist.fxml"));
+				Parent root = playlistLoader.load();
+				Scene playlistScene = new Scene(root);
+				
+				//Obtain the controller to set selected user and playlist
+				PlaylistController playlistControl =playlistLoader.getController();
+				playlistControl.setUserAndPlaylist(selectedUser, selectedPlaylist);
+				
+				//Load the current stage to prevent from generating a new window/popup
+				Stage playlistStage = (Stage) temporaryLabel.getScene().getWindow();
+				playlistStage.setScene(playlistScene);
+				playlistStage.show();
+				
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+	}
+	
+
 
 	//Allows a user to add a playlist to the list of playlists created
 	public void CreatePlaylist() throws FileNotFoundException, IOException, ParseException {
@@ -79,16 +122,6 @@ public class HomeController {
 			}
 		}
 
-//		JSONParser parsing = new JSONParser();
-//		
-//		JSONObject mainObject = (JSONObject) parsing.parse(new FileReader("users.json"));
-//		JSONArray userArray = (JSONArray) mainObject.get("users");
-//		for(Object jsObj : userArray) {
-//			User theUser = (User) jsObj;
-//			if(theUser.getUsername().equals(selectedUser.getUsername())) {
-//				JSONArray playlistArray = new JSON
-//			}
-//		}
 
 	}
 	

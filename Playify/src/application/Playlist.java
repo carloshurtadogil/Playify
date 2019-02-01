@@ -40,5 +40,9 @@ public class Playlist {
 			}
 		}
 	}
+	
+	public String toString() {
+		return this.getPlaylistName();
+	}
 
 }
