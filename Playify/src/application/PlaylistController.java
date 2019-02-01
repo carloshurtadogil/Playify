@@ -10,6 +10,7 @@ public class PlaylistController {
 	private User selectedUser;
 	private Playlist selectedPlaylist;
 	
+	//Constructor
 	public PlaylistController() {
 		
 	}
