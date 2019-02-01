@@ -4,10 +4,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Song {
-	@SerializedName("songname")
+	@SerializedName("name")
 	@Expose
 	private String songName;
-	@SerializedName("songtype")
+	@SerializedName("terms")
 	@Expose
 	private String songType;
 	

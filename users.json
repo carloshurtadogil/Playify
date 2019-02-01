@@ -7,12 +7,12 @@
           "playlistname": "favorites",
           "songs": [
             {
-              "songname": "Rick Astley",
-              "songtype": "drama"
+              "name": "Rick Astley",
+              "terms": "drama"
             },
             {
-              "songname": "Bohemian Rhapsody",
-              "songtype": "classic rock"
+              "name": "Bohemian Rhapsody",
+              "terms": "classic rock"
             }
           ]
         },
@@ -20,8 +20,8 @@
           "playlistname": "disney",
           "songs": [
             {
-              "songname": "It's a Small World",
-              "songtype": "family friendly"
+              "name": "It's a Small World",
+              "terms": "family friendly"
             }
           ]
         }
