@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 
 public class CreatePlaylistController {
@@ -24,13 +25,17 @@ public class CreatePlaylistController {
 	private ListView<String> listOfSongs;
 	@FXML
 	private Button btnAdd;
+	@FXML
+	private TextField txtPlaylistName;
+	@FXML
+	private Button btnSet;
+	
+	//List to hold songs that match search results
+	private List<Song> searchResults = new ArrayList<Song>();
 	
 	public void Search(ActionEvent event) { 
 		try {
 			Gson gson = new Gson();
-			
-			//List to hold songs that match search results
-			List<Song> searchResults = new ArrayList<Song>();
 			
 			//List to hold song names
 			List<String> songNames = new ArrayList<String>();
@@ -46,6 +51,7 @@ public class CreatePlaylistController {
 			}
 			
 			listOfSongs.setItems(FXCollections.observableList(songNames));
+			listOfSongs.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 			
 		}catch (Exception e) {
 			System.out.println("Search Error");
@@ -58,8 +64,16 @@ public class CreatePlaylistController {
 		ObservableList<String> selectedSongs;
 		selectedSongs = listOfSongs.getSelectionModel().getSelectedItems();
 		
-		for(String song: selectedSongs) {
-			
+		for(String songName: selectedSongs) {
+			for(Song song: searchResults) {
+				if(songName.equals(song.getSongName())) {
+					//Add to playlist
+				}
+			}
 		}
+	}
+	
+	public void SetPlaylistName(ActionEvent event) {
+		
 	}
 }

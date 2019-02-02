@@ -6,20 +6,30 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="350.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.CreatePlaylistController">
+<AnchorPane prefHeight="459.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.CreatePlaylistController">
    <children>
-      <TextField fx:id="txtSearch" layoutX="72.0" layoutY="31.0" promptText="Search Songs">
+      <TextField fx:id="txtSearch" layoutX="73.0" layoutY="138.0" promptText="Search Songs">
          <font>
             <Font size="18.0" />
          </font>
       </TextField>
-      <Button fx:id="btnEnter" layoutX="326.0" layoutY="31.0" mnemonicParsing="false" onAction="#Search" text="Enter">
+      <Button fx:id="btnEnter" layoutX="328.0" layoutY="138.0" mnemonicParsing="false" onAction="#Search" text="Enter">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <ListView fx:id="listOfSongs" layoutX="36.0" layoutY="102.0" prefHeight="155.0" prefWidth="428.0" />
-      <Button fx:id="btnAdd" layoutX="196.0" layoutY="286.0" mnemonicParsing="false" onAction="#Add" prefHeight="39.0" prefWidth="109.0" text="Add">
+      <ListView fx:id="listOfSongs" layoutX="37.0" layoutY="206.0" prefHeight="155.0" prefWidth="428.0" />
+      <Button fx:id="btnAdd" layoutX="196.0" layoutY="389.0" mnemonicParsing="false" onAction="#Add" prefHeight="39.0" prefWidth="109.0" text="Add">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <TextField fx:id="txtPlaylistName" layoutX="73.0" layoutY="64.0" promptText="Enter Playlist Name">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </TextField>
+      <Button fx:id="btnSet" layoutX="336.0" layoutY="64.0" mnemonicParsing="false" onAction="#SetPlaylistName" text="Set">
          <font>
             <Font size="18.0" />
          </font>
