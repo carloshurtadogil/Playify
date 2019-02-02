@@ -45,15 +45,23 @@ public class HomeController {
 		this.selectedUser = theUser;
 		temporaryLabel.setText("This is a temporary home page");
 		loadPlaylists(selectedUser);
-
-		if (loadPlaylists(selectedUser)) {
-			System.out.println("Success: User " + theUser.getUsername() + "'s playlists exists");
-			populatePlaylists(theUser);
-			for (Playlist p : selectedUser.getPlaylists()) {
-				p.printPlaylistDetails();
+		
+		if(selectedUser.getPlaylists().size() > 0) {
+			
+			String playlistToRemove = selectedUser.getPlaylists().get(0).getPlaylistName();
+			if(removePlaylist(selectedUser, playlistToRemove)) {
+				System.out.println("Success in removing playlist: " + playlistToRemove);
+				System.out.println("password:" + selectedUser.getPassword());
+				System.out.println("username:" + selectedUser.getUsername());
+				System.out.println("playlists: ");
+				for(Playlist p : selectedUser.getPlaylists()) {
+					p.printPlaylistDetails();
+				}
+			} else {
+				System.out.println("Failed to remove playlist: " + playlistToRemove);
 			}
 		} else {
-			System.out.println("Fail: User " + theUser.getUsername() + "'s playlists do not exists");
+			System.out.println("No playlists to remove");
 		}
 
 	}
@@ -203,6 +211,60 @@ public class HomeController {
 			}
 		}
 
+		return false;
+	}
+	
+	//Find 
+	public boolean removePlaylist(User user, String name) throws FileNotFoundException, IOException, ParseException {
+		JSONParser parsing = new JSONParser();
+		JSONObject mainObject = (JSONObject) parsing.parse(new FileReader("users.json"));
+		JSONArray userArray = (JSONArray) mainObject.get("users");
+		for(int i = 0; i < userArray.size(); i ++) {
+			//find user
+			JSONObject traverseUser = (JSONObject) userArray.get(i);
+			if(user.getUsername().equals(traverseUser.get("username"))) {
+				// grab the playlists
+				JSONArray playlistArray = (JSONArray) traverseUser.get("playlists");
+				if(playlistArray.size() > 0) {
+					for(int j = 0; j < playlistArray.size(); j++) {
+						JSONObject pl = (JSONObject) playlistArray.get(j);
+						if(pl.get("playlistname").toString().equals(name)) {
+							playlistArray.remove(j);
+							user.getPlaylists().remove(j);
+							
+							JSONObject userEdit = new JSONObject();
+							userEdit.put("username", traverseUser.get("username"));
+							userEdit.put("password", traverseUser.get("password"));
+							userEdit.put("playlists", playlistArray);
+							userArray.remove(i);
+							userArray.add(i, userEdit);
+							
+							
+							
+							//Writes the new user object into the users.json file
+							try {
+								BufferedWriter fileWrite  = new BufferedWriter(new FileWriter("users.json"));
+
+								fileWrite.write(mainObject.toString());
+								fileWrite.flush();
+								fileWrite.close();
+							}
+							catch(IOException ioException) {
+								ioException.printStackTrace();
+							}
+							catch(Exception e) {
+								e.printStackTrace();
+							}
+							
+							
+							return true;
+						}
+					}
+				}
+				break;
+			}
+		}
+		System.out.println(userArray.toJSONString());
 		return false;
 	}
 
