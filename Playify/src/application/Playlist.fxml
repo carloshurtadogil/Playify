@@ -5,9 +5,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
 <AnchorPane minHeight="400.0" minWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PlaylistController">
    <children>
       <Label fx:id="tempLabel" layoutX="156.0" layoutY="64.0" text="Label" />
+      <ListView fx:id="songsView" layoutX="91.0" layoutY="121.0" prefHeight="200.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

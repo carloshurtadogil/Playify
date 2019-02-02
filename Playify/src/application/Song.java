@@ -31,5 +31,9 @@ public class Song {
 	public String getSongType() {
 		return this.songType;
 	}
+	
+	public String toString() {
+		return this.getSongName();
+	}
 
 }
