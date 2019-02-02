@@ -9,7 +9,7 @@
    <children>
       <Label fx:id="temporaryLabel" layoutX="79.0" layoutY="50.0" text="This is a temporary home page" />
       <ListView fx:id="playlistView" layoutX="82.0" layoutY="100.0" prefHeight="200.0" prefWidth="200.0" />
-      <Button layoutX="69.0" layoutY="328.0" mnemonicParsing="false" onAction="#CreatePlaylist" text="Create Playlist" />
+      <Button layoutX="69.0" layoutY="328.0" mnemonicParsing="false" onAction="#GoToPlaylistPage" text="Create Playlist" />
       <Button fx:id="deletePlaylistButton" layoutX="200.0" layoutY="328.0" mnemonicParsing="false" text="Delete Playlist" />
    </children>
 </AnchorPane>
