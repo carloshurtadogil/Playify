@@ -215,56 +215,18 @@ public class HomeController {
 	}
 	
 	//Find 
-	public boolean removePlaylist(User user, String name) throws FileNotFoundException, IOException, ParseException {
-		JSONParser parsing = new JSONParser();
-		JSONObject mainObject = (JSONObject) parsing.parse(new FileReader("users.json"));
-		JSONArray userArray = (JSONArray) mainObject.get("users");
-		for(int i = 0; i < userArray.size(); i ++) {
-			//find user
-			JSONObject traverseUser = (JSONObject) userArray.get(i);
-			if(user.getUsername().equals(traverseUser.get("username"))) {
-				// grab the playlists
-				JSONArray playlistArray = (JSONArray) traverseUser.get("playlists");
-				if(playlistArray.size() > 0) {
-					for(int j = 0; j < playlistArray.size(); j++) {
-						JSONObject pl = (JSONObject) playlistArray.get(j);
-						if(pl.get("playlistname").toString().equals(name)) {
-							playlistArray.remove(j);
-							user.getPlaylists().remove(j);
-							
-							JSONObject userEdit = new JSONObject();
-							userEdit.put("username", traverseUser.get("username"));
-							userEdit.put("password", traverseUser.get("password"));
-							userEdit.put("playlists", playlistArray);
-							userArray.remove(i);
-							userArray.add(i, userEdit);
-							
-							
-							
-							//Writes the new user object into the users.json file
-							try {
-								BufferedWriter fileWrite  = new BufferedWriter(new FileWriter("users.json"));
-
-								fileWrite.write(mainObject.toString());
-								fileWrite.flush();
-								fileWrite.close();
-							}
-							catch(IOException ioException) {
-								ioException.printStackTrace();
-							}
-							catch(Exception e) {
-								e.printStackTrace();
-							}
-							
-							
-							return true;
-						}
-					}
+	public boolean removePlaylist(User user, String name)  {
+		List<Playlist> playlists = user.getPlaylists();
+		if(playlists.size() > 0) {
+			
+			for(int i = 0; i < playlists.size(); i++) {
+				if(playlists.get(i).getPlaylistName() == name) {
+					playlists.remove(i);
+					user.setPlaylists(playlists);
+					return true;
 				}
-				break;
 			}
 		}
-		System.out.println(userArray.toJSONString());
 		return false;
 	}
 
