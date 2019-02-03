@@ -100,13 +100,22 @@ public class User{
 				
 		         JSONObject playlistJSON = new JSONObject();
 		         JSONArray songs = new JSONArray();//new song array to be inserted into the current playlist
-		         for(Song song : tempPL.getSongs()) {
-		        	 JSONObject songJSON = new JSONObject();
-		        	 songJSON.put("terms", song.getSongType());
-		        	 songJSON.put("name", song.getSongName());
-		        	 songs.add(songJSON);
+		         
+		         //Check if there are any actual songs in the playlists
+		         if(tempPL.getSongs()!=null) {
+		        	 for(Song song : tempPL.getSongs()) {
+			        	 JSONObject songJSON = new JSONObject();
+			        	 songJSON.put("terms", song.getSongType());
+			        	 songJSON.put("name", song.getSongName());
+			        	 songs.add(songJSON);
+			         }
+		        	 playlistJSON.put("songs", songs);// add all songs to playlist array
 		         }
-		         playlistJSON.put("songs", songs);// add all songs to playlist array
+		         //otherwise in the case of an empty playlist, put a JSONArray in place
+		         else {
+		        	 playlistJSON.put("songs", new JSONArray());
+		         }
+		         
 		         playlistJSON.put("playlistname", tempPL.getPlaylistName()); //add playlist name to the playlist array
 		         pl.add(playlistJSON); 
 		         

@@ -42,6 +42,8 @@ public class HomeController {
 		temporaryLabel.setText("This is a temporary home page");
 		loadPlaylists(selectedUser);
 		
+		populatePlaylists(selectedUser);
+		
 		/* For Testing purposes
 		if(selectedUser.getPlaylists().size() > 0) {
 			
