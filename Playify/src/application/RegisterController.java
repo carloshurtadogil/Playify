@@ -11,9 +11,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonWriter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,6 +35,7 @@ public class RegisterController {
 	 private AnchorPane rootPane;
 	
 	//Registers a new user into the system
+	@SuppressWarnings("unchecked")
 	public void Register(ActionEvent event) throws FileNotFoundException, IOException, ParseException{
 		if(this.checkUsername() && this.checkPasswordsMatch() == true) {
 			

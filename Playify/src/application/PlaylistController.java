@@ -1,7 +1,5 @@
 package application;
 
-import java.util.List;
-
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -13,6 +11,7 @@ public class PlaylistController {
 	private Label tempLabel;
 	@FXML
 	private ListView<Song> songsView;
+	@SuppressWarnings("unused")
 	private User selectedUser;
 	private Playlist selectedPlaylist;
 

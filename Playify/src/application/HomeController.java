@@ -1,9 +1,7 @@
 package application;
 
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,9 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class HomeController {
@@ -39,13 +32,17 @@ public class HomeController {
 	private ListView<Playlist> playlistView;
 	private User selectedUser;
 
-	// This method executes after the HomeController is loaded, to set the user
-	// as a logged in user
-	public void setLoggedUser(User theUser) throws FileNotFoundException, IOException, ParseException {
-		this.selectedUser = theUser;
+	/**
+	 * This method executes after the HomeController is loaded, to set the user 
+	 * as a logged in user
+	 * @param user The current user
+	 */
+	public void setLoggedUser(User user) throws FileNotFoundException, IOException, ParseException {
+		this.selectedUser = user;
 		temporaryLabel.setText("This is a temporary home page");
 		loadPlaylists(selectedUser);
 		
+		/* For Testing purposes
 		if(selectedUser.getPlaylists().size() > 0) {
 			
 			String playlistToRemove = selectedUser.getPlaylists().get(0).getPlaylistName();
@@ -62,11 +59,14 @@ public class HomeController {
 			}
 		} else {
 			System.out.println("No playlists to remove");
-		}
+		}*/
 
 	}
 
-	// Populates all of the user's playlists into the ListView of Home.fxml
+	/**
+	 * Populates all of the user's playlists into the ListView of Home.fxml
+	 * @param someUser The current user
+	 */
 	public void populatePlaylists(User someUser) {
 
 		// Populate the list of playlists into the ListView as an observable list
@@ -114,7 +114,9 @@ public class HomeController {
 		});
 	}
 
-	// Allows a user to add a playlist to the list of playlists created
+	/**
+	 * Allows a user to add a playlist to the list of playlists created
+	 */ 
 	public void GoToPlaylistPage(ActionEvent event) {
 
 		try {
@@ -164,8 +166,12 @@ public class HomeController {
 
 	}
 
-	// Traverse the list of users, identify their playlists, and upload information
-	// on said playlists
+	/**
+	 * Traverse the list of users, identify their playlists, and upload information
+	 * on said playlists
+	 * 
+	 * @param user User whose playlists are being read
+	 */ 
 	public boolean loadPlaylists(User user) throws FileNotFoundException, IOException, ParseException {
 		JSONParser parsing = new JSONParser();
 		JSONObject mainObject = (JSONObject) parsing.parse(new FileReader("users.json"));
@@ -215,7 +221,12 @@ public class HomeController {
 		return false;
 	}
 	
-	//Find 
+	/**
+	 * Remove a playlist from the user's playlist array 
+	 * @param user User who's playlists will be updated
+	 * @param name The name of the playlist to be removed
+	 * @return True if the playlist has been found and subsequently removed, false otherwise
+	 */
 	public boolean removePlaylist(User user, String name)  {
 		List<Playlist> playlists = user.getPlaylists();
 		if(playlists.size() > 0) {
