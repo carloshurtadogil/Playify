@@ -126,9 +126,10 @@ public class HomeController {
 			
 			//Obtain the controller to set the selected user
 			CreatePlaylistController createPlaylistControl = createPlaylistLoader.getController();
+			createPlaylistControl.setLoggedUser(selectedUser);
 
 			//Load the current stage to prevent from generating a new window/popup
-			Stage createPlaylistStage = (Stage) temporaryLabel.getScene().getWindow();
+			Stage createPlaylistStage = new Stage();
 			createPlaylistStage.setScene(createPlaylistScene);
 			createPlaylistStage.show();
 
