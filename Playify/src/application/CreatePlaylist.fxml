@@ -19,7 +19,7 @@
          </font>
       </Button>
       <ListView fx:id="listOfSongs" layoutX="37.0" layoutY="206.0" prefHeight="155.0" prefWidth="428.0" />
-      <Button fx:id="btnAdd" layoutX="196.0" layoutY="389.0" mnemonicParsing="false" onAction="#Add" prefHeight="39.0" prefWidth="109.0" text="Add">
+      <Button fx:id="btnAdd" layoutX="73.0" layoutY="388.0" mnemonicParsing="false" onAction="#Add" prefHeight="39.0" prefWidth="149.0" text="Add Song(s)">
          <font>
             <Font size="18.0" />
          </font>
@@ -35,5 +35,10 @@
          </font>
       </Button>
       <Label fx:id="tempLabel" layoutX="236.0" layoutY="28.0" text="Label" />
+      <Button fx:id="btnCreatePlaylist" layoutX="268.0" layoutY="388.0" mnemonicParsing="false" onAction="#createPlaylist" text="Create Playlist">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

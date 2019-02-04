@@ -85,6 +85,7 @@ public class User{
 	
 	@SuppressWarnings("unchecked")
 	public void updateUserJSON() throws FileNotFoundException, IOException, ParseException {
+
 		
 		JSONParser parsing = new JSONParser();
 		JSONObject mainObject = (JSONObject) parsing.parse(new FileReader("users.json"));
@@ -159,5 +160,10 @@ public class User{
 				}
 			}
 		}
+	}
+	
+	public void addPlaylist(Playlist newPlaylist) {
+		this.playlists.add(newPlaylist);
+		setPlaylists(this.playlists);
 	}
 }

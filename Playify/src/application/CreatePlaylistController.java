@@ -34,10 +34,14 @@ public class CreatePlaylistController {
 	private TextField txtPlaylistName;
 	@FXML
 	private Button btnSet;
+	@FXML
+	private Button btnCreatePlaylist;
+	
 	//List to hold songs that match search results
 	private List<Song> searchResults = new ArrayList<Song>();
 	//User logged in
 	private User selectedUser;
+	private Playlist newPlaylist = new Playlist();
 	
 	
 	public void setLoggedUser(User theUser) throws FileNotFoundException, IOException, ParseException {
@@ -82,6 +86,7 @@ public class CreatePlaylistController {
 			ObservableList<String> selectedSongs;
 			selectedSongs = listOfSongs.getSelectionModel().getSelectedItems();
 			
+			
 			for(String songName: selectedSongs) {
 				for(Song song: searchResults) {
 					if(songName.equals(song.getSongName())) {
@@ -96,6 +101,10 @@ public class CreatePlaylistController {
 	}
 	
 	public void SetPlaylistName(ActionEvent event) {
-		
+		this.newPlaylist.setPlaylistName(txtPlaylistName.getText());
+	}
+	
+	public void createPlaylist(ActionEvent event) {
+		selectedUser.addPlaylist(this.newPlaylist);
 	}
 }
