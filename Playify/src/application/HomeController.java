@@ -39,7 +39,7 @@ public class HomeController {
 	 */
 	public void setLoggedUser(User user) throws FileNotFoundException, IOException, ParseException {
 		this.selectedUser = user;
-		temporaryLabel.setText("This is a temporary home page");
+		temporaryLabel.setText(user.getUsername());
 		loadPlaylists(selectedUser);
 		
 		populatePlaylists(selectedUser);

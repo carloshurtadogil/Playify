@@ -6,20 +6,20 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="rootPane" prefHeight="450.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.LoginController">
+<AnchorPane fx:id="rootPane" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.LoginController">
    <children>
-      <Button layoutX="190.0" layoutY="304.0" mnemonicParsing="false" onAction="#Login" text="Login" />
-      <TextField fx:id="usernameField" layoutX="106.0" layoutY="147.0" promptText="Username">
+      <Button layoutX="512.0" layoutY="325.0" mnemonicParsing="false" onAction="#Login" text="Login" />
+      <TextField fx:id="usernameField" layoutX="420.0" layoutY="198.0" promptText="Username">
          <font>
             <Font size="18.0" />
          </font>
       </TextField>
-      <PasswordField fx:id="passwordField" layoutX="106.0" layoutY="225.0" promptText="Password">
+      <PasswordField fx:id="passwordField" layoutX="420.0" layoutY="252.0" prefHeight="35.0" prefWidth="231.0" promptText="Password">
          <font>
             <Font size="18.0" />
          </font>
       </PasswordField>
-      <Label fx:id="labelStatus" layoutX="104.0" layoutY="82.0" prefHeight="21.0" prefWidth="228.0" text="Label" textFill="#141414" />
-      <Button layoutX="109.0" layoutY="362.0" mnemonicParsing="false" onAction="#SendToRegister" text="Dont have an account, register" />
+      <Label fx:id="labelStatus" alignment="CENTER" layoutX="429.0" layoutY="134.0" prefHeight="21.0" prefWidth="228.0" text="Playify" textFill="#141414" />
+      <Button layoutX="431.0" layoutY="374.0" mnemonicParsing="false" onAction="#SendToRegister" text="Dont have an account, register" />
    </children>
 </AnchorPane>

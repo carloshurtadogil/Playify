@@ -1,101 +1,97 @@
 {
-    "users":
-    [
+  "users": [
+    {
+      "password": "time",
+      "playlists": [
         {
-            "password":"time",
-            "playlists":
-            [
-                {
-                    "songs":
-                    [
-                        {
-                            "terms":"drama",
-                            "name":"Rick Astley"
-                        },
-                        {
-                            "terms":"classic rock",
-                            "name":"Bohemian Rhapsody"
-                        }
-                    ],
-                    "playlistname":"favorites"
-                },
-                {
-                    "songs":
-                    [
-                        {
-                            "terms":"family friendly",
-                            "name":"It's a Small World"
-                        }
-                    ],
-                    "playlistname":"disney"
-                }
-            ],
-            "username":"time"
+          "songs": [
+            {
+              "terms": "drama",
+              "name": "Rick Astley"
+            },
+            {
+              "terms": "classic rock",
+              "name": "Bohemian Rhapsody"
+            }
+          ],
+          "playlistname": "favorites"
         },
         {
-            "password":"Dude",
-            "playlists":[],
-            "username":"Random"
-        },
-        {
-            "password":"df",
-            "playlists":[],
-            "username":"df"
-        },
-        {
-            "password":"sde",
-            "playlists":[],
-            "username":"sde"
-        },
-        {
-            "password":"lebron",
-            "playlists":[],
-            "username":"lebron"
-        },
-        {
-            "password":"dff",
-            "playlists":[],
-            "username":"df"
-        },
-        {
-            "password":"rfa",
-            "playlists":[],
-            "username":""
-        },
-        {
-            "password":"fad",
-            "playlists":[],
-            "username":"fad"
-        },
-        {
-            "password":"bm",
-            "playlists":[],
-            "username":"Bataman"
-        },
-        {
-            "password":"lebron",
-            "playlists":[],
-            "username":"Lakers"
-        },
-        {
-            "password":"23",
-            "playlists":[],
-            "username":"lebronjames"
-        },
-        {
-            "password":"23",
-            "playlists":[],
-            "username":"lebronjames1"
-        },
-        {
-            "password":"Drake",
-            "playlists":[],
-            "username":"Samuel"
-        },
-        {
-            "password":"564987",
-            "playlists":[],
-            "username":"tetert"
+          "songs": [
+            {
+              "terms": "family friendly",
+              "name": "It's a Small World"
+            }
+          ],
+          "playlistname": "disney"
         }
-    ]
+      ],
+      "username": "time"
+    },
+    {
+      "password": "Dude",
+      "playlists": [],
+      "username": "Random"
+    },
+    {
+      "password": "df",
+      "playlists": [],
+      "username": "df"
+    },
+    {
+      "password": "sde",
+      "playlists": [],
+      "username": "sde"
+    },
+    {
+      "password": "lebron",
+      "playlists": [],
+      "username": "lebron"
+    },
+    {
+      "password": "dff",
+      "playlists": [],
+      "username": "df"
+    },
+    {
+      "password": "rfa",
+      "playlists": [],
+      "username": ""
+    },
+    {
+      "password": "fad",
+      "playlists": [],
+      "username": "fad"
+    },
+    {
+      "password": "bm",
+      "playlists": [],
+      "username": "Bataman"
+    },
+    {
+      "password": "lebron",
+      "playlists": [],
+      "username": "Lakers"
+    },
+    {
+      "password": "23",
+      "playlists": [],
+      "username": "lebronjames"
+    },
+    {
+      "password": "23",
+      "playlists": [],
+      "username": "lebronjames1"
+    },
+    {
+      "password": "Drake",
+      "playlists": [],
+      "username": "Samuel"
+    },
+    {
+      "password": "564987",
+      "playlists": [],
+      "username": "tetert"
+    }
+  ]
 }

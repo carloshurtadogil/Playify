@@ -1,8 +1,13 @@
 package application;
 
+import java.io.IOException;
 import java.util.List;
 
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
+
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,6 +24,8 @@ public class PlaylistController {
 	@FXML
 	private ListView<Song> songsView;
 	
+	@FXML
+	private Button backButton;
 	@FXML
 	private Button removeSongButton;
 	
@@ -45,7 +52,35 @@ public class PlaylistController {
 	public void populateSongs() {
 		//Performs a null check on the playlist in case its empty
 		if(selectedPlaylist.getSongs()!=null) {
-			
+			backButton.setOnAction(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent arg0) {
+					try {
+						// Load the Home.fxml page for that particular user
+						FXMLLoader homeLoader = new FXMLLoader();
+						homeLoader.setLocation(getClass().getResource("/application/Home.fxml"));
+						Parent root = homeLoader.load();
+						Scene homeScene = new Scene(root);
+
+						// Obtain the controller to set selected user and playlists
+						HomeController homeControl = homeLoader.getController();
+						homeControl.setLoggedUser(selectedUser);
+
+						// Load the current stage to prevent from generating a new window/popup
+						Stage homeStage = (Stage) backButton.getScene().getWindow();
+						homeStage.setScene(homeScene);
+						homeStage.show();
+
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (org.json.simple.parser.ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
 			songsView.setItems(FXCollections.observableList(selectedPlaylist.getSongs()));
 			songsView.setOnMouseClicked(event->{
 				
@@ -106,6 +141,7 @@ public class PlaylistController {
 			Scene songPlayerScene = new Scene(songPlayerRoot);
 			
 			MediaFX songPlayer = songPlayerLoader.getController();
+			songPlayer.setUserAndPlaylist(selectedUser, selectedPlaylist);
 			songPlayer.songPlayerControls();
 			
 			Stage songPlayerStage = (Stage) tempLabel.getScene().getWindow();
