@@ -4,9 +4,13 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.stage.Stage;
 
 public class PlaylistController {
 	
@@ -53,6 +57,7 @@ public class PlaylistController {
 					});
 					//Proceeds to play song from playlist on button click
 					playSongButton.setOnAction((playButtonPressed) ->{
+						goToSongPlayer();
 						System.out.println("The following song will be played");
 					});			
 				}
@@ -87,5 +92,30 @@ public class PlaylistController {
 		}
 		//Repopulate the songs in the current playlist
 		this.populateSongs();
+	}
+	
+	//Goes to the song player page
+	public void goToSongPlayer() {
+		Song selectedSong = songsView.getSelectionModel().getSelectedItem();
+		try {
+			
+			FXMLLoader songPlayerLoader = new FXMLLoader();
+			songPlayerLoader.setLocation(getClass().getResource("/application/SongPlayer.fxml"));
+			
+			Parent songPlayerRoot = songPlayerLoader.load();
+			Scene songPlayerScene = new Scene(songPlayerRoot);
+			
+			MediaFX songPlayer = songPlayerLoader.getController();
+			songPlayer.songPlayerControls();
+			
+			Stage songPlayerStage = (Stage) tempLabel.getScene().getWindow();
+			songPlayerStage.setScene(songPlayerScene);
+			songPlayerStage.show();
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

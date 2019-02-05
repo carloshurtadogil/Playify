@@ -73,7 +73,7 @@ public class LoginController {
 				HomeController home = loader.getController();
 				home.setLoggedUser(theUser);
 
-				Stage homeStage = new Stage();
+				Stage homeStage = (Stage) labelStatus.getScene().getWindow();
 				homeStage.setScene(homeScene);
 				homeStage.show();
 
