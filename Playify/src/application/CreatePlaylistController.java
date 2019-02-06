@@ -59,8 +59,12 @@ public class CreatePlaylistController {
 			List<String> songNames = new ArrayList<String>();
 		
 			//Creates a list that contains every song.
-			Playlist myPlaylist = gson.fromJson(new FileReader("music.json"), Playlist.class);
-			System.out.println(myPlaylist);
+			Music myPlaylist = gson.fromJson(new FileReader("music.json"), Music.class);
+			if(myPlaylist != null) {
+				myPlaylist.printSongDetails();
+			} else {
+				System.out.println("Playlist is null");
+			}
 			/*
 			
 			List<Song> masterSongList = myPlaylist.getSongs();
