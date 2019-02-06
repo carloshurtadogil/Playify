@@ -103,31 +103,32 @@ public class PlaylistController {
 	
 	//Removes a song from the user's playlist
 	public void removeSongFromPlaylist(Song selectedSong) {
-//		
-//		//Utilized for retrieving at which the playlist is stored in the user's list of playlists
-//		int index = 0;
-//		
-//		List<Song> songsInPlaylist = selectedPlaylist.getSongs();
-//		//Traverse the current playlist and find the appropriate song to delete
-//		for(int i=0; i<songsInPlaylist.size(); i++) {
-//			//If found, remove the song from the playlist
-//			if(songsInPlaylist.get(i).getTitle().equals(selectedSong.getTitle())) {	
-//				songsInPlaylist.remove(songsInPlaylist.get(i));
-//				selectedPlaylist.setSongs(songsInPlaylist);
-//				break;
-//			}
-//		}
-//		
-//		//Traverse the user's playlists, find the appropriate playlist and replace it with the updated playlist
-//		for(int j=0;j<selectedUser.getPlaylists().size();j++) {
-//			if(selectedUser.getPlaylists().get(j).getPlaylistName().equals(selectedPlaylist.getPlaylistName())){
-//				index = j;
-//				selectedUser.getPlaylists().set(j, selectedPlaylist);
-//				selectedUser.setPlaylists(selectedUser.getPlaylists());
-//			}
-//		}
-//		//Repopulate the songs in the current playlist
-//		this.populateSongs();
+		
+		//Utilized for retrieving at which the playlist is stored in the user's list of playlists
+		int index = 0;
+		
+		List<Song> songsInPlaylist = selectedPlaylist.getSongs();
+		//Traverse the current playlist and find the appropriate song to delete
+		for(int i=0; i<songsInPlaylist.size(); i++) {
+			//If found, remove the song from the playlist
+			
+			if(songsInPlaylist.get(i).getSongDetails().getTitle().equals(selectedSong.getSongDetails().getTitle())) {	
+				songsInPlaylist.remove(songsInPlaylist.get(i));
+				selectedPlaylist.setSongs(songsInPlaylist);
+				break;
+			}
+		}
+		
+		//Traverse the user's playlists, find the appropriate playlist and replace it with the updated playlist
+		for(int j=0;j<selectedUser.getPlaylists().size();j++) {
+			if(selectedUser.getPlaylists().get(j).getPlaylistName().equals(selectedPlaylist.getPlaylistName())){
+				index = j;
+				selectedUser.getPlaylists().set(j, selectedPlaylist);
+				selectedUser.setPlaylists(selectedUser.getPlaylists());
+			}
+		}
+		//Repopulate the songs in the current playlist
+		this.populateSongs();
 	}
 	
 	//Goes to the song player page
@@ -142,7 +143,7 @@ public class PlaylistController {
 			Scene songPlayerScene = new Scene(songPlayerRoot);
 			
 			MediaFX songPlayer = songPlayerLoader.getController();
-			songPlayer.setUserAndPlaylist(selectedUser, selectedPlaylist);
+			songPlayer.setUserAndSong(selectedUser, selectedPlaylist, selectedSong);
 			songPlayer.songPlayerControls();
 			
 			Stage songPlayerStage = (Stage) tempLabel.getScene().getWindow();

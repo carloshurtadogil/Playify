@@ -53,49 +53,49 @@ public class CreatePlaylistController {
 	}
 	
 	public void Search(ActionEvent event) { 
-		try {
-			List<String> songNames = new ArrayList<String>();
-			Gson gson = new Gson();
-			List<Song> mySongs = gson.fromJson(new FileReader("music.json"), new TypeToken<List<Song>>(){}.getType());
-			Playlist masterPlaylist = new Playlist();
-			masterPlaylist.setSongs(mySongs);
-			
-			for(Song x : masterPlaylist.songs) {
-				if(x.song.title.equals(txtSearch.getText()) || x.artist.name.equals(txtSearch.getText())) {
-					searchResults.add(x);
-					songNames.add(x.song.title);
-				}
-					
-			}
-			
-			listOfSongs.setItems(FXCollections.observableList(songNames));
-			listOfSongs.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
+//		try {
+//			List<String> songNames = new ArrayList<String>();
+//			Gson gson = new Gson();
+//			List<Song> mySongs = gson.fromJson(new FileReader("music.json"), new TypeToken<List<Song>>(){}.getType());
+//			Playlist masterPlaylist = new Playlist();
+//			masterPlaylist.setSongs(mySongs);
+//			
+//			for(Song x : masterPlaylist.songs) {
+//				if(x.song.title.equals(txtSearch.getText()) || x.artist.name.equals(txtSearch.getText())) {
+//					searchResults.add(x);
+//					songNames.add(x.song.title);
+//				}
+//					
+//			}
+//			
+//			listOfSongs.setItems(FXCollections.observableList(songNames));
+//			listOfSongs.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}	
 	}
 	
 	public void Add(ActionEvent event) {
-		try {
-			ObservableList<String> selectedSongs;
-			selectedSongs = listOfSongs.getSelectionModel().getSelectedItems();
-			List<Song> theSongs = new ArrayList<Song>();
-			
-			for(String songName: selectedSongs) {
-				for(Song song: searchResults) {
-					if(songName.equals(song.song.title)) {
-						theSongs.add(song);
-					}
-				}
-			}
-			
-			this.newPlaylist.setSongs(theSongs);
-			
-		}catch (Exception e) {
-			System.out.println("Add Song Error");
-			e.printStackTrace();
-		}
+//		try {
+//			ObservableList<String> selectedSongs;
+//			selectedSongs = listOfSongs.getSelectionModel().getSelectedItems();
+//			List<Song> theSongs = new ArrayList<Song>();
+//			
+//			for(String songName: selectedSongs) {
+//				for(Song song: searchResults) {
+//					if(songName.equals(song.song.title)) {
+//						theSongs.add(song);
+//					}
+//				}
+//			}
+//			
+//			this.newPlaylist.setSongs(theSongs);
+//			
+//		}catch (Exception e) {
+//			System.out.println("Add Song Error");
+//			e.printStackTrace();
+//		}
 	}
 	
 	public void SetPlaylistName(ActionEvent event) {

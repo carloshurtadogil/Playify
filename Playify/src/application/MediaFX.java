@@ -1,5 +1,6 @@
 package application;
 
+import java.io.File;
 import java.io.IOException;
 
 import javafx.application.Application;
@@ -21,6 +22,7 @@ public class MediaFX {
 	private MediaPlayer mediaplayer; 
 	private User currentUser;
 	private Playlist currentPlaylist;
+	private Song currentSong;
 	@FXML
 	private Button backButton;
 	@FXML
@@ -30,9 +32,10 @@ public class MediaFX {
 	@FXML
 	private Button stopSongButton;
 	
-	public void setUserAndPlaylist(User user, Playlist playlist) {
+	public void setUserAndSong(User user, Playlist p, Song s) {
 		currentUser = user;
-		currentPlaylist = playlist;
+		currentPlaylist = p;
+		currentSong = s;
 	}
 	
 	//Orchestrates play, pause, and stop functionalities of a selected song
@@ -66,6 +69,12 @@ public class MediaFX {
 			}
 		});
 		
+		
+		StringBuilder songIdentificationNumber = new StringBuilder();
+		
+		
+		
+		
 		playSongButton.setOnAction(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -92,9 +101,9 @@ public class MediaFX {
 		
 		
 		//Intentionally commented this block of code since we need to fix the path
-		//Media musicFile = new Media("C:\\Users\\Marianne\\Downloads\\Playify Music\\Soul");
+		//Media song = new Media(new File("C://Desktop//" + songPath).toURI().toString());
 		
-		//mediaplayer = new MediaPlayer(musicFile);
+		//mediaplayer = new MediaPlayer(song);
 		//mediaplayer.setAutoPlay(true);
 		//mediaplayer.setVolume(0.1);
 		
