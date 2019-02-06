@@ -3,8 +3,6 @@ package application;
 import java.io.IOException;
 import java.util.List;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
-
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -32,7 +30,6 @@ public class PlaylistController {
 	@FXML
 	private Button playSongButton;
 	
-	@SuppressWarnings("unused")
 	private User selectedUser;
 	private Playlist selectedPlaylist;
 
@@ -44,7 +41,7 @@ public class PlaylistController {
 	public void setUserAndPlaylist(User theUser, Playlist thePlaylist) {
 		this.selectedUser = theUser;
 		this.selectedPlaylist = thePlaylist;
-
+		this.tempLabel.setText(thePlaylist.getPlaylistName());
 		this.populateSongs();
 	}
 	
@@ -110,7 +107,7 @@ public class PlaylistController {
 		//Traverse the current playlist and find the appropriate song to delete
 		for(int i=0; i<songsInPlaylist.size(); i++) {
 			//If found, remove the song from the playlist
-			if(songsInPlaylist.get(i).getSongName().equals(selectedSong.getSongName())) {	
+			if(songsInPlaylist.get(i).getTitle().equals(selectedSong.getTitle())) {	
 				songsInPlaylist.remove(songsInPlaylist.get(i));
 				selectedPlaylist.setSongs(songsInPlaylist);
 				break;

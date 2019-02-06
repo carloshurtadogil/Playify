@@ -7,10 +7,10 @@
 
 <AnchorPane minHeight="720.0" minWidth="1080.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PlaylistController">
    <children>
-      <Label fx:id="tempLabel" layoutX="165.0" layoutY="33.0" text="Label" />
-      <ListView fx:id="songsView" layoutX="94.0" layoutY="78.0" prefHeight="200.0" prefWidth="200.0" />
-      <Button fx:id="playSongButton" layoutX="75.0" layoutY="309.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="92.0" text="Play" />
-      <Button fx:id="removeSongButton" layoutX="183.0" layoutY="309.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="162.0" text="Remove Song" />
+      <Label fx:id="tempLabel" layoutX="513.0" layoutY="91.0" text="Label" />
+      <ListView fx:id="songsView" layoutX="322.0" layoutY="121.0" prefHeight="331.0" prefWidth="432.0" />
+      <Button fx:id="playSongButton" layoutX="405.0" layoutY="483.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="92.0" text="Play" />
+      <Button fx:id="removeSongButton" layoutX="513.0" layoutY="483.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="162.0" text="Remove Song" />
       <Button fx:id="backButton" layoutX="30.0" layoutY="19.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="92.0" text="Back" />
    </children>
 </AnchorPane>

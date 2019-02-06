@@ -15,6 +15,10 @@ import org.json.simple.parser.ParseException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -86,9 +90,26 @@ public class User{
 	@SuppressWarnings("unchecked")
 	public void updateUserJSON() throws FileNotFoundException, IOException, ParseException {
 
-		
 		JSONParser parsing = new JSONParser();
 		JSONObject mainObject = (JSONObject) parsing.parse(new FileReader("users.json"));
+		
+		//TESTING PURPOSES
+	/*	Gson gson1 = new Gson();
+		String json1 = gson1.toJson(mainObject);
+		System.out.println(json1);
+		
+	    JsonParser jp = new JsonParser();
+	    JsonElement root = jp.parse(json1);
+	    System.out.println(root.toString());
+	    //JsonArray rootArr = root.getAsJsonArray();
+
+	    JsonObject rootObj = rootArr.get(0).getAsJsonObject();
+	    rootObj.entrySet().forEach(entry -> System.out.println(entry.getKey()+": "+entry.getValue().getAsString()));
+
+*/
+		
+		//TESTING PURPOSES
+		
 		JSONArray userArray = (JSONArray) mainObject.get("users"); //the list of user objects found is users.json
 		
 		JSONObject userEdit = new JSONObject(); //user JSON object to replace the current user object
@@ -106,8 +127,29 @@ public class User{
 		         if(tempPL.getSongs()!=null) {
 		        	 for(Song song : tempPL.getSongs()) {
 			        	 JSONObject songJSON = new JSONObject();
-			        	 songJSON.put("terms", song.getSongType());
-			        	 songJSON.put("name", song.getSongName());
+			        	 songJSON.put(	"key"	, song.getKey());
+			        	 songJSON.put(	"mode_confidence"	, song.getModeConfidence());
+			        	 songJSON.put(	"artist_mbtags_count"	, song.getArtistMBTagsCount());
+			        	 songJSON.put(	"key_confidence"	, song.getKeyConfidence());
+			        	 songJSON.put(	"tatums_start"	, song.getTatumsStart());
+			        	 songJSON.put(	"year"	, song.getYear());
+			        	 songJSON.put(	"duration"	, song.getDuration());
+			        	 songJSON.put(	"hotttnesss"	, song.getHotttnesss());
+			        	 songJSON.put(	"beats_start"	, song.getBeatsStart());
+			        	 songJSON.put(	"time_signature_confidence"	, song.getTimeSignatureConfidence());
+			        	 songJSON.put(	"title"	, song.getTitle());
+			        	 songJSON.put(	"bars_confidence"	, song.getBarsConfidence());
+			        	 songJSON.put(	"id"	, song.getID());
+			        	 songJSON.put(	"bars_start"	, song.getBarsStart());
+			        	 songJSON.put(	"artist_mbtags"	, song.getArtistMBTags());
+			        	 songJSON.put(	"start_of_fade_out"	, song.getStartOfFadeOut());
+			        	 songJSON.put(	"tempo"	, song.getTempo());
+			        	 songJSON.put(	"end_of_fade_in"	, song.getEndOfFadeIn());
+			        	 songJSON.put(	"beats_confidence"	, song.getBeatsConfidence());
+			        	 songJSON.put(	"tatums_confidence"	, song.getTatumsConfidence());
+			        	 songJSON.put(	"mode"	, song.getMode());
+			        	 songJSON.put(	"time_signature"	, song.getTimeSignature());
+			        	 songJSON.put(	"loudness"	, song.getLoudness());
 			        	 songs.add(songJSON);
 			         }
 		        	 playlistJSON.put("songs", songs);// add all songs to playlist array

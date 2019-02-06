@@ -35,8 +35,7 @@ public class Playlist {
 		System.out.println("Playlist Name: " + playlistname);
 		if(songs.size() > 0) {
 			for (Song s : songs) {
-				System.out.println("	Song Name: " + s.getSongName());
-				System.out.println("		Song Type: " + s.getSongType());
+				System.out.println("	Song Name: " + s.getTitle());
 			}
 		}
 	}

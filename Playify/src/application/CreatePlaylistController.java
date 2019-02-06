@@ -8,6 +8,7 @@ import java.util.List;
 import org.json.simple.parser.ParseException;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 
 import javafx.event.ActionEvent;
 import javafx.collections.FXCollections;
@@ -59,6 +60,9 @@ public class CreatePlaylistController {
 		
 			//Creates a list that contains every song.
 			Playlist myPlaylist = gson.fromJson(new FileReader("music.json"), Playlist.class);
+			System.out.println(myPlaylist);
+			/*
+			
 			List<Song> masterSongList = myPlaylist.getSongs();
 			
 			//Check each song in the master list, if the song matches the search criteria then add it to the searchResults list.
@@ -73,12 +77,22 @@ public class CreatePlaylistController {
 			//Display the song names in the list view and set the list view so they can select multiple items.
 			listOfSongs.setItems(FXCollections.observableList(songNames));
 			listOfSongs.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+			*/
 			
 		}catch (Exception e) {
 			System.out.println("Search Error");
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void Search() {
+		JsonParser jp = new JsonParser();
+	    //JsonElement root = jp.parse(json);
+	    //JsonArray rootArr = root.getAsJsonArray();
+
+	    //JsonObject rootObj = rootArr.get(0).getAsJsonObject();
+	    //rootObj.entrySet().forEach(entry -> System.out.println(entry.getKey()+": "+entry.getValue().getAsString()));
 	}
 	
 	public void Add(ActionEvent event) {
@@ -89,7 +103,7 @@ public class CreatePlaylistController {
 			
 			for(String songName: selectedSongs) {
 				for(Song song: searchResults) {
-					if(songName.equals(song.getSongName())) {
+					if(songName.equals(song.getTitle())) {
 						//Add to playlist
 					}
 				}

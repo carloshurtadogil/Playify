@@ -6,12 +6,54 @@
         {
           "songs": [
             {
-              "terms": "drama",
-              "name": "Rick Astley"
+              "mode_confidence": 0.345,
+              "hotttnesss": 0.270775999,
+              "year": 0,
+              "beats_confidence": 1.0,
+              "artist_mbtags_count": 2.0,
+              "bars_start": 1.00249,
+              "loudness": -7.664,
+              "tempo": 147.421,
+              "end_of_fade_in": 0.131,
+              "title": "Slave To Love (7\" Version) (2009 Digital Remaster)",
+              "key_confidence": 0.344,
+              "duration": 240.03873,
+              "beats_start": 0.18237,
+              "bars_confidence": 0.083,
+              "mode": 0,
+              "artist_mbtags": "british",
+              "start_of_fade_out": 221.965,
+              "time_signature_confidence": 1.0,
+              "id": "SOPSYTV12AB01807DB",
+              "tatums_confidence": 1.0,
+              "key": 11.0,
+              "tatums_start": 0.18237,
+              "time_signature": 4.0
             },
             {
-              "terms": "classic rock",
-              "name": "Bohemian Rhapsody"
+              "mode_confidence": 0.546,
+              "hotttnesss": 0.0,
+              "year": 0,
+              "beats_confidence": 0.908,
+              "artist_mbtags_count": 1.0,
+              "bars_start": 0.92047,
+              "loudness": -19.478,
+              "tempo": 89.667,
+              "end_of_fade_in": 0.241,
+              "title": "In A Subtle Way",
+              "key_confidence": 0.611,
+              "duration": 456.30649,
+              "beats_start": 0.23284,
+              "bars_confidence": 0.238,
+              "mode": 1,
+              "artist_mbtags": "jazz and blues",
+              "start_of_fade_out": 451.315,
+              "time_signature_confidence": 0.747,
+              "id": "SOOGFBZ12AC3DF7FF2",
+              "tatums_confidence": 0.0,
+              "key": 1.0,
+              "tatums_start": 0.06094,
+              "time_signature": 4.0
             }
           ],
           "playlistname": "favorites"
@@ -19,8 +61,29 @@
         {
           "songs": [
             {
-              "terms": "family friendly",
-              "name": "It's a Small World"
+              "mode_confidence": 0.251,
+              "hotttnesss": 0.394394856,
+              "year": 0,
+              "beats_confidence": 0.773,
+              "artist_mbtags_count": 0.0,
+              "bars_start": 0.77461,
+              "loudness": -17.699,
+              "tempo": 90.932,
+              "end_of_fade_in": 0.0,
+              "title": "Midnight Swim",
+              "key_confidence": 0.0,
+              "duration": 128.83546,
+              "beats_start": 0.77461,
+              "bars_confidence": 0.359,
+              "mode": 1,
+              "artist_mbtags": "",
+              "start_of_fade_out": 121.423,
+              "time_signature_confidence": 1.0,
+              "id": "SORSECL12AB0182267",
+              "tatums_confidence": 0.302,
+              "key": 3.0,
+              "tatums_start": 0.77461,
+              "time_signature": 3.0
             }
           ],
           "playlistname": "disney"
