@@ -1,6 +1,7 @@
 package application;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.collections.FXCollections;
@@ -20,7 +21,7 @@ public class PlaylistController {
 	@FXML
 	private Label tempLabel;
 	@FXML
-	private ListView<Song> songsView;
+	private ListView<String> songsView;
 	
 	@FXML
 	private Button backButton;
@@ -47,10 +48,13 @@ public class PlaylistController {
 	
 	//This method is called to populate the songs of the user's playlist into the ListView
 	public void populateSongs() {
+		List<String> songNames = new ArrayList<String>();
 		//Performs a null check on the playlist in case its empty
 		if(selectedPlaylist.getSongs()!=null) {
-			
-			songsView.setItems(FXCollections.observableList(selectedPlaylist.getSongs()));
+			for(Song x : selectedPlaylist.songs) {
+				songNames.add(x.getSongDetails().getTitle());
+			}
+			songsView.setItems(FXCollections.observableList(songNames));
 			songsView.setOnMouseClicked(event->{
 				
 				if(event.getClickCount() ==1) {
@@ -102,7 +106,7 @@ public class PlaylistController {
 	}
 	
 	//Removes a song from the user's playlist
-	public void removeSongFromPlaylist(Song selectedSong) {
+	public void removeSongFromPlaylist(String selectedSong) {
 		
 		//Utilized for retrieving at which the playlist is stored in the user's list of playlists
 		int index = 0;
@@ -112,7 +116,7 @@ public class PlaylistController {
 		for(int i=0; i<songsInPlaylist.size(); i++) {
 			//If found, remove the song from the playlist
 			
-			if(songsInPlaylist.get(i).getSongDetails().getTitle().equals(selectedSong.getSongDetails().getTitle())) {	
+			if(songsInPlaylist.get(i).getSongDetails().getTitle().equals(selectedSong)) {	
 				songsInPlaylist.remove(songsInPlaylist.get(i));
 				selectedPlaylist.setSongs(songsInPlaylist);
 				break;
@@ -133,7 +137,13 @@ public class PlaylistController {
 	
 	//Goes to the song player page
 	public void goToSongPlayer() {
-		Song selectedSong = songsView.getSelectionModel().getSelectedItem();
+		Song songChoice = new Song();
+		String selectedSong = songsView.getSelectionModel().getSelectedItem();
+		for(Song x : selectedPlaylist.songs) {
+			if(x.getSongDetails().getTitle().equals(selectedSong)){
+				songChoice = x;
+			}
+		}
 		try {
 			
 			FXMLLoader songPlayerLoader = new FXMLLoader();
@@ -143,7 +153,7 @@ public class PlaylistController {
 			Scene songPlayerScene = new Scene(songPlayerRoot);
 			
 			MediaFX songPlayer = songPlayerLoader.getController();
-			songPlayer.setUserAndSong(selectedUser, selectedPlaylist, selectedSong);
+			songPlayer.setUserAndSong(selectedUser, selectedPlaylist, songChoice);
 			songPlayer.songPlayerControls();
 			
 			Stage songPlayerStage = (Stage) tempLabel.getScene().getWindow();

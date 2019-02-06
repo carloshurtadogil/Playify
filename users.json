@@ -50,7 +50,13 @@
             }
           ],
           "playlistname": "Favorites"
-        },
+        }
+      ],
+      "username": "time"
+    },
+    {
+      "password": "Wright",
+      "playlists": [
         {
           "songs": [
             {
@@ -95,77 +101,141 @@
                 "name": "Fear Itself",
                 "id": 300848
               }
+            },
+            {
+              "song": {
+                "mode_confidence": 0.332,
+                "hotttnesss": 0.6244255,
+                "year": 2004,
+                "beats_confidence": 0.692,
+                "artist_mbtags_count": 1.0,
+                "bars_start": 1.1904,
+                "loudness": -4.882,
+                "tempo": 105.206,
+                "end_of_fade_in": 0.0,
+                "title": "Let's Get It Started",
+                "key_confidence": 0.205,
+                "duration": 229.61588,
+                "beats_start": 0.63902,
+                "bars_confidence": 0.933,
+                "mode": 0,
+                "artist_mbtags": "pop and chart",
+                "start_of_fade_out": 213.664,
+                "time_signature_confidence": 1.0,
+                "id": "SOCHRXB12A8AE48069",
+                "tatums_confidence": 0.41,
+                "key": 11.0,
+                "tatums_start": 0.36332,
+                "time_signature": 4.0
+              },
+              "artist": {
+                "similar": "ARV4KO21187FB38008",
+                "familiarity": 0.8456019,
+                "hotttnesss": 1.005942,
+                "terms": "hip hop",
+                "latitude": 37.157356,
+                "name": "Black Eyed Peas",
+                "location": "Los Angeles, CA",
+                "id": "ARTDQRC1187FB4EFD4",
+                "terms_freq": 1.0,
+                "longitude": -63.933357
+              },
+              "release": {
+                "name": "Total Workout Running 102 - 135 - 84bpm Ideal For Jogging_ Running_ Treadmill & General Fitness",
+                "id": 358442
+              }
+            },
+            {
+              "song": {
+                "mode_confidence": 0.507,
+                "hotttnesss": 0.0,
+                "year": 2004,
+                "beats_confidence": 0.712,
+                "artist_mbtags_count": 1.0,
+                "bars_start": 1.32488,
+                "loudness": -5.939,
+                "tempo": 107.199,
+                "end_of_fade_in": 0.165,
+                "title": "Let's Get It Started",
+                "key_confidence": 0.5,
+                "duration": 223.03302,
+                "beats_start": 0.21216,
+                "bars_confidence": 0.081,
+                "mode": 0,
+                "artist_mbtags": "pop and chart",
+                "start_of_fade_out": 219.847,
+                "time_signature_confidence": 1.0,
+                "id": "SOGBUUF12AB018B87E",
+                "tatums_confidence": 0.642,
+                "key": 6.0,
+                "tatums_start": 0.21216,
+                "time_signature": 4.0
+              },
+              "artist": {
+                "similar": "ARV4KO21187FB38008",
+                "familiarity": 0.8456019,
+                "hotttnesss": 1.005942,
+                "terms": "hip hop",
+                "latitude": 37.157356,
+                "name": "Black Eyed Peas",
+                "location": "Los Angeles, CA",
+                "id": "ARTDQRC1187FB4EFD4",
+                "terms_freq": 1.0,
+                "longitude": -63.933357
+              },
+              "release": {
+                "name": "Kids Sing Along Pac",
+                "id": 673805
+              }
+            },
+            {
+              "song": {
+                "mode_confidence": 0.492,
+                "hotttnesss": 0.5701059,
+                "year": 2001,
+                "beats_confidence": 0.579,
+                "artist_mbtags_count": 1.0,
+                "bars_start": 2.95336,
+                "loudness": -10.296,
+                "tempo": 85.008,
+                "end_of_fade_in": 0.0,
+                "title": "WKYA (drop)",
+                "key_confidence": 0.074,
+                "duration": 124.18567,
+                "beats_start": 0.65164,
+                "bars_confidence": 0.058,
+                "mode": 0,
+                "artist_mbtags": "soul and reggae",
+                "start_of_fade_out": 121.005,
+                "time_signature_confidence": 1.0,
+                "id": "SORWHWY12A6702038E",
+                "tatums_confidence": 0.0,
+                "key": 1.0,
+                "tatums_start": 0.16161,
+                "time_signature": 5.0
+              },
+              "artist": {
+                "similar": "AR05OJD1187B9B99A6",
+                "familiarity": 0.7431298,
+                "hotttnesss": 0.49356684,
+                "terms": "hip hop",
+                "latitude": 37.157356,
+                "name": "Redman",
+                "location": "Newark, NJ",
+                "id": "ARXWAQQ1187B9AE954",
+                "terms_freq": 1.0,
+                "longitude": -63.933357
+              },
+              "release": {
+                "name": "Malpractice",
+                "id": 8552
+              }
             }
           ],
-          "playlistname": "New"
+          "playlistname": "Hip-Hop"
         }
       ],
-      "username": "time"
-    },
-    {
-      "password": "Dude",
-      "playlists": [],
-      "username": "Random"
-    },
-    {
-      "password": "df",
-      "playlists": [],
-      "username": "df"
-    },
-    {
-      "password": "sde",
-      "playlists": [],
-      "username": "sde"
-    },
-    {
-      "password": "lebron",
-      "playlists": [],
-      "username": "lebron"
-    },
-    {
-      "password": "dff",
-      "playlists": [],
-      "username": "df"
-    },
-    {
-      "password": "rfa",
-      "playlists": [],
-      "username": ""
-    },
-    {
-      "password": "fad",
-      "playlists": [],
-      "username": "fad"
-    },
-    {
-      "password": "bm",
-      "playlists": [],
-      "username": "Bataman"
-    },
-    {
-      "password": "lebron",
-      "playlists": [],
-      "username": "Lakers"
-    },
-    {
-      "password": "23",
-      "playlists": [],
-      "username": "lebronjames"
-    },
-    {
-      "password": "23",
-      "playlists": [],
-      "username": "lebronjames1"
-    },
-    {
-      "password": "Drake",
-      "playlists": [],
-      "username": "Samuel"
-    },
-    {
-      "password": "564987",
-      "playlists": [],
-      "username": "tetert"
+      "username": "Devon"
     }
   ]
 }
