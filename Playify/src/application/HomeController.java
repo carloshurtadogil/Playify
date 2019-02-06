@@ -11,6 +11,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -30,6 +31,8 @@ public class HomeController {
 	private AnchorPane rootPane;
 	@FXML
 	private ListView<Playlist> playlistView;
+	@FXML
+	private Button logoutButton;
 	private User selectedUser;
 
 	/**
@@ -71,6 +74,29 @@ public class HomeController {
 	 */
 	public void populatePlaylists(User someUser) {
 
+		logoutButton.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent arg0) {
+				try {
+					// Load the Login.fxml page 
+					FXMLLoader portalLoader = new FXMLLoader();
+				    portalLoader.setLocation(getClass().getResource("/application/Login.fxml"));
+					Parent root = portalLoader.load();
+					Scene portalScene = new Scene(root);
+
+					// Load the current stage to prevent from generating a new window/popup
+					Stage portalStage = (Stage) logoutButton.getScene().getWindow();
+					portalStage.setScene(portalScene);
+					portalStage.show();
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+			}
+		});
+		
 		// Populate the list of playlists into the ListView as an observable list
 		playlistView.setItems(FXCollections.observableList(someUser.getPlaylists()));
 
