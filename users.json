@@ -56,7 +56,7 @@
               "time_signature": 4.0
             }
           ],
-          "playlistname": "favorites"
+          "playlistname": "Favorites"
         },
         {
           "songs": [
@@ -86,7 +86,7 @@
               "time_signature": 3.0
             }
           ],
-          "playlistname": "disney"
+          "playlistname": "Disney"
         }
       ],
       "username": "time"
