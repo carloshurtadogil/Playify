@@ -201,75 +201,76 @@ public class HomeController {
 	 * @param user User whose playlists are being read
 	 */ 
 	public boolean loadPlaylists(User user) throws FileNotFoundException, IOException, ParseException {
-		JSONParser parsing = new JSONParser();
-		JSONObject mainObject = (JSONObject) parsing.parse(new FileReader("users.json"));
-		JSONArray userArray = (JSONArray) mainObject.get("users");
-
-		List<Playlist> usersPlaylist = new ArrayList<Playlist>();
-
-		for (int i = 0; i < userArray.size(); i++) {
-			// Search for the user
-			JSONObject traverseUser = (JSONObject) userArray.get(i);
-			if (user.getUsername().equals(traverseUser.get("username"))) {
-
-				// grab the playlists
-				JSONArray playlistArray = (JSONArray) traverseUser.get("playlists");
-
-				if (playlistArray.size() > 0) {
-
-					for (int j = 0; j < playlistArray.size(); j++) {
-
-						JSONObject pl = (JSONObject) playlistArray.get(j);
-
-						Playlist playlistObject = new Playlist();
-
-						playlistObject.setPlaylistName(pl.get("playlistname").toString());
-
-						JSONArray songs = (JSONArray) pl.get("songs");
-
-						if (songs.size() > 0) {
-							List<Song> songList = new ArrayList<Song>();
-							for (int k = 0; k < songs.size(); k++) {
-								JSONObject song = (JSONObject) songs.get(k);
-								Song songObject = new Song();
-								songObject.setKey(Double.parseDouble(song.get("key").toString()));;
-								songObject.setModeConfidence(Double.parseDouble(song.get(	"mode_confidence"	).toString()));
-								songObject.setArtistMBTagsCount(Double.parseDouble(song.get(	"artist_mbtags_count"	).toString()));
-								songObject.setKeyConfidence(Double.parseDouble(song.get(	"key_confidence"	).toString()));
-								songObject.setTatumsStart(Double.parseDouble(song.get(	"tatums_start"	).toString()));
-								songObject.setYear(Integer.parseInt(song.get(	"year"	).toString()));
-								songObject.setDuration(Double.parseDouble(song.get(	"duration"	).toString()));
-								songObject.setHotttnesss(Double.parseDouble(song.get(	"hotttnesss"	).toString()));
-								songObject.setBeatsStart(Double.parseDouble(song.get(	"beats_start"	).toString()));
-								songObject.setTimeSignatureConfidence	(Double.parseDouble(song.get(	"time_signature_confidence"	).toString()));
-								songObject.setTitle	(song.get(	"title"	).toString());
-								songObject.setBarsConfidence(Double.parseDouble(song.get(	"bars_confidence"	).toString()));
-								songObject.setID(song.get(	"id"	).toString());
-								songObject.setBarsStart	(Double.parseDouble(song.get(	"bars_start"	).toString()));
-								songObject.setArtistMBTags(song.get(	"artist_mbtags"	).toString());
-								songObject.setStartOfFadeOut	(Double.parseDouble(song.get(	"start_of_fade_out"	).toString()));
-								songObject.setTempo(Double.parseDouble(song.get(	"tempo"	).toString()));
-								songObject.setEndOfFadeIn(Double.parseDouble(song.get(	"end_of_fade_in"	).toString()));
-								songObject.setBeatsConfidence(Double.parseDouble(song.get(	"beats_confidence"	).toString()));
-								songObject.setTatusmConfidence(Double.parseDouble(song.get(	"tatums_confidence"	).toString()));
-								songObject.setMode(Integer.parseInt(song.get(	"mode"	).toString()));
-								songObject.setTimeSignature(Double.parseDouble(song.get(	"time_signature"	).toString()));
-								songObject.setLoudness(Double.parseDouble(song.get(	"loudness"	).toString()));
-						
-								
-								songList.add(songObject);
-							}
-							playlistObject.setSongs(songList);
-						}
-						usersPlaylist.add(playlistObject);
-						user.setPlaylists(usersPlaylist);
-
-					}
-					return true;
-				}
-				break;
-			}
-		}
+//		JSONParser parsing = new JSONParser();
+//		JSONObject mainObject = (JSONObject) parsing.parse(new FileReader("users.json"));
+//		JSONArray userArray = (JSONArray) mainObject.get("users");
+//
+//		List<Playlist> usersPlaylist = new ArrayList<Playlist>();
+//
+//		for (int i = 0; i < userArray.size(); i++) {
+//			// Search for the user
+//			JSONObject traverseUser = (JSONObject) userArray.get(i);
+//			if (user.getUsername().equals(traverseUser.get("username"))) {
+//
+//				// grab the playlists
+//				JSONArray playlistArray = (JSONArray) traverseUser.get("playlists");
+//
+//				if (playlistArray.size() > 0) {
+//
+//					for (int j = 0; j < playlistArray.size(); j++) {
+//
+//						JSONObject pl = (JSONObject) playlistArray.get(j);
+//
+//						Playlist playlistObject = new Playlist();
+//
+//						playlistObject.setPlaylistName(pl.get("playlistname").toString());
+//
+//						JSONArray songs = (JSONArray) pl.get("songs");
+//
+//						if (songs.size() > 0) {
+//							List<Song> songList = new ArrayList<Song>();
+//							for (int k = 0; k < songs.size(); k++) {
+//								JSONObject song = (JSONObject) songs.get(k);
+//								Song songObject = new Song();
+//								songObject.artist.familiarity = 
+//								songObject.setKey(Double.parseDouble(song.get("key").toString()));
+//								songObject.setModeConfidence(Double.parseDouble(song.get(	"mode_confidence"	).toString()));
+//								songObject.setArtistMBTagsCount(Double.parseDouble(song.get(	"artist_mbtags_count"	).toString()));
+//								songObject.setKeyConfidence(Double.parseDouble(song.get(	"key_confidence"	).toString()));
+//								songObject.setTatumsStart(Double.parseDouble(song.get(	"tatums_start"	).toString()));
+//								songObject.setYear(Integer.parseInt(song.get(	"year"	).toString()));
+//								songObject.setDuration(Double.parseDouble(song.get(	"duration"	).toString()));
+//								songObject.setHotttnesss(Double.parseDouble(song.get(	"hotttnesss"	).toString()));
+//								songObject.setBeatsStart(Double.parseDouble(song.get(	"beats_start"	).toString()));
+//								songObject.setTimeSignatureConfidence	(Double.parseDouble(song.get(	"time_signature_confidence"	).toString()));
+//								songObject.setTitle	(song.get(	"title"	).toString());
+//								songObject.setBarsConfidence(Double.parseDouble(song.get(	"bars_confidence"	).toString()));
+//								songObject.setID(song.get(	"id"	).toString());
+//								songObject.setBarsStart	(Double.parseDouble(song.get(	"bars_start"	).toString()));
+//								songObject.setArtistMBTags(song.get(	"artist_mbtags"	).toString());
+//								songObject.setStartOfFadeOut	(Double.parseDouble(song.get(	"start_of_fade_out"	).toString()));
+//								songObject.setTempo(Double.parseDouble(song.get(	"tempo"	).toString()));
+//								songObject.setEndOfFadeIn(Double.parseDouble(song.get(	"end_of_fade_in"	).toString()));
+//								songObject.setBeatsConfidence(Double.parseDouble(song.get(	"beats_confidence"	).toString()));
+//								songObject.setTatusmConfidence(Double.parseDouble(song.get(	"tatums_confidence"	).toString()));
+//								songObject.setMode(Integer.parseInt(song.get(	"mode"	).toString()));
+//								songObject.setTimeSignature(Double.parseDouble(song.get(	"time_signature"	).toString()));
+//								songObject.setLoudness(Double.parseDouble(song.get(	"loudness"	).toString()));
+//						
+//								
+//								songList.add(songObject);
+//							}
+//							playlistObject.setSongs(songList);
+//						}
+//						usersPlaylist.add(playlistObject);
+//						user.setPlaylists(usersPlaylist);
+//
+//					}
+//					return true;
+//				}
+//				break;
+//			}
+//		}
 
 		return false;
 	}

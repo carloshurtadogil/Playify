@@ -9,7 +9,7 @@ public class Playlist {
 
 	@SerializedName("songs")
 	@Expose
-	private List<Song> songs;
+	List<Song> songs;
 	
 	@SerializedName("playlistname")
 	@Expose
@@ -31,14 +31,6 @@ public class Playlist {
 		this.playlistname = name;
 	}
 	
-	public void printPlaylistDetails() {
-		System.out.println("Playlist Name: " + playlistname);
-		if(songs.size() > 0) {
-			for (Song s : songs) {
-				System.out.println("	Song Name: " + s.getTitle());
-			}
-		}
-	}
 	
 	public String toString() {
 		return this.getPlaylistName();
