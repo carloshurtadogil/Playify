@@ -56,6 +56,8 @@ public class MediaFX {
 					Stage playlistStage = (Stage) backButton.getScene().getWindow();
 					playlistStage.setScene(playlistScene);
 					playlistStage.show();
+					
+					//
 
 				} catch (IOException e) {
 					// TODO Auto-generated catch block

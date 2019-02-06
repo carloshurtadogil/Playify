@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -8,6 +9,16 @@
 
 <AnchorPane fx:id="rootPane" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.LoginController">
    <children>
+   
+   		<ImageView fitHeight="129.0" fitWidth="425.0" layoutX="330.0" layoutY="39.0">
+      	<image>
+      		<Image url="img/playify.png" />
+      	
+      	</image>
+      
+      </ImageView>
+   
+   
       <Button layoutX="512.0" layoutY="325.0" mnemonicParsing="false" onAction="#Login" text="Login" />
       <TextField fx:id="usernameField" layoutX="420.0" layoutY="198.0" promptText="Username">
          <font>
@@ -19,7 +30,7 @@
             <Font size="18.0" />
          </font>
       </PasswordField>
-      <Label fx:id="labelStatus" alignment="CENTER" layoutX="429.0" layoutY="134.0" prefHeight="21.0" prefWidth="228.0" text="Playify" textFill="#141414" />
+      <Label fx:id="labelStatus" alignment="CENTER" layoutX="416.0" layoutY="489.0" prefHeight="21.0" prefWidth="228.0" textFill="#141414" />
       <Button layoutX="431.0" layoutY="374.0" mnemonicParsing="false" onAction="#SendToRegister" text="Dont have an account, register" />
    </children>
 </AnchorPane>
