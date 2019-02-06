@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
@@ -7,9 +8,16 @@
 
 <AnchorPane prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MediaFX">
    <children>
-      <Button fx:id="playSongButton" layoutX="78.0" layoutY="304.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Play" />
-      <Button fx:id="pauseSongButton" layoutX="195.0" layoutY="304.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="95.0" text="Pause" />
-      <Button fx:id="stopSongButton" layoutX="326.0" layoutY="304.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Stop" />
-      <Button fx:id="backButton" layoutX="91.0" layoutY="44.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Back" />
+      <Button fx:id="playSongButton" layoutX="498.0" layoutY="496.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Play" />
+      <Button fx:id="pauseSongButton" layoutX="313.0" layoutY="496.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="95.0" text="Pause" />
+      <Button fx:id="stopSongButton" layoutX="679.0" layoutY="496.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Stop" />
+      <Button fx:id="backButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Back" />
+      <ImageView fitHeight="287.0" fitWidth="361.0" layoutX="360.0" layoutY="180.0">
+         <image>
+            <Image url="@../../../../../../../../Desktop/Logo.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="backButton1" layoutX="155.0" layoutY="496.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="&lt;&lt;" />
+      <Button fx:id="backButton11" layoutX="826.0" layoutY="496.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="&gt;&gt;" />
    </children>
 </AnchorPane>
