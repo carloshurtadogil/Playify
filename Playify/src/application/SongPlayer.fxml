@@ -11,7 +11,7 @@
       <Button fx:id="playSongButton" layoutX="498.0" layoutY="496.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Play" />
       <Button fx:id="pauseSongButton" layoutX="313.0" layoutY="496.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="95.0" text="Pause" />
       <Button fx:id="stopSongButton" layoutX="679.0" layoutY="496.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Stop" />
-      <Button fx:id="backButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Back" />
+      <Button fx:id="backButton" layoutX="271.0" layoutY="180.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Back" />
       <ImageView fitHeight="287.0" fitWidth="361.0" layoutX="360.0" layoutY="180.0">
          <image>
             <Image url="@../../../../../../../../Desktop/Logo.png" />
