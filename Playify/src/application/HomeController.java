@@ -107,7 +107,7 @@ public class HomeController {
 			if (event.getClickCount() == 1) {
 				deletePlaylistButton.setOnAction((buttonPressed) -> {
 					//Call method that will delete the playlist
-					//DeletePlaylist(playlistView.getSelectionModel().getSelectedItem());
+					this.removePlaylist(selectedUser, playlistView.getSelectionModel().getSelectedItem().getPlaylistName());
 					System.out.println("This button will delete this playlist...");
 				});
 			}
@@ -126,13 +126,17 @@ public class HomeController {
 
 					// Obtain the controller to set selected user and playlist
 					PlaylistController playlistControl = playlistLoader.getController();
-					playlistControl.setUserAndPlaylist(selectedUser, selectedPlaylist);
-
-					// Load the current stage to prevent from generating a new window/popup
-					Stage playlistStage = (Stage) temporaryLabel.getScene().getWindow();
-					playlistStage.setScene(playlistScene);
-					playlistStage.show();
-
+					
+					//Checks if a selected playlist is not null,
+					//or in other words if a user clicks on an empty item in the ListView
+					if(selectedPlaylist!=null) {
+						playlistControl.setUserAndPlaylist(selectedUser, selectedPlaylist);
+						// Load the current stage to prevent from generating a new window/popup
+						Stage playlistStage = (Stage) temporaryLabel.getScene().getWindow();
+						playlistStage.setScene(playlistScene);
+						playlistStage.show();
+					}
+					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -281,19 +285,22 @@ public class HomeController {
 	 * @param name The name of the playlist to be removed
 	 * @return True if the playlist has been found and subsequently removed, false otherwise
 	 */
-	public boolean removePlaylist(User user, String name)  {
+	public void removePlaylist(User user, String name)  {
 		List<Playlist> playlists = user.getPlaylists();
 		if(playlists.size() > 0) {
 			
 			for(int i = 0; i < playlists.size(); i++) {
-				if(playlists.get(i).getPlaylistName() == name) {
+				if(playlists.get(i).getPlaylistName().equals(name)) {
 					playlists.remove(i);
 					user.setPlaylists(playlists);
-					return true;
+					break;
 				}
 			}
+			
+			selectedUser =user;
+			populatePlaylists(selectedUser);
 		}
-		return false;
+		
 	}
 
 }
