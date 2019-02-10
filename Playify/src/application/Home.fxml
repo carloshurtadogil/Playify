@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -8,12 +9,15 @@
 
 <AnchorPane prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: GREY;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.HomeController">
    <children>
-      <Label fx:id="temporaryLabel" layoutX="431.0" layoutY="120.0" text="This is a temporary home page" />
+      <Label fx:id="temporaryLabel" alignment="CENTER" layoutX="424.0" layoutY="178.0" text="This is a temporary home page" textFill="WHITE">
+         <font>
+            <Font name="Trebuchet MS Bold" size="17.0" />
+         </font></Label>
       <ListView fx:id="playlistView" layoutX="394.0" layoutY="210.0" prefHeight="328.0" prefWidth="293.0" />
       <Button layoutX="414.0" layoutY="561.0" mnemonicParsing="false" onAction="#GoToPlaylistPage" text="Create Playlist" />
       <Button fx:id="deletePlaylistButton" layoutX="546.0" layoutY="561.0" mnemonicParsing="false" text="Delete Playlist" />
       <Button fx:id="logoutButton" layoutX="70.0" layoutY="61.0" mnemonicParsing="false" text="Logout" />
-      <ImageView fitHeight="150.0" fitWidth="335.0" layoutX="459.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="150.0" fitWidth="335.0" layoutX="485.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="/img/songicon.png" />
          </image>

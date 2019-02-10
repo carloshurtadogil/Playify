@@ -109,6 +109,7 @@ public class PlaylistController {
 	public void removeSongFromPlaylist(String selectedSong) {
 		
 		//Utilized for retrieving at which the playlist is stored in the user's list of playlists
+		@SuppressWarnings("unused")
 		int index = 0;
 		
 		List<Song> songsInPlaylist = selectedPlaylist.getSongs();
