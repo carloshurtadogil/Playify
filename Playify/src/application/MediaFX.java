@@ -1,6 +1,11 @@
 package application;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import com.sun.jndi.toolkit.url.Uri;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -9,8 +14,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
+
+
 
 
 public class MediaFX {
@@ -36,7 +44,7 @@ public class MediaFX {
 	}
 	
 	//Orchestrates play, pause, and stop functionalities of a selected song
-	public void songPlayerControls() {
+	public void songPlayerControls() throws URISyntaxException {
 		
 		backButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -97,13 +105,13 @@ public class MediaFX {
 			}
 		});
 		
-		
+	
 		//Intentionally commented this block of code since we need to fix the path
-		//Media song = new Media(new File("C://Desktop//" + songPath).toURI().toString());
+		Media song = new Media(getClass().getResource("/Music/" + currentSong.getSongDetails().getSongId() + ".mp3").toURI().toString());
 		
-		//mediaplayer = new MediaPlayer(song);
-		//mediaplayer.setAutoPlay(true);
-		//mediaplayer.setVolume(0.1);
+		mediaplayer = new MediaPlayer(song);
+		mediaplayer.setAutoPlay(true);
+		mediaplayer.setVolume(0.1);
 		
 	}
 
