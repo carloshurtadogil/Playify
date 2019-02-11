@@ -158,7 +158,7 @@ public class HomeController {
 			createPlaylistControl.setLoggedUser(selectedUser);
 
 			//Load the current stage to prevent from generating a new window/popup
-			Stage createPlaylistStage = new Stage();
+			Stage createPlaylistStage = (Stage) temporaryLabel.getScene().getWindow();
 			createPlaylistStage.setScene(createPlaylistScene);
 			createPlaylistStage.show();
 
@@ -166,31 +166,6 @@ public class HomeController {
 			e.printStackTrace();
 			System.out.println("An exception has occurred");
 		}
-
-		// Playlist newPlaylist = new Playlist();
-		// selectedUser.getPlaylists().add(newPlaylist);
-		//
-		//
-		// JSONParser parsing = new JSONParser();
-		//
-		// JSONObject mainObject = (JSONObject) parsing.parse(new
-		// FileReader("users.json"));
-		// JSONArray userArray = (JSONArray) mainObject.get("users");
-		//
-		// for(int i=0; i<userArray.size(); i++) {
-		//
-		// JSONObject user = (JSONObject)userArray.get(i);
-		// if(selectedUser.getUsername().equals(user.get("username"))) {
-		// JSONArray playlistArray= (JSONArray) user.get("playlists");
-		// playlistArray.add(newPlaylist);
-		//
-		// BufferedWriter writer = new BufferedWriter(new FileWriter("users.json"));
-		// writer.write(mainObject.toString());
-		// writer.flush();
-		// writer.close();
-		// }
-		// }
-
 	}
 
 	/**

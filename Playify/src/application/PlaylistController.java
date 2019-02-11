@@ -60,13 +60,19 @@ public class PlaylistController {
 				if(event.getClickCount() ==1) {
 					//Proceeds to remove song from playlist on button click
 					removeSongButton.setOnAction((removeButtonPressed) ->{
-						this.removeSongFromPlaylist(songsView.getSelectionModel().getSelectedItem());
-						System.out.println("The following song will be removed from the playlist");
+						if(songsView.getSelectionModel().getSelectedItem() !=null) {
+							this.removeSongFromPlaylist(songsView.getSelectionModel().getSelectedItem());
+							System.out.println("The following song will be removed from the playlist");
+						}
+
 					});
 					//Proceeds to play song from playlist on button click
 					playSongButton.setOnAction((playButtonPressed) ->{
-						goToSongPlayer();
-						System.out.println("The following song will be played");
+						if(songsView.getSelectionModel().getSelectedItem() !=null) {
+							goToSongPlayer();
+							System.out.println("The following song will be played");
+						}
+						
 					});			
 				}
 			});

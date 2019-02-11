@@ -5,21 +5,22 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.simple.parser.ParseException;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import javafx.event.ActionEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class CreatePlaylistController {
 	@FXML
@@ -106,5 +107,21 @@ public class CreatePlaylistController {
 	
 	public void createPlaylist(ActionEvent event) {
 		selectedUser.addPlaylist(this.newPlaylist);
+		try {
+			FXMLLoader homeControllerLoader = new FXMLLoader();
+			homeControllerLoader.setLocation(getClass().getResource("/application/Home.fxml"));
+			Parent root = homeControllerLoader.load();
+			
+			HomeController homeController = homeControllerLoader.getController();
+			homeController.setLoggedUser(selectedUser);
+			
+			Scene homeScene = new Scene(root);
+			Stage homeStage = (Stage) tempLabel.getScene().getWindow();
+			homeStage.setScene(homeScene);
+			homeStage.show();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
