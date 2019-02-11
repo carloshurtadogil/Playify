@@ -122,13 +122,14 @@ public class MediaFX {
 			}
 		});
 		
+		System.out.println("Song to be played: " + currentSong.getSongDetails().getTitle() + ".mp3");
 	
 		//Intentionally commented this block of code since we need to fix the path
 		Media song = new Media(getClass().getResource("/Music/" + currentSong.getSongDetails().getSongId() + ".mp3").toURI().toString());
 		
 		mediaplayer = new MediaPlayer(song);
 		mediaplayer.setAutoPlay(true);
-		mediaplayer.setVolume(0.1);
+		mediaplayer.setVolume(0.5);
 		
 	}
 

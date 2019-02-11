@@ -133,6 +133,92 @@
                 "id": 151155, 
                 "name": "Julie Andrews Selects Her Favourite Disney Songs"
               }
+            },
+            {
+              "release": {
+                "id": 83355, 
+                "name": "Que Todo Mexico Se Entere"
+              }, 
+              "artist": {
+                "terms_freq": 1.0, 
+                "terms": "folk", 
+                "name": "Mercedes Castro", 
+                "familiarity": 0.435732004, 
+                "longitude": -63.933357868519515, 
+                "id": "ARPPTNG11F50C482A3", 
+                "location": "Not available", 
+                "latitude": 37.15735675013362, 
+                "similar": "ARWGVZO11F4C84241B", 
+                "hotttnesss": 0.373045954
+              }, 
+              "song": {
+                "key": 3.0, 
+                "mode_confidence": 0.63, 
+                "artist_mbtags_count": 0.0, 
+                "key_confidence": 0.791, 
+                "tatums_start": 0.08763, 
+                "year": 0, 
+                "duration": 129.74975, 
+                "hotttnesss": null, 
+                "beats_start": 0.32872, 
+                "time_signature_confidence": 0.0, 
+                "title": "El Cara Bonita", 
+                "bars_confidence": 0.557, 
+                "id": "SOBXFLQ12A6D4F3578", 
+                "bars_start": 0.32872, 
+                "artist_mbtags": "", 
+                "start_of_fade_out": 125.022, 
+                "tempo": 129.354, 
+                "end_of_fade_in": 0.0, 
+                "beats_confidence": 0.557, 
+                "tatums_confidence": 1.0, 
+                "mode": 1, 
+                "time_signature": 1.0, 
+                "loudness": -8.077
+              }
+            },
+            {
+              "release": {
+                "id": 162755, 
+                "name": "Long Road Out Of Eden"
+              }, 
+              "artist": {
+                "terms_freq": 1.0, 
+                "terms": "country rock", 
+                "name": "Eagles", 
+                "familiarity": 0.76702021, 
+                "longitude": -63.933357868519515, 
+                "id": "AR16GSC1187B9A6291", 
+                "location": "Los Angeles, California", 
+                "latitude": 37.15735675013362, 
+                "similar": "ARJ45QE1187FB423B8", 
+                "hotttnesss": 0.6295148
+              }, 
+              "song": {
+                "key": 9.0, 
+                "mode_confidence": 0.328, 
+                "artist_mbtags_count": 2.0, 
+                "key_confidence": 0.472, 
+                "tatums_start": 0.03219, 
+                "year": 2007, 
+                "duration": 427.36281, 
+                "hotttnesss": 0.558997327, 
+                "beats_start": 0.27798, 
+                "time_signature_confidence": 0.0, 
+                "title": "Last Good Time In Town", 
+                "bars_confidence": 1.0, 
+                "id": "SONISVG12A8C13EB34", 
+                "bars_start": 0.27798, 
+                "artist_mbtags": "rock", 
+                "start_of_fade_out": 423.985, 
+                "tempo": 115.277, 
+                "end_of_fade_in": 4.592, 
+                "beats_confidence": 1.0, 
+                "tatums_confidence": 1.0, 
+                "mode": 0, 
+                "time_signature": 1.0, 
+                "loudness": -6.991
+              }
             }
           ],
           "playlistname": "Favorites"
