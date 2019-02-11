@@ -14,10 +14,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
 public class PlaylistController {
 	
+	@FXML
+	private Stage otherStage;
 	@FXML
 	private Label tempLabel;
 	@FXML
@@ -152,18 +155,27 @@ public class PlaylistController {
 			}
 		}
 		try {
-			
+			//Load the SongPlayer fxml page 
 			FXMLLoader songPlayerLoader = new FXMLLoader();
 			songPlayerLoader.setLocation(getClass().getResource("/application/SongPlayer.fxml"));
-			
 			Parent songPlayerRoot = songPlayerLoader.load();
-			Scene songPlayerScene = new Scene(songPlayerRoot);
 			
+			//Obtain the MediaFX controller to set user settings
 			MediaFX songPlayer = songPlayerLoader.getController();
 			songPlayer.setUserAndSong(selectedUser, selectedPlaylist, songChoice);
-			songPlayer.songPlayerControls();
 			
-			Stage songPlayerStage = (Stage) tempLabel.getScene().getWindow();
+			//Obtain the MediaPlayer from the MediaFX class
+			MediaPlayer currentMediaPlayer = songPlayer.getMediaPlayer();
+			//If the current media player is not null, in other words no song is currently playing
+			//stop the current song
+			if(currentMediaPlayer !=null) {
+				currentMediaPlayer.stop();
+			}
+			
+			//Proceed to navigate to the SongPlayer.fxml page
+			songPlayer.songPlayerControls();
+			Scene songPlayerScene = new Scene(songPlayerRoot);
+			Stage songPlayerStage = (Stage)tempLabel.getScene().getWindow();
 			songPlayerStage.setScene(songPlayerScene);
 			songPlayerStage.show();
 			

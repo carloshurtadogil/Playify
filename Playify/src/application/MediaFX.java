@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
@@ -23,11 +24,13 @@ import javafx.stage.Stage;
 
 public class MediaFX {
 
-	private MediaPlayer mediaplayer; 
+	private static MediaPlayer mediaplayer; 
 	private User currentUser;
 	private Playlist currentPlaylist;
 	@SuppressWarnings("unused")
 	private Song currentSong;
+	@FXML
+	private Label tempLabel;
 	@FXML
 	private Button backButton;
 	@FXML
@@ -36,8 +39,14 @@ public class MediaFX {
 	private Button pauseSongButton;
 	@FXML
 	private Button stopSongButton;
+	@FXML
+	private Button exitSongButton;
 	
-	public void setUserAndSong(User user, Playlist p, Song s) {
+	
+	public MediaPlayer getMediaPlayer() {
+		return mediaplayer;
+	}
+	public void setUserAndSong(User user, Playlist p, Song s) throws URISyntaxException {
 		currentUser = user;
 		currentPlaylist = p;
 		currentSong = s;
@@ -79,6 +88,14 @@ public class MediaFX {
 		StringBuilder songIdentificationNumber = new StringBuilder();
 		
 		
+		exitSongButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				mediaplayer.stop();
+				tempLabel.getScene().getWindow().hide();
+				
+			}
+		});
 		
 		
 		playSongButton.setOnAction(new EventHandler<ActionEvent>() {
