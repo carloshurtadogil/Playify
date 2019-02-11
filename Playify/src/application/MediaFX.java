@@ -7,6 +7,8 @@ import java.net.URISyntaxException;
 
 import com.sun.jndi.toolkit.url.Uri;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
@@ -41,6 +44,8 @@ public class MediaFX {
 	private Button stopSongButton;
 	@FXML
 	private Button exitSongButton;
+	
+	@FXML Slider volumeSlider; 
 	
 	
 	public MediaPlayer getMediaPlayer() {
@@ -88,6 +93,18 @@ public class MediaFX {
 		StringBuilder songIdentificationNumber = new StringBuilder();
 		
 		
+		
+		volumeSlider.valueProperty().addListener(new InvalidationListener()
+	{
+			
+			@Override
+			public void invalidated(Observable observable)
+			{
+				mediaplayer.setVolume(volumeSlider.getValue() / 100);
+			}
+				
+		});
+		
 		exitSongButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -129,7 +146,11 @@ public class MediaFX {
 		
 		mediaplayer = new MediaPlayer(song);
 		mediaplayer.setAutoPlay(true);
-		mediaplayer.setVolume(0.5);
+		//mediaplayer.setVolume(0.5);
+		
+		//Volume slider initialization
+		
+				volumeSlider.setValue(mediaplayer.getVolume() * 100);
 		
 	}
 
