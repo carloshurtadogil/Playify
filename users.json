@@ -47,6 +47,92 @@
                 "name": "Fear Itself",
                 "id": 300848
               }
+            }, 
+            {
+              "song": {
+                "key": 0.0, 
+                "mode_confidence": 0.617, 
+                "artist_mbtags_count": 1.0, 
+                "key_confidence": 0.582, 
+                "tatums_start": 0.16646, 
+                "year": 2008, 
+                "duration": 106.81424, 
+                "hotttnesss": null, 
+                "beats_start": 0.16646, 
+                "time_signature_confidence": 0.0, 
+                "title": "Blame Canada ( From: South Park )", 
+                "bars_confidence": 0.005, 
+                "id": "SOIVRUS12A8C133164", 
+                "bars_start": 1.04182, 
+                "artist_mbtags": "composer", 
+                "start_of_fade_out": 99.66, 
+                "tempo": 136.975, 
+                "end_of_fade_in": 0.357, 
+                "beats_confidence": 1.0, 
+                "tatums_confidence": 0.813, 
+                "mode": 1, 
+                "time_signature": 4.0, 
+                "loudness": -16.079
+              },
+              "artist": {
+                "terms_freq": 1.0, 
+                "terms": "soundtrack", 
+                "name": "Marc Shaiman", 
+                "familiarity": 0.510010871, 
+                "longitude": -63.933357868519515, 
+                "id": "AR8IEZO1187B99055E", 
+                "location": "Not available", 
+                "latitude": 37.15735675013362, 
+                "similar": "ARU52PB1187FB58E46", 
+                "hotttnesss": 0.378442737
+              }, 
+              "release": {
+                "id": 190811, 
+                "name": "The Bucket List"
+              }
+            },
+            {
+              "song": {
+                "key": 4.0, 
+                "mode_confidence": 0.562, 
+                "artist_mbtags_count": 0.0, 
+                "key_confidence": 0.631, 
+                "tatums_start": 0.16656, 
+                "year": 1991, 
+                "duration": 193.67138, 
+                "hotttnesss": null, 
+                "beats_start": 0.16656, 
+                "time_signature_confidence": 0.949, 
+                "title": "When You Wish Upon A Star", 
+                "bars_confidence": 0.25, 
+                "id": "SOEKGLO12A8C1363DE", 
+                "bars_start": 0.80336, 
+                "artist_mbtags": "", 
+                "start_of_fade_out": 188.488, 
+                "tempo": 98.752, 
+                "end_of_fade_in": 2.844, 
+                "beats_confidence": 0.108, 
+                "tatums_confidence": 0.108, 
+                "mode": 1, 
+                "time_signature": 3.0, 
+                "loudness": -8.615
+              },
+              "artist": {
+                "terms_freq": 0.967995329, 
+                "terms": "vocal jazz", 
+                "name": "Cliff Edwards/Disney Studio Chorus", 
+                "familiarity": 0.448318719, 
+                "longitude": -73.55439, 
+                "id": "ARYTJPJ1187FB4ABCC", 
+                "location": "Montreal, Quebec, Canada", 
+                "latitude": 45.51228, 
+                "similar": "ARGT89Y1187FB5B07A", 
+                "hotttnesss": 0.356612934
+              }, 
+              "release": {
+                "id": 151155, 
+                "name": "Julie Andrews Selects Her Favourite Disney Songs"
+              }
             }
           ],
           "playlistname": "Favorites"
