@@ -34,11 +34,12 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <Label fx:id="tempLabel" layoutX="236.0" layoutY="28.0" text="Label" />
+      <Label fx:id="tempLabel" layoutX="236.0" layoutY="28.0" />
       <Button fx:id="btnCreatePlaylist" layoutX="268.0" layoutY="388.0" mnemonicParsing="false" onAction="#createPlaylist" text="Create Playlist">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
+      <Button fx:id="backButton" layoutX="22.0" layoutY="13.0" mnemonicParsing="false" onAction="#goBackToHomePage" text="Back" />
    </children>
 </AnchorPane>

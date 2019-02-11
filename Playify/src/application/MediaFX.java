@@ -42,8 +42,6 @@ public class MediaFX {
 	private Button pauseSongButton;
 	@FXML
 	private Button stopSongButton;
-	@FXML
-	private Button exitSongButton;
 	
 	@FXML Slider volumeSlider; 
 	
@@ -94,8 +92,7 @@ public class MediaFX {
 		
 		
 		
-		volumeSlider.valueProperty().addListener(new InvalidationListener()
-	{
+		volumeSlider.valueProperty().addListener(new InvalidationListener(){
 			
 			@Override
 			public void invalidated(Observable observable)
@@ -103,15 +100,6 @@ public class MediaFX {
 				mediaplayer.setVolume(volumeSlider.getValue() / 100);
 			}
 				
-		});
-		
-		exitSongButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent arg0) {
-				mediaplayer.stop();
-				tempLabel.getScene().getWindow().hide();
-				
-			}
 		});
 		
 		
@@ -149,8 +137,7 @@ public class MediaFX {
 		//mediaplayer.setVolume(0.5);
 		
 		//Volume slider initialization
-		
-				volumeSlider.setValue(mediaplayer.getVolume() * 100);
+		volumeSlider.setValue(mediaplayer.getVolume() * 100);
 		
 	}
 

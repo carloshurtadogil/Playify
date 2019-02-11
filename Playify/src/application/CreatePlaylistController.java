@@ -24,6 +24,8 @@ import javafx.stage.Stage;
 
 public class CreatePlaylistController {
 	@FXML
+	private Button backButton;
+	@FXML
 	private Button btnEnter;
 	@FXML
 	private Button btnAdd;
@@ -111,6 +113,26 @@ public class CreatePlaylistController {
 			FXMLLoader homeControllerLoader = new FXMLLoader();
 			homeControllerLoader.setLocation(getClass().getResource("/application/Home.fxml"));
 			Parent root = homeControllerLoader.load();
+			
+			HomeController homeController = homeControllerLoader.getController();
+			homeController.setLoggedUser(selectedUser);
+			
+			Scene homeScene = new Scene(root);
+			Stage homeStage = (Stage) tempLabel.getScene().getWindow();
+			homeStage.setScene(homeScene);
+			homeStage.show();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void goBackToHomePage(ActionEvent event) {
+		try {
+			FXMLLoader homeControllerLoader = new FXMLLoader();
+			homeControllerLoader.setLocation(getClass().getResource("/application/Home.fxml"));
+			Parent root = homeControllerLoader.load();
+			
 			
 			HomeController homeController = homeControllerLoader.getController();
 			homeController.setLoggedUser(selectedUser);
