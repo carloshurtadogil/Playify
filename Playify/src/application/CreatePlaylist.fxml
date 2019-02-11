@@ -6,36 +6,36 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="459.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.CreatePlaylistController">
+<AnchorPane prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.CreatePlaylistController">
    <children>
-      <TextField fx:id="txtSearch" layoutX="73.0" layoutY="138.0" promptText="Search Songs">
+      <TextField fx:id="txtSearch" layoutX="367.0" layoutY="216.0" promptText="Search Songs">
          <font>
             <Font size="18.0" />
          </font>
       </TextField>
-      <Button fx:id="btnEnter" layoutX="328.0" layoutY="138.0" mnemonicParsing="false" onAction="#Search" text="Enter">
+      <Button fx:id="btnEnter" layoutX="622.0" layoutY="216.0" mnemonicParsing="false" onAction="#Search" text="Enter">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <ListView fx:id="listOfSongs" layoutX="37.0" layoutY="206.0" prefHeight="155.0" prefWidth="428.0" />
-      <Button fx:id="btnAdd" layoutX="73.0" layoutY="388.0" mnemonicParsing="false" onAction="#Add" prefHeight="39.0" prefWidth="149.0" text="Add Song(s)">
+      <ListView fx:id="listOfSongs" layoutX="331.0" layoutY="284.0" prefHeight="155.0" prefWidth="428.0" />
+      <Button fx:id="btnAdd" layoutX="367.0" layoutY="466.0" mnemonicParsing="false" onAction="#Add" prefHeight="39.0" prefWidth="149.0" text="Add Song(s)">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <TextField fx:id="txtPlaylistName" layoutX="73.0" layoutY="64.0" promptText="Enter Playlist Name">
+      <TextField fx:id="txtPlaylistName" layoutX="367.0" layoutY="142.0" promptText="Enter Playlist Name">
          <font>
             <Font size="18.0" />
          </font>
       </TextField>
-      <Button fx:id="btnSet" layoutX="336.0" layoutY="64.0" mnemonicParsing="false" onAction="#SetPlaylistName" text="Set">
+      <Button fx:id="btnSet" layoutX="630.0" layoutY="142.0" mnemonicParsing="false" onAction="#SetPlaylistName" text="Set">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
       <Label fx:id="tempLabel" layoutX="236.0" layoutY="28.0" />
-      <Button fx:id="btnCreatePlaylist" layoutX="268.0" layoutY="388.0" mnemonicParsing="false" onAction="#createPlaylist" text="Create Playlist">
+      <Button fx:id="btnCreatePlaylist" layoutX="562.0" layoutY="466.0" mnemonicParsing="false" onAction="#createPlaylist" text="Create Playlist">
          <font>
             <Font size="18.0" />
          </font>
