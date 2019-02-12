@@ -161,26 +161,34 @@ public class CreatePlaylistController {
 	public void createPlaylist(ActionEvent event) {
 		newPlaylist = new Playlist();
 		newPlaylist.setPlaylistName(txtPlaylistName.getText());
-		for(Song s: newSongs) {
-			newPlaylist.addSong(s);
+		
+		if(newSongs.size() !=0 && !(newPlaylist.getPlaylistName()).isEmpty()) {
+			for(Song s: newSongs) {
+				newPlaylist.addSong(s);
+			}
+			selectedUser.addPlaylist(this.newPlaylist);
+			try {
+				FXMLLoader homeControllerLoader = new FXMLLoader();
+				homeControllerLoader.setLocation(getClass().getResource("/application/Home.fxml"));
+				Parent root = homeControllerLoader.load();
+				
+				HomeController homeController = homeControllerLoader.getController();
+				homeController.setLoggedUser(selectedUser);
+				
+				Scene homeScene = new Scene(root);
+				Stage homeStage = (Stage) tempLabel.getScene().getWindow();
+				homeStage.setScene(homeScene);
+				homeStage.show();
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
-		selectedUser.addPlaylist(this.newPlaylist);
-		try {
-			FXMLLoader homeControllerLoader = new FXMLLoader();
-			homeControllerLoader.setLocation(getClass().getResource("/application/Home.fxml"));
-			Parent root = homeControllerLoader.load();
-			
-			HomeController homeController = homeControllerLoader.getController();
-			homeController.setLoggedUser(selectedUser);
-			
-			Scene homeScene = new Scene(root);
-			Stage homeStage = (Stage) tempLabel.getScene().getWindow();
-			homeStage.setScene(homeScene);
-			homeStage.show();
+		else {
+			System.out.println("Can't create a new playlist since there are no songs or missing playlistname");
 		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
+		
+		
 	}
 	
 	public void goBackToHomePage(ActionEvent event) {
