@@ -30,7 +30,6 @@ public class MediaFX {
 	private static MediaPlayer mediaplayer; 
 	private User currentUser;
 	private Playlist currentPlaylist;
-	@SuppressWarnings("unused")
 	private Song currentSong;
 	@FXML
 	private Label tempLabel;
