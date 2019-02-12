@@ -14,6 +14,10 @@ public class Song {
 	private SongDetails song;
 	
 	
+	public String toString() {
+		return song.getTitle();
+	}
+	
 	public ArtistDetails getArtistDetails() {
 		return this.artist;
 	}

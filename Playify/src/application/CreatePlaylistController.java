@@ -41,6 +41,8 @@ public class CreatePlaylistController {
 	private ListView<String> listOfSongs;
 	@FXML
 	private Label tempLabel;
+	@FXML
+	private Button clearButton;
 	
 	//List to hold songs that match search results
 	private List<Song> searchResults = new ArrayList<Song>();
@@ -52,7 +54,10 @@ public class CreatePlaylistController {
 	public void setLoggedUser(User theUser) throws FileNotFoundException, IOException, ParseException {
 		this.selectedUser = theUser;
 		tempLabel.setText("Username: " + selectedUser.getUsername());
-		
+		loadAllSongs();
+		clearButton.setOnAction((buttonPressed) -> {
+			loadAllSongs();
+		});
 	}
 	
 	public void Search(ActionEvent event) { 
@@ -143,6 +148,23 @@ public class CreatePlaylistController {
 			homeStage.show();
 		}
 		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadAllSongs () {
+		try {
+			Gson gson = new Gson();
+			List<Song> mySongs = gson.fromJson(new FileReader("music.json"), new TypeToken<List<Song>>(){}.getType());
+			Playlist masterPlaylist = new Playlist();
+			masterPlaylist.setSongs(mySongs);
+			List<String> songNames = new ArrayList<String> ();
+			for(Song s : mySongs) {
+				songNames.add(s.getSongDetails().getTitle());
+			}
+			listOfSongs.setItems(FXCollections.observableList(songNames));
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

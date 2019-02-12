@@ -44,5 +44,10 @@
          </font>
       </Button>
       <Button fx:id="backButton" layoutX="22.0" layoutY="13.0" mnemonicParsing="false" onAction="#goBackToHomePage" text="Back" />
+      <Button fx:id="clearButton" layoutX="709.0" layoutY="216.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="69.0" text="Clear">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
