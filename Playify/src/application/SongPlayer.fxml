@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -11,15 +12,18 @@
       <Button fx:id="playSongButton" layoutX="498.0" layoutY="496.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Play" />
       <Button fx:id="pauseSongButton" layoutX="313.0" layoutY="496.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="95.0" text="Pause" />
       <Button fx:id="stopSongButton" layoutX="679.0" layoutY="496.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Stop" />
-      <Button fx:id="backButton" layoutX="271.0" layoutY="180.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Back" />
-      <ImageView fitHeight="287.0" fitWidth="361.0" layoutX="378.0" layoutY="120.0">
+      <Button fx:id="backButton" layoutX="44.0" layoutY="40.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Back" />
+      <ImageView fitHeight="287.0" fitWidth="361.0" layoutX="375.0" layoutY="71.0">
          <image>
             <Image url="/img/songicon.png" />
          </image>
       </ImageView>
       <Button fx:id="backButton1" layoutX="155.0" layoutY="496.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="&lt;&lt;" />
       <Button fx:id="backButton11" layoutX="826.0" layoutY="496.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="&gt;&gt;" />
-      <Label fx:id="tempLabel" layoutX="523.0" layoutY="276.0" />
+      <Label fx:id="tempLabel" alignment="CENTER" layoutX="333.0" layoutY="403.0" prefHeight="17.0" prefWidth="445.0" text="Label" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
       <Slider fx:id="volumeSlider" layoutX="474.0" layoutY="595.0" />
    </children>
 </AnchorPane>

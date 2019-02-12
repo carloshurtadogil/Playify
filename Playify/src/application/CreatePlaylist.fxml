@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.CreatePlaylistController">
+<AnchorPane prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: GREY;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.CreatePlaylistController">
    <children>
       <TextField fx:id="txtSearch" layoutX="367.0" layoutY="216.0" promptText="Search Songs">
          <font>
@@ -34,7 +34,10 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <Label fx:id="tempLabel" layoutX="236.0" layoutY="28.0" />
+      <Label fx:id="tempLabel" alignment="CENTER" layoutX="438.0" layoutY="85.0" prefHeight="26.0" prefWidth="214.0" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
       <Button fx:id="btnCreatePlaylist" layoutX="562.0" layoutY="466.0" mnemonicParsing="false" onAction="#createPlaylist" text="Create Playlist">
          <font>
             <Font size="18.0" />

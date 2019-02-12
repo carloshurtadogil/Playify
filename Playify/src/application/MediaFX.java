@@ -52,6 +52,7 @@ public class MediaFX {
 		currentUser = user;
 		currentPlaylist = p;
 		currentSong = s;
+		tempLabel.setText(s.getSongDetails().getTitle());
 	}
 	
 	//Orchestrates play, pause, and stop functionalities of a selected song
