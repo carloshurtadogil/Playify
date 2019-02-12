@@ -18,8 +18,8 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <ListView fx:id="listOfSongs" layoutX="331.0" layoutY="284.0" prefHeight="155.0" prefWidth="428.0" />
-      <Button fx:id="btnAdd" layoutX="367.0" layoutY="466.0" mnemonicParsing="false" onAction="#Add" prefHeight="39.0" prefWidth="149.0" text="Add Song(s)">
+      <ListView fx:id="listOfSongs" layoutX="47.0" layoutY="331.0" prefHeight="155.0" prefWidth="428.0" />
+      <Button fx:id="btnAdd" layoutX="187.0" layoutY="512.0" mnemonicParsing="false" onAction="#Add" prefHeight="39.0" prefWidth="149.0" text="Add Song(s)">
          <font>
             <Font size="18.0" />
          </font>
@@ -38,13 +38,24 @@
          <font>
             <Font size="20.0" />
          </font></Label>
-      <Button fx:id="btnCreatePlaylist" layoutX="562.0" layoutY="466.0" mnemonicParsing="false" onAction="#createPlaylist" text="Create Playlist">
+      <Button fx:id="btnCreatePlaylist" layoutX="467.0" layoutY="514.0" mnemonicParsing="false" onAction="#createPlaylist" text="Create Playlist">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
       <Button fx:id="backButton" layoutX="22.0" layoutY="13.0" mnemonicParsing="false" onAction="#goBackToHomePage" text="Back" />
       <Button fx:id="clearButton" layoutX="709.0" layoutY="216.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="69.0" text="Clear">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <ListView fx:id="newPlaylistView" layoutX="599.0" layoutY="331.0" prefHeight="155.0" prefWidth="428.0" />
+      <Label fx:id="pLabel" alignment="CENTER" layoutX="774.0" layoutY="287.0" text="New Playlist" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Button fx:id="removeButton" layoutX="757.0" layoutY="512.0" mnemonicParsing="false" onAction="#Remove" prefHeight="39.0" prefWidth="149.0" text="Remove">
          <font>
             <Font size="18.0" />
          </font>

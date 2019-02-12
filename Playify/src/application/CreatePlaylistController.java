@@ -43,6 +43,14 @@ public class CreatePlaylistController {
 	private Label tempLabel;
 	@FXML
 	private Button clearButton;
+	@FXML
+	private Label pLabel;
+	@FXML
+	private ListView<Song> newPlaylistView;
+	@FXML
+	private Button removeButton;
+	private List<Song> newSongs;
+	private List<Song> mySongs;
 	
 	//List to hold songs that match search results
 	private List<Song> searchResults = new ArrayList<Song>();
@@ -58,6 +66,7 @@ public class CreatePlaylistController {
 		clearButton.setOnAction((buttonPressed) -> {
 			loadAllSongs();
 		});
+		newSongs = new ArrayList<Song>();
 	}
 	
 	public void Search(ActionEvent event) { 
@@ -87,16 +96,28 @@ public class CreatePlaylistController {
 	}
 	
 	public void Add(ActionEvent event) {
+		System.out.println("Clicked");
 		try {
 			ObservableList<String> selectedSongs;
 			selectedSongs = listOfSongs.getSelectionModel().getSelectedItems();
 			List<Song> theSongs = new ArrayList<Song>();
 			
 			for(String songName: selectedSongs) {
+				System.out.println(songName);
 				for(Song song: searchResults) {
 					if(songName.equals(song.getSongDetails().getTitle())) {
 						theSongs.add(song);
+						
 					}
+				}
+				if(mySongs != null) {
+					for(Song s : mySongs) {
+						if(s.getSongDetails().getTitle().equals(songName)) {
+							newSongs.add(s);
+						}
+					}
+					newPlaylistView.setItems(FXCollections.observableList(newSongs));
+					newPlaylistView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 				}
 			}
 			
@@ -108,11 +129,41 @@ public class CreatePlaylistController {
 		}
 	}
 	
+	public void Remove(ActionEvent event) {
+		try {
+			ObservableList<Song> selectedSongs;
+			selectedSongs = newPlaylistView.getSelectionModel().getSelectedItems();
+			List<Song> theSongs = new ArrayList<Song>();
+			for(Song s: selectedSongs) {
+				if(newSongs != null) {
+					String songName = s.getSongDetails().getTitle();
+					for(int i = 0; i < newSongs.size(); i ++) {
+						if(newSongs.get(i).getSongDetails().getTitle().equals(songName)) {
+							newSongs.remove(i);
+						}
+					}
+					newPlaylistView.setItems(FXCollections.observableList(newSongs));
+				}
+			}
+			
+			this.newPlaylist.setSongs(theSongs);
+			
+		}catch (Exception e) {
+			System.out.println("Remove Song Error");
+			e.printStackTrace();
+		}
+	}
+	
 	public void SetPlaylistName(ActionEvent event) {
 		this.newPlaylist.setPlaylistName(txtPlaylistName.getText());
 	}
 	
 	public void createPlaylist(ActionEvent event) {
+		newPlaylist = new Playlist();
+		newPlaylist.setPlaylistName(txtPlaylistName.getText());
+		for(Song s: newSongs) {
+			newPlaylist.addSong(s);
+		}
 		selectedUser.addPlaylist(this.newPlaylist);
 		try {
 			FXMLLoader homeControllerLoader = new FXMLLoader();
@@ -155,7 +206,7 @@ public class CreatePlaylistController {
 	public void loadAllSongs () {
 		try {
 			Gson gson = new Gson();
-			List<Song> mySongs = gson.fromJson(new FileReader("music.json"), new TypeToken<List<Song>>(){}.getType());
+			mySongs = gson.fromJson(new FileReader("music.json"), new TypeToken<List<Song>>(){}.getType());
 			Playlist masterPlaylist = new Playlist();
 			masterPlaylist.setSongs(mySongs);
 			List<String> songNames = new ArrayList<String> ();

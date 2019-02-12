@@ -1,5 +1,6 @@
 package application;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
@@ -22,6 +23,14 @@ public class Playlist {
 	public List<Song> getSongs() {
 		return this.songs;
 	}
+	
+	public void addSong(Song s) {
+		if(songs == null) {
+			songs = new ArrayList<Song>();
+		}
+		songs.add(s);
+	}
+	
 	
 	public String getPlaylistName () {
 		return this.playlistname;
