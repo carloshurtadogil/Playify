@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import javax.xml.bind.DatatypeConverter;
@@ -36,6 +38,7 @@ public class ClientCommunicationModule implements CommunicationModule {
 	}
 
 	//Creates a socket then transfers a packet over using that newly created socket
+	//then proceeds to wait till the client sends back a response
 	@Override
 	public String send(JsonObject request) throws IOException {
 		
@@ -44,11 +47,16 @@ public class ClientCommunicationModule implements CommunicationModule {
 		
 		//Create a new socket
 		DatagramSocket ds = new DatagramSocket();
-				
 		InetAddress iAddress = InetAddress.getLocalHost();
 				
-		DatagramPacket dPacket = new DatagramPacket(messageInBytes, messageInBytes.length, 0, null);
-		ds.send(dPacket);
+		//Get ready to send the packet from the client communication module to the server communication module
+		DatagramPacket thePacket = new DatagramPacket(messageInBytes, messageInBytes.length, iAddress, 80);
+		ds.send(thePacket);
+		
+		//Get ready to receive the response from the server communication module
+		byte[] receivedResponse = new byte[1024];
+		DatagramPacket receivedPacket = new DatagramPacket(receivedResponse, receivedResponse.length); 
+		ds.receive(receivedPacket);
 		
 		return null;
 	}
