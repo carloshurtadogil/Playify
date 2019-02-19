@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -38,7 +39,16 @@ public class HomeController {
 	private ListView<String> allSongsView;
 	@FXML
 	private Label errorLabel;
-	
+	@FXML
+	private Button playButton;
+	@FXML 
+	private Button pauseButton;
+	@FXML 
+	private Button stopButton;
+	@FXML
+	private Button removeSongButton;
+	@FXML
+	private Slider volumeSlider;
 	
 	private User selectedUser;
 	private List<Song> mySongs;
@@ -117,6 +127,7 @@ public class HomeController {
 		}
 		playlistView.setItems(FXCollections.observableList(masterPlaylist));
 
+		
 		// Sets a mouse clicked event for each of the Playlists
 		playlistView.setOnMouseClicked(event -> {
 
@@ -124,9 +135,12 @@ public class HomeController {
 			if (event.getClickCount() == 1) {
 				if(playlistView.getSelectionModel().getSelectedIndex() == 0) {
 					allSongsView.setItems(FXCollections.observableList(master.getSongNames()));
+					removeSongButton.setVisible(false);
 				} else {
 					String playlistname = playlistView.getSelectionModel().getSelectedItem().getPlaylistName();
 					allSongsView.setItems(FXCollections.observableList(someUser.getSpecificPlaylist(playlistname).getSongNames()));
+					removeSongButton.setVisible(true);
+					AddActionToSongsView();
 				}
 				deletePlaylistButton.setOnAction((buttonPressed) -> {
 					//Call method that will delete the playlist
@@ -143,7 +157,9 @@ public class HomeController {
 					
 				});
 			}
+			
 
+			/*
 			// User must click twice on the playlist to go to its page
 			if (event.getClickCount() == 2) {
 				// assign the selected playlist to a Playlist object/variable
@@ -173,7 +189,7 @@ public class HomeController {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+			}*/
 
 		});
 	}
@@ -207,7 +223,7 @@ public class HomeController {
 
 	/**
 	 * Traverse the list of users, identify their playlists, and upload information
-	 * on said playlists
+	 * on said play lists
 	 * 
 	 * @param user User whose playlists are being read
 	 */ 
@@ -320,11 +336,7 @@ public class HomeController {
 			master = new Playlist();
 			master.setPlaylistName("All");
 			master.setSongs(mySongs);
-			List<String> songNames = new ArrayList<String> ();
-			for(Song s : mySongs) {
-				songNames.add(s.getSongDetails().getTitle());
-			}
-			allSongsView.setItems(FXCollections.observableList(songNames));
+			allSongsView.setItems(FXCollections.observableList(master.getSongNames()));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -333,6 +345,21 @@ public class HomeController {
 	
 	public void loadPlaylistSongs(ArrayList<Playlist> p) {
 		playlistView.setItems(FXCollections.observableList(p));
+	}
+	
+	public void AddActionToSongsView() {
+		allSongsView.setOnMouseClicked(event -> {
+			if(playlistView.getSelectionModel() != null && playlistView.getSelectionModel().getSelectedIndex() != 0) {
+				if(event.getClickCount() == 1) {
+					if(removeSongButton.isVisible()) {
+						removeSongButton.setOnAction((buttonPressed) -> {
+							System.out.println("Song to be removed: " + allSongsView.getSelectionModel().getSelectedItem());
+						});
+					}
+				}
+			}
+		});
+		
 	}
 
 }
