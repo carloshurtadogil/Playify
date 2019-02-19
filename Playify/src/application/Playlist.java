@@ -31,6 +31,14 @@ public class Playlist {
 		songs.add(s);
 	}
 	
+	public List<String> getSongNames() {
+		List<String> names = new ArrayList<String>();
+		for(Song s: songs)
+		{
+			names.add(s.getSongDetails().getTitle());
+		}
+		return names;
+	}
 	
 	public String getPlaylistName () {
 		return this.playlistname;

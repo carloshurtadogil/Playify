@@ -49,6 +49,27 @@ public class User{
 	public List<Playlist> getPlaylists(){
 		return this.playlists;
 	}
+	
+	public Playlist getSpecificPlaylist(String name) {
+		Playlist found = null;
+		for(int i = 0; i < playlists.size(); i++) {
+			if(playlists.get(i).getPlaylistName().equals(name)) {
+				found = playlists.get(i);
+				break;
+			}
+		}
+		
+		return found;
+	}
+	
+	public List<String> getPlaylistNames() {
+		List<String> names = new ArrayList<String>();
+		for(Playlist p: this.playlists) {
+			names.add(p.getPlaylistName());
+		}
+		
+		return names;
+	}
 
 	public void setUsername(String uname) {
 		this.username = uname;

@@ -1,9 +1,15 @@
 package application;
 
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import org.json.simple.parser.ParseException;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -28,7 +34,16 @@ public class HomeController {
 	private ListView<Playlist> playlistView;
 	@FXML
 	private Button logoutButton;
+	@FXML
+	private ListView<String> allSongsView;
+	@FXML
+	private Label errorLabel;
+	
+	
 	private User selectedUser;
+	private List<Song> mySongs;
+	private Playlist master;
+	
 
 	/**
 	 * This method executes after the HomeController is loaded, to set the user 
@@ -39,7 +54,7 @@ public class HomeController {
 		this.selectedUser = user;
 		temporaryLabel.setText(user.getUsername());
 		loadPlaylists(selectedUser);
-		
+		loadAllSongs();
 		populatePlaylists(selectedUser);
 		
 		/* For Testing purposes
@@ -93,17 +108,39 @@ public class HomeController {
 		});
 		
 		// Populate the list of playlists into the ListView as an observable list
-		playlistView.setItems(FXCollections.observableList(someUser.getPlaylists()));
+		
+		List<Playlist> masterPlaylist = new ArrayList<Playlist>();
+		masterPlaylist.add(master);
+		
+		for(Playlist p : someUser.getPlaylists()) {
+			masterPlaylist.add(p);
+		}
+		playlistView.setItems(FXCollections.observableList(masterPlaylist));
 
 		// Sets a mouse clicked event for each of the Playlists
 		playlistView.setOnMouseClicked(event -> {
 
 			// User must click on an item in order to delete it
 			if (event.getClickCount() == 1) {
+				if(playlistView.getSelectionModel().getSelectedIndex() == 0) {
+					allSongsView.setItems(FXCollections.observableList(master.getSongNames()));
+				} else {
+					String playlistname = playlistView.getSelectionModel().getSelectedItem().getPlaylistName();
+					allSongsView.setItems(FXCollections.observableList(someUser.getSpecificPlaylist(playlistname).getSongNames()));
+				}
 				deletePlaylistButton.setOnAction((buttonPressed) -> {
 					//Call method that will delete the playlist
-					this.removePlaylist(selectedUser, playlistView.getSelectionModel().getSelectedItem().getPlaylistName());
-					System.out.println("This button will delete this playlist...");
+					if(playlistView.getSelectionModel().getSelectedIndex() != 0)
+					{
+						this.removePlaylist(selectedUser, playlistView.getSelectionModel().getSelectedItem().getPlaylistName());
+						System.out.println("This button will delete this playlist...");
+						errorLabel.setVisible(false);
+					}
+					else
+					{
+						errorLabel.setVisible(true);
+					}
+					
 				});
 			}
 
@@ -271,6 +308,31 @@ public class HomeController {
 			populatePlaylists(selectedUser);
 		}
 		
+	}
+	
+	/**
+	 * Load all songs to user's homepage
+	 */
+	public void loadAllSongs () {
+		try {
+			Gson gson = new Gson();
+			mySongs = gson.fromJson(new FileReader("music.json"), new TypeToken<List<Song>>(){}.getType());
+			master = new Playlist();
+			master.setPlaylistName("All");
+			master.setSongs(mySongs);
+			List<String> songNames = new ArrayList<String> ();
+			for(Song s : mySongs) {
+				songNames.add(s.getSongDetails().getTitle());
+			}
+			allSongsView.setItems(FXCollections.observableList(songNames));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadPlaylistSongs(ArrayList<Playlist> p) {
+		playlistView.setItems(FXCollections.observableList(p));
 	}
 
 }
