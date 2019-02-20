@@ -16,6 +16,7 @@ import com.google.gson.JsonObject;
 
 public class ClientCommunicationModule implements CommunicationModule {
 	
+	private byte [] messageBuffer;
 	
 	public ClientCommunicationModule() throws SocketException {
 		
@@ -28,6 +29,7 @@ public class ClientCommunicationModule implements CommunicationModule {
 		try {
 			//generate a random requestID using the UUID library
 			request.addProperty("requestId", UUID.randomUUID().toString());
+			
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -43,22 +45,25 @@ public class ClientCommunicationModule implements CommunicationModule {
 	public String send(JsonObject request) throws IOException {
 		
 		
-		byte[] messageInBytes = request.toString().getBytes();
+		messageBuffer = request.toString().getBytes();
 		
 		//Create a new socket
 		DatagramSocket ds = new DatagramSocket();
 		InetAddress iAddress = InetAddress.getLocalHost();
 				
 		//Get ready to send the packet from the client communication module to the server communication module
-		DatagramPacket thePacket = new DatagramPacket(messageInBytes, messageInBytes.length, iAddress, 80);
+		DatagramPacket thePacket = new DatagramPacket(messageBuffer, messageBuffer.length, iAddress, 80);
 		ds.send(thePacket);
+		System.out.println("Packet has been sent");
+		
 		
 		//Get ready to receive the response from the server communication module
-		byte[] receivedResponse = new byte[1024];
-		DatagramPacket receivedPacket = new DatagramPacket(receivedResponse, receivedResponse.length); 
-		ds.receive(receivedPacket);
+		thePacket = new DatagramPacket(messageBuffer, messageBuffer.length); 
+		ds.receive(thePacket);
 		
-		return null;
+		System.out.println("Reply has been received");
+		String receivedMessage = new String(thePacket.getData(), 0, thePacket.getLength());
+		return receivedMessage;
 	}
 
 	@Override

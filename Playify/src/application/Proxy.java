@@ -24,9 +24,9 @@ public class Proxy implements ProxyInterface {
     Dispatcher dispacher;   // This is only for test. it should use the Communication  Module
     
     ClientCommunicationModule communicationModule;
-    public Proxy(Dispatcher dispacher, ClientCommunicationModule communicationModule)
+    public Proxy(ClientCommunicationModule communicationModule)
     {
-        this.dispacher = dispacher;   
+        //this.dispacher = dispacher;   
         this.communicationModule = communicationModule ;
     }
     
@@ -40,7 +40,7 @@ public class Proxy implements ProxyInterface {
         JsonObject jsonParam = new JsonObject();
         
         jsonRequest.addProperty("remoteMethod", remoteMethod);
-        jsonRequest.addProperty("objectName", "SongServices");
+        jsonRequest.addProperty("objectName", "LoginDispatcher");
         // It is hardcoded. Instead it should be dynamic using  RemoteRef
         if (remoteMethod.equals("getSongChunk"))
         {
@@ -53,6 +53,10 @@ public class Proxy implements ProxyInterface {
         {
             jsonParam.addProperty("song", param[0]);        
         }
+        else if(remoteMethod.equals("verifyLoginInformation")) {
+        	jsonParam.addProperty("username", param[0]);
+        	jsonParam.addProperty("password", param[1]);
+        }
         jsonRequest.add("param", jsonParam);
         
         
@@ -61,7 +65,8 @@ public class Proxy implements ProxyInterface {
         //Send the marshalled file to the communication module in the client
         try {
         	jsonRequest = this.communicationModule.addRequestIdToRequest(jsonRequest);
-			proxyReturn= this.communicationModule.send(jsonRequest);
+			System.out.println(jsonRequest);
+        	proxyReturn= this.communicationModule.send(jsonRequest);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -72,7 +77,7 @@ public class Proxy implements ProxyInterface {
         	JsonObject gsonProxyReturn = parser.parse(proxyReturn).getAsJsonObject();
         	
         	
-        	return gsonProxyReturn;
+        	return gsonProxyReturn.getAsJsonObject();
         }
         
         return null;

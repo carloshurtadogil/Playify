@@ -52,6 +52,8 @@ public class Dispatcher implements DispatcherInterface {
         JsonParser parser = new JsonParser();
         JsonObject jsonRequest = parser.parse(request).getAsJsonObject();
         
+        System.out.println("What is exactly going on at this moment");
+        
         try {
             // Obtains the object pointing to SongServices
             Object object = ListOfObjects.get(jsonRequest.get("objectName").getAsString());
@@ -70,12 +72,14 @@ public class Dispatcher implements DispatcherInterface {
             }
             // Prepare the  parameters 
             Class[] types =  method.getParameterTypes();
+            System.out.println(types[0].getCanonicalName() + " " + types[1].getCanonicalName());
             Object[] parameter = new Object[types.length];
             String[] strParam = new String[types.length];
             JsonObject jsonParam = jsonRequest.get("param").getAsJsonObject();
             int j = 0;
             for (Map.Entry<String, JsonElement>  entry  :  jsonParam.entrySet())
             {
+            	System.out.println(entry.getValue().getAsString() + "yahoo");
                 strParam[j++] = entry.getValue().getAsString();
             }
             // Prepare parameters
@@ -89,12 +93,14 @@ public class Dispatcher implements DispatcherInterface {
                     case "java.lang.Integer":
                         parameter[i] =  Integer.parseInt(strParam[i]);
                         break;
-                    case "String":
+                    case "java.lang.String":
                         parameter[i] = new String(strParam[i]);
+                        System.out.println(parameter[i] + " sweet");
                         break;
                 }
             }
             // Prepare the return
+            
             Class returnType = method.getReturnType();
             String ret = "";
             switch (returnType.getCanonicalName())
@@ -106,6 +112,7 @@ public class Dispatcher implements DispatcherInterface {
                         ret = method.invoke(object, parameter).toString();
                         break;
                     case "java.lang.String":
+                    	System.out.println("Curiousity killed the cat twice " + parameter[0] + " " +parameter[1]);
                         ret = (String)method.invoke(object, parameter);
                         break;
                 }
@@ -117,7 +124,9 @@ public class Dispatcher implements DispatcherInterface {
             jsonReturn.addProperty("error", "Error on " + jsonRequest.get("objectName").getAsString() + "." + jsonRequest.get("remoteMethod").getAsString());
         }
      
-        return jsonReturn.toString();
+        //Replaces all backslashes in the json string, then return 
+        String finalResult = (jsonReturn.toString()).replace("\\", "");
+        return finalResult;
     }
 
     /* 

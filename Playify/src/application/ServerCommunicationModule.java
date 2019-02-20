@@ -9,88 +9,103 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Base64;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public class ServerCommunicationModule implements CommunicationModule {
+public class ServerCommunicationModule extends Thread {
 
 	private DatagramSocket dSocket;
+	private boolean currentlyRunning;
+	private byte[] sentMessage = new byte[1024];
 	private Dispatcher dispatcher;
 
 	public ServerCommunicationModule() throws IOException {
 
-		dSocket = new DatagramSocket();
-		InetSocketAddress inetSocketAddr = new InetSocketAddress(InetAddress.getLocalHost(), 80);
-		dSocket.bind(inetSocketAddr);
+		dSocket = new DatagramSocket(80);
 
-	}
-
-	@Override
-	public String send(JsonObject request) throws SocketException, UnknownHostException, IOException {
-		// TODO Auto-generated method stub
-
-		return null;
-	}
-
-	@Override
-	public String StarServer(DispatcherInterface dispatcher) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	// Starts the server by firing the server communication module
-	public void startServer() throws IOException {
+	public void run() {
+		currentlyRunning = true;
 
-		boolean waitForPacketArrival = false;
-		byte[] sentMessage = new byte[1024];
-		DatagramPacket dPacket = new DatagramPacket(sentMessage, sentMessage.length);
+		while (currentlyRunning) {
+			DatagramPacket dPacket = new DatagramPacket(sentMessage, sentMessage.length);
 
-		while (!waitForPacketArrival) {
 			try {
 				dSocket.receive(dPacket);
+				InetAddress address = dPacket.getAddress();
+				int port = dPacket.getPort();
+				System.out.println("Packet has arrived");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 			if (dPacket.getData() != null) {
-				byte[] packetData = dPacket.getData();
-				String packetData64String = Base64.getEncoder().encodeToString(packetData);
+				try {
+					byte[] packetData = dPacket.getData();
+					System.out.println(packetData);
+					String packetData64String = new String(packetData);
 
-				JsonParser parser = new JsonParser();
-				JsonObject packetDataRequest = parser.parse(packetData64String).getAsJsonObject();
-				String dispatchedItem = startDispatcher(packetDataRequest);
+					JSONParser parser = new JSONParser();
+					
+
+					String packetDataString = packetData64String.toString();
+					int lastBracket = packetDataString.lastIndexOf("}");
+					
+					packetDataString = packetDataString.substring(0,lastBracket+1);
+					JSONObject packetDataRequest = new JSONObject();
+
+					packetDataRequest = (JSONObject) parser.parse(packetDataString);
+
+
+					String dispatchedItem = startDispatcher(packetDataRequest);
+
+
+					sentMessage = dispatchedItem.getBytes();
+
+					dPacket = new DatagramPacket(sentMessage, sentMessage.length, InetAddress.getLocalHost(), 80);
+
+					dSocket.send(dPacket);
+
+				}
+				catch(Exception e) {
+					e.printStackTrace();
+				}
 				
-				
-				byte[] bytesToBeDelivered = dispatchedItem.getBytes();
-				
-				
-				DatagramPacket packetToBeReturned = new DatagramPacket(bytesToBeDelivered, bytesToBeDelivered.length);
-				
-				dSocket.send(packetToBeReturned);
 			}
 		}
 
 	}
 
-	
-
 	// Fires up the dispatcher whenever a request comes in to the server
 	// communication model
-	public String startDispatcher(JsonObject request) {
+	public String startDispatcher(JSONObject request) {
 
 		dispatcher = new Dispatcher();
+		System.out.println("why");
 
-		SongDispatcher songDispatch = new SongDispatcher();
-		dispatcher.registerObject(songDispatch, request.get("objectName").getAsString());
+		LoginDispatcher loginDispatch = new LoginDispatcher();
+		System.out.println(request.get("objectName").toString() + " kool");
+		
+
+		System.out.println(request.get("remoteMethod").toString() + " kool");
+		
 		try {
+			dispatcher.registerObject(loginDispatch, request.get("objectName").toString());
 			return dispatcher.dispatch(request.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		 return null;
+		return null;
 
 	}
 
