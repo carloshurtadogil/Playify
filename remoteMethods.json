@@ -1,0 +1,30 @@
+{
+ "remoteMethods" :  [
+	{
+	"name":"verifyLoginInformation",
+     "object":"LoginDispatcher",
+     "call-semantics":"at-most-one",
+     "param":
+          {
+              "user":"string",
+              "password":"string"
+          },
+        "return":"String"
+     },
+     
+     {
+        "name":"getSongChunk",
+        "object":"SongServices",
+        "call-semantics":"maybe",
+        "param":
+          {
+              "song":"Long",
+              "fragment":"Long"
+          },
+        "return":"Byte[]"
+   	}
+
+	]
+}
+
+

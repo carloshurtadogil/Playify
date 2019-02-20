@@ -1,42 +1,55 @@
 package application;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.List;
 import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 
-interface RemoteRefInterface {
-  /*
-  * return the Json object defining the remote method
-  * The catalog of the remote methods are defined in 
-  * a Json file as follows:
-  {
-   "remoteMethod":
-   {
-        "name":"login",
-        "object":"LoginServices",
-        "call-semantics":"at-most-one",
-        "param":
-          {
-              "user":"string",
-              "password":"string"
-          },
-        "return":"String"
-   },
-   "remoteMethod":
-   {
-        "name":"getSongChunk",
-        "object":"SongServices",
-        "call-semantics":"maybe",
-        "param":
-          {
-              "song":"Long",
-              "fragment":"Long"
-          },
-        "return":"Byte[]"
-   },
+public class RemoteRef implements RemoteRefInterface{
+
+	//Fetches the remote reference from a json file containing all remote methods
+	@Override
+	public String getRemoteReference(String remoteMethod) {
+		
+		Gson theGson = new Gson();
+		
+		try {
+			//Fetch all remote methods from the json file
+			String jsonString = "";
+			
+			RemoteMethodResponse remoteMethodResponse = theGson.fromJson(new FileReader("remoteMethods.json"), RemoteMethodResponse.class);
+			List<RemoteMethod> allRemoteMethods = remoteMethodResponse.getRemoteMethods();
+			
+			//Traverses the entire list of remote methods in order to fetch that particular method
+			if(allRemoteMethods.size() != 0 || allRemoteMethods !=null) {
+				
+				for(int i=0; i<allRemoteMethods.size(); i++) {
+					if(allRemoteMethods.get(i).getName().equals(remoteMethod)){
+						 jsonString= theGson.toJson(allRemoteMethods.get(i));
+						 break;
+					}
+				}
+				System.out.println(jsonString);
+				return jsonString;
+			}
+			
+		} catch (JsonIOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonSyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		return null;
+		
+	}
+	
 }
-  * @param  remoteMethod: Name of the remote method or
-  * if the remote method does not exists in the catalog
-  */
-  Gson getRemoteReference(String remoteMethod);
-}
-
-
