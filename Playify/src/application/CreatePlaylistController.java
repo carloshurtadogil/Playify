@@ -19,8 +19,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import javazoom.jl.player.*;
+import javazoom.jl.decoder.JavaLayerException;
 
 public class CreatePlaylistController {
 	@FXML
@@ -38,7 +42,7 @@ public class CreatePlaylistController {
 	@FXML
 	private TextField txtPlaylistName;
 	@FXML
-	private ListView<String> listOfSongs;
+	private ListView<Song> listOfSongs;
 	@FXML
 	private Label tempLabel;
 	@FXML
@@ -49,14 +53,26 @@ public class CreatePlaylistController {
 	private ListView<Song> newPlaylistView;
 	@FXML
 	private Button removeButton;
+	@FXML 
+	private Button playButton;
+	@FXML 
+	private Button pauseButton;
+	@FXML 
+	private Button stopButton;
+	@FXML 
+	private Slider volumeSlider;
+	
 	private List<Song> newSongs;
 	private List<Song> mySongs;
+	
+	private PlayifyPlayer musicPlayer;
 	
 	//List to hold songs that match search results
 	private List<Song> searchResults = new ArrayList<Song>();
 	//User logged in
 	private User selectedUser;
 	private Playlist newPlaylist = new Playlist();
+	private int volume;
 	
 	
 	public void setLoggedUser(User theUser) throws FileNotFoundException, IOException, ParseException {
@@ -69,9 +85,33 @@ public class CreatePlaylistController {
 		newSongs = new ArrayList<Song>();
 	}
 	
+	/**
+	 * Retrieve the player
+	 * @return The music player found in this class
+	 */
+	public PlayifyPlayer getMusicPlayer() {
+		return musicPlayer;
+	}
+	
+	/**
+	 * For the transfer of a music player from the previous controller
+	 * @param p The player to be transferred
+	 */
+	public void setMusicPlayer(PlayifyPlayer p) {
+		musicPlayer = p;
+	}
+	
+	/**
+	 * Transfer the volume from the previous controller
+	 * @param v The volume level that the song is playing at
+	 */
+	public void setVolume(int v) {
+		volume = v;
+	}
+	
 	public void Search(ActionEvent event) { 
 		try {
-			List<String> songNames = new ArrayList<String>();
+			List<Song> songNames = new ArrayList<Song>();
 			Gson gson = new Gson();
 			List<Song> mySongs = gson.fromJson(new FileReader("music.json"), new TypeToken<List<Song>>(){}.getType());
 			Playlist masterPlaylist = new Playlist();
@@ -82,7 +122,7 @@ public class CreatePlaylistController {
 				   x.getArtistDetails().getName().equals(txtSearch.getText()) || 
 				   x.getArtistDetails().getTerms().equals(txtSearch.getText())) {
 					searchResults.add(x);
-					songNames.add(x.getSongDetails().getTitle());
+					songNames.add(x);
 				}
 					
 			}
@@ -95,24 +135,36 @@ public class CreatePlaylistController {
 		}	
 	}
 	
+	public void Play(ActionEvent event) {
+		System.out.println("Play clicked");
+	}
+	
+	public void Stop(ActionEvent event) {
+		System.out.println("Stop clicked");
+	}
+	
+	public void Pause(ActionEvent event) {
+		System.out.println("Pause clicked");
+	}
+	
 	public void Add(ActionEvent event) {
 		System.out.println("Clicked");
 		try {
-			ObservableList<String> selectedSongs;
+			ObservableList<Song> selectedSongs;
 			selectedSongs = listOfSongs.getSelectionModel().getSelectedItems();
 			List<Song> theSongs = new ArrayList<Song>();
 			
-			for(String songName: selectedSongs) {
+			for(Song songName: selectedSongs) {
 				System.out.println(songName);
 				for(Song song: searchResults) {
-					if(songName.equals(song.getSongDetails().getTitle())) {
+					if(songName.getSongDetails().getTitle().equals(song.getSongDetails().getTitle())) {
 						theSongs.add(song);
 						
 					}
 				}
 				if(mySongs != null) {
 					for(Song s : mySongs) {
-						if(s.getSongDetails().getTitle().equals(songName)) {
+						if(s.getSongDetails().getTitle().equals(songName.getSongDetails().getTitle())) {
 							newSongs.add(s);
 						}
 					}
@@ -217,9 +269,9 @@ public class CreatePlaylistController {
 			mySongs = gson.fromJson(new FileReader("music.json"), new TypeToken<List<Song>>(){}.getType());
 			Playlist masterPlaylist = new Playlist();
 			masterPlaylist.setSongs(mySongs);
-			List<String> songNames = new ArrayList<String> ();
+			List<Song> songNames = new ArrayList<Song> ();
 			for(Song s : mySongs) {
-				songNames.add(s.getSongDetails().getTitle());
+				songNames.add(s);
 			}
 			listOfSongs.setItems(FXCollections.observableList(songNames));
 			

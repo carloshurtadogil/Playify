@@ -35,7 +35,7 @@ public class Playlist {
 		List<String> names = new ArrayList<String>();
 		for(Song s: songs)
 		{
-			names.add(s.getSongDetails().getTitle() + " | " + s.getArtistDetails().getName());
+			names.add(s.getSongDetails().getTitle());
 		}
 		return names;
 	}
@@ -48,6 +48,14 @@ public class Playlist {
 		this.playlistname = name;
 	}
 	
+	public Song getSong(String name) {
+		for(int i = 0; i < songs.size(); i++) {
+			if(songs.get(i).getSongDetails().getTitle().equals(name)) {
+				return songs.get(i);
+			}
+		}
+		return null;
+	}
 	
 	public String toString() {
 		return this.getPlaylistName();

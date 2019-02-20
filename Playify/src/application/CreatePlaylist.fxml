@@ -18,8 +18,8 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <ListView fx:id="listOfSongs" layoutX="47.0" layoutY="331.0" prefHeight="155.0" prefWidth="428.0" />
-      <Button fx:id="btnAdd" layoutX="187.0" layoutY="512.0" mnemonicParsing="false" onAction="#Add" prefHeight="39.0" prefWidth="149.0" text="Add Song(s)">
+      <ListView fx:id="listOfSongs" layoutX="47.0" layoutY="331.0" prefHeight="155.0" prefWidth="390.0" />
+      <Button fx:id="btnAdd" layoutX="466.0" layoutY="360.0" mnemonicParsing="false" onAction="#Add" prefHeight="39.0" prefWidth="149.0" text="Add Song(s)">
          <font>
             <Font size="18.0" />
          </font>
@@ -38,7 +38,7 @@
          <font>
             <Font size="20.0" />
          </font></Label>
-      <Button fx:id="btnCreatePlaylist" layoutX="467.0" layoutY="514.0" mnemonicParsing="false" onAction="#createPlaylist" text="Create Playlist">
+      <Button fx:id="btnCreatePlaylist" layoutX="467.0" layoutY="283.0" mnemonicParsing="false" onAction="#createPlaylist" text="Create Playlist">
          <font>
             <Font size="18.0" />
          </font>
@@ -49,16 +49,32 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <ListView fx:id="newPlaylistView" layoutX="599.0" layoutY="331.0" prefHeight="155.0" prefWidth="428.0" />
+      <ListView fx:id="newPlaylistView" layoutX="637.0" layoutY="331.0" prefHeight="155.0" prefWidth="390.0" />
       <Label fx:id="pLabel" alignment="CENTER" layoutX="774.0" layoutY="287.0" text="New Playlist" textFill="WHITE">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <Button fx:id="removeButton" layoutX="757.0" layoutY="512.0" mnemonicParsing="false" onAction="#Remove" prefHeight="39.0" prefWidth="149.0" text="Remove">
+      <Button fx:id="removeButton" layoutX="466.0" layoutY="426.0" mnemonicParsing="false" onAction="#Remove" prefHeight="39.0" prefWidth="149.0" text="Remove">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
+      <Button fx:id="playButton" layoutX="471.0" layoutY="532.0" mnemonicParsing="false" onAction="#Play" prefHeight="39.0" prefWidth="149.0" text="Play">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="pauseButton" layoutX="194.0" layoutY="532.0" mnemonicParsing="false" onAction="#Pause" prefHeight="39.0" prefWidth="149.0" text="Pause">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="stopButton" layoutX="757.0" layoutY="532.0" mnemonicParsing="false" onAction="#Stop" prefHeight="39.0" prefWidth="149.0" text="Stop">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Slider fx:id="volumeSlider" layoutX="476.0" layoutY="621.0" onAction="#ChangeVolume" value="50.0" />
    </children>
 </AnchorPane>

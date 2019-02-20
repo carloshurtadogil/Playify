@@ -24,6 +24,9 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import javazoom.jl.player.*;
+import javazoom.jl.decoder.JavaLayerException;
+
 public class HomeController {
 	@FXML
 	private Label temporaryLabel;
@@ -36,7 +39,7 @@ public class HomeController {
 	@FXML
 	private Button logoutButton;
 	@FXML
-	private ListView<String> allSongsView;
+	private ListView<Song> allSongsView;
 	@FXML
 	private Label errorLabel;
 	@FXML
@@ -53,6 +56,8 @@ public class HomeController {
 	private User selectedUser;
 	private List<Song> mySongs;
 	private Playlist master;
+	private PlayifyPlayer musicPlayer;
+	private int volume;
 	
 
 	/**
@@ -86,6 +91,31 @@ public class HomeController {
 			System.out.println("No playlists to remove");
 		}*/
 
+	}
+	
+	/**
+	 * Retrieve the player
+	 * @return The music player found in this class
+	 */
+	public PlayifyPlayer getMusicPlayer() {
+		return musicPlayer;
+	}
+	
+	/**
+	 * For the transfer of a music player from the previous controller
+	 * @param p The player to be transferred
+	 */
+	public void setMusicPlayer(PlayifyPlayer p) {
+		musicPlayer = p;
+	}
+	
+	
+	/**
+	 * Transfer the volume from the previous controller
+	 * @param v The volume level that the song is playing at
+	 */
+	public void setVolume(int v) {
+		volume = v;
 	}
 
 	/**
@@ -127,20 +157,27 @@ public class HomeController {
 		}
 		playlistView.setItems(FXCollections.observableList(masterPlaylist));
 
-		
+		allSongsView.setOnMouseClicked(event -> {
+			if(event.getClickCount() == 1) {
+				playButton.setOnAction((buttonPressed) -> {
+					String name = allSongsView.getSelectionModel().getSelectedItem().getSongDetails().getTitle();
+					String id = allSongsView.getSelectionModel().getSelectedItem().getSongDetails().getSongId();
+					System.out.println("Song to be played: " + name + " " + id);
+				});
+			}
+		});
 		// Sets a mouse clicked event for each of the Playlists
 		playlistView.setOnMouseClicked(event -> {
 
 			// User must click on an item in order to delete it
 			if (event.getClickCount() == 1) {
 				if(playlistView.getSelectionModel().getSelectedIndex() == 0) {
-					allSongsView.setItems(FXCollections.observableList(master.getSongNames()));
+					allSongsView.setItems(FXCollections.observableList(master.getSongs()));
 					removeSongButton.setVisible(false);
 				} else {
 					String playlistname = playlistView.getSelectionModel().getSelectedItem().getPlaylistName();
-					allSongsView.setItems(FXCollections.observableList(someUser.getSpecificPlaylist(playlistname).getSongNames()));
+					allSongsView.setItems(FXCollections.observableList(someUser.getSpecificPlaylist(playlistname).getSongs()));
 					removeSongButton.setVisible(true);
-					AddActionToSongsView();
 				}
 				deletePlaylistButton.setOnAction((buttonPressed) -> {
 					//Call method that will delete the playlist
@@ -336,7 +373,7 @@ public class HomeController {
 			master = new Playlist();
 			master.setPlaylistName("All");
 			master.setSongs(mySongs);
-			allSongsView.setItems(FXCollections.observableList(master.getSongNames()));
+			allSongsView.setItems(FXCollections.observableList(master.getSongs()));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
