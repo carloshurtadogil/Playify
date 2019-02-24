@@ -148,43 +148,14 @@ public class User{
 			        	 JSONObject releaseJSON = new JSONObject();
 			        	 JSONObject artistJSON = new JSONObject();
 			        	 
-			        	 songJSON.put(	"key"	, song.getSongDetails().getKey());
-			        	 songJSON.put(	"mode_confidence"	, song.getSongDetails().getModeConfidence());
-			        	 songJSON.put(	"artist_mbtags_count"	, song.getSongDetails().getArtistMbTagsCount());
-			        	 songJSON.put(	"key_confidence"	, song.getSongDetails().getKeyConfidence());
-			        	 songJSON.put(	"tatums_start"	, song.getSongDetails().getTatumsStart());
-			        	 songJSON.put(	"year"	, song.getSongDetails().getYear());
-			        	 songJSON.put(	"duration"	, song.getSongDetails().getDuration());
-			        	 songJSON.put(	"hotttnesss"	, song.getSongDetails().getHotness());
-			        	 songJSON.put(	"beats_start"	, song.getSongDetails().getBeatsStart());
-			        	 songJSON.put(	"time_signature_confidence"	, song.getSongDetails().getTimeSignatureConfidence());
 			        	 songJSON.put(	"title"	, song.getSongDetails().getTitle());
-			        	 songJSON.put(	"bars_confidence"	, song.getSongDetails().getBarsConfidence());
-			        	 songJSON.put(	"id"	, song.getSongDetails().getSongId());
-			        	 songJSON.put(	"bars_start"	, song.getSongDetails().getBarsStart());
-			        	 songJSON.put(	"artist_mbtags"	, song.getSongDetails().getArtistMbTags());
-			        	 songJSON.put(	"start_of_fade_out"	, song.getSongDetails().getStartOfFadeOut());
-			        	 songJSON.put(	"tempo"	, song.getSongDetails().getTempo());
-			        	 songJSON.put(	"end_of_fade_in"	, song.getSongDetails().getEndOfFadeIn());
-			        	 songJSON.put(	"beats_confidence"	, song.getSongDetails().getBeatsConfidence());
-			        	 songJSON.put(	"tatums_confidence"	, song.getSongDetails().getTatumsConfidence());
-			        	 songJSON.put(	"mode"	, song.getSongDetails().getMode());
-			        	 songJSON.put(	"time_signature"	, song.getSongDetails().getTimeSignature());
-			        	 songJSON.put(	"loudness"	, song.getSongDetails().getLoudness());
+			        	 songJSON.put("id", song.getSongDetails().getSongId());
 			        	 
 			        	 releaseJSON.put( "id", song.getRelease().getReleaseID());
 			        	 releaseJSON.put( "name", song.getRelease().getReleaseName());
 			        	 
-			        	 artistJSON.put( "terms_freq", song.getArtistDetails().getTermsFreq());
 			        	 artistJSON.put( "terms", song.getArtistDetails().getTerms());
 			        	 artistJSON.put( "name", song.getArtistDetails().getName());
-			        	 artistJSON.put( "familiarity", song.getArtistDetails().getFamiliarity());
-			        	 artistJSON.put( "longitude", song.getArtistDetails().getLongitude());
-			        	 artistJSON.put( "id", song.getArtistDetails().getArtistId());
-			        	 artistJSON.put( "location", song.getArtistDetails().getLocation());
-			        	 artistJSON.put( "latitude", song.getArtistDetails().getLatitude());
-			        	 artistJSON.put( "similar", song.getArtistDetails().getSimilar());
-			        	 artistJSON.put( "hotttnesss", song.getArtistDetails().getHotness());
 			        	 
 			        	 JSONObject finalizedSongJSON = new JSONObject();
 			        	 finalizedSongJSON.put( "release", releaseJSON);

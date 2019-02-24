@@ -87,24 +87,48 @@ public class ServerCommunicationModule extends Thread {
 
 	// Fires up the dispatcher whenever a request comes in to the server
 	// communication model
-	public String startDispatcher(JSONObject request) {
+	public String startDispatcher(JSONObject request) throws ParseException {
 
 		dispatcher = new Dispatcher();
-		System.out.println("why");
-
-		LoginDispatcher loginDispatch = new LoginDispatcher();
-		System.out.println(request.get("objectName").toString() + " kool");
 		
+		LoginDispatcher loginDispatcher = new LoginDispatcher();
+		SongDispatcher songDispatcher = new SongDispatcher();
+		RegisterDispatcher registerDispatcher = new RegisterDispatcher();
 
-		System.out.println(request.get("remoteMethod").toString() + " kool");
+		RemoteRefInterface remoteRefInterface = new RemoteRef();
 		
-		try {
-			dispatcher.registerObject(loginDispatch, request.get("objectName").toString());
-			return dispatcher.dispatch(request.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
+		
+		String remoteReferenceDetails = remoteRefInterface.getRemoteReference(request.get("remoteMethod").toString());
+		
+		if(remoteReferenceDetails !=null) {
+			JSONParser parser = new JSONParser();
+			JSONObject remoteRefJson = (JSONObject)parser.parse(remoteReferenceDetails);
+			
+			String nameOfDispatcher = remoteRefJson.get("object").toString();
+			switch(nameOfDispatcher) {
+				case "LoginDispatcher":
+					loginDispatcher = new LoginDispatcher();
+					break;
+				case "SongDispatcher":
+					songDispatcher = new SongDispatcher();
+					break;
+				case "RegisterDispatcher":
+					registerDispatcher = new RegisterDispatcher();
+					break;
+			}
+			
+			try {
+				dispatcher.registerObject(loginDispatcher, request.get("objectName").toString());
+				return dispatcher.dispatch(request.toString());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		}
-
+		
+		
+		
+		
 		return null;
 
 	}
