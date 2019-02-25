@@ -32,62 +32,66 @@ public class ServerCommunicationModule extends Thread {
 	}
 
 	// Starts the server by firing the server communication module
-	public void run() {
+	public void StartServer() throws IOException {
 		currentlyRunning = true;
 
 		while (currentlyRunning) {
-			DatagramPacket dPacket = new DatagramPacket(sentMessage, sentMessage.length);
+			DatagramPacket incomingRequest = new DatagramPacket(sentMessage, sentMessage.length);
+			
+			
+			
+			
+			dSocket.receive(incomingRequest);
+			
+			String requestMessage = new String(sentMessage, 0, incomingRequest.getLength());
+			
+			System.out.println(requestMessage);
+			
+			InetAddress clientAddress = incomingRequest.getAddress();
+			int clientPort = incomingRequest.getPort();
+			
 
-			try {
-				dSocket.receive(dPacket);
-				InetAddress address = dPacket.getAddress();
-				int port = dPacket.getPort();
-				System.out.println("Packet has arrived");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			DatagramPacket response =  new DatagramPacket(sentMessage, sentMessage.length, clientAddress, 80);
 
-			if (dPacket.getData() != null) {
-				try {
-					byte[] packetData = dPacket.getData();
-					System.out.println(packetData);
-					String packetData64String = new String(packetData);
-
-					JSONParser parser = new JSONParser();
-					
-
-					String packetDataString = packetData64String.toString();
-					int lastBracket = packetDataString.lastIndexOf("}");
-					
-					packetDataString = packetDataString.substring(0,lastBracket+1);
-					JSONObject packetDataRequest = new JSONObject();
-
-					packetDataRequest = (JSONObject) parser.parse(packetDataString);
-
-
-					String dispatchedItem = startDispatcher(packetDataRequest);
-
-
-					sentMessage = dispatchedItem.getBytes();
-
-					dPacket = new DatagramPacket(sentMessage, sentMessage.length, InetAddress.getLocalHost(), 80);
-
-					dSocket.send(dPacket);
-
-				}
-				catch(Exception e) {
-					e.printStackTrace();
-				}
-				
-			}
+			dSocket.send(response);
+//			
+//			if (dPacket.getData() != null) {
+//				try {
+//					byte[] packetData = dPacket.getData();
+//					System.out.println(packetData);
+//					String packetData64String = new String(packetData);
+//
+//					JSONParser parser = new JSONParser();
+//					
+//
+//					String packetDataString = packetData64String.toString();
+//					int lastBracket = packetDataString.lastIndexOf("}");
+//					
+//					packetDataString = packetDataString.substring(0,lastBracket+1);
+//					JSONObject packetDataRequest = new JSONObject();
+//
+//					packetDataRequest = (JSONObject) parser.parse(packetDataString);
+//
+//
+//					String dispatchedItem = startDispatcher(packetDataRequest);
+//
+//
+//					sentMessage = dispatchedItem.getBytes();
+//
+//
+//				}
+//				catch(Exception e) {
+//					e.printStackTrace();
+//				}
+//				
+//			}
 		}
 
 	}
 
 	// Fires up the dispatcher whenever a request comes in to the server
 	// communication model
-	public String startDispatcher(JSONObject request) throws ParseException {
+	public byte[] startDispatcher(JSONObject request) throws ParseException {
 
 		dispatcher = new Dispatcher();
 		
@@ -119,7 +123,7 @@ public class ServerCommunicationModule extends Thread {
 			
 			try {
 				dispatcher.registerObject(loginDispatcher, request.get("objectName").toString());
-				return dispatcher.dispatch(request.toString());
+				return (dispatcher.dispatch(request.toString())).getBytes();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
