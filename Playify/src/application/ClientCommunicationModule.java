@@ -16,8 +16,8 @@ import com.google.gson.JsonObject;
 
 public class ClientCommunicationModule implements CommunicationModule {
 	
-	private byte [] messageBuffer;
-	
+	private byte [] messageBuffer = new byte[6000];
+	private byte[] retrievedReply = new byte[6000];
 	public ClientCommunicationModule() throws SocketException {
 		
 		
@@ -35,6 +35,9 @@ public class ClientCommunicationModule implements CommunicationModule {
 			e.printStackTrace();
 		}
 		
+		
+		System.out.println("what is going on");
+		
 		return request;
 		
 	}
@@ -45,6 +48,7 @@ public class ClientCommunicationModule implements CommunicationModule {
 	public String send(JsonObject request) throws IOException {
 		
 		
+		System.out.println("The following request is the following : " + request.toString());
 		messageBuffer = request.toString().getBytes();
 		
 		//Create a new socket
@@ -58,11 +62,13 @@ public class ClientCommunicationModule implements CommunicationModule {
 		
 		
 		//Get ready to receive the response from the server communication module
-		thePacket = new DatagramPacket(messageBuffer, messageBuffer.length); 
+		thePacket = new DatagramPacket(retrievedReply, retrievedReply.length); 
 		ds.receive(thePacket);
 		
 		System.out.println("Reply has been received");
 		String receivedMessage = new String(thePacket.getData(), 0, thePacket.getLength());
+		System.out.println("OKEY DOKEY" + receivedMessage + " " + thePacket.getLength());
+		
 		return receivedMessage;
 	}
 

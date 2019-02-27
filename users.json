@@ -7,224 +7,12 @@
           "songs": [
             {
               "song": {
-                "mode_confidence": 0.617,
-                "hotttnesss": 0.0,
-                "year": 2008,
-                "beats_confidence": 1.0,
-                "artist_mbtags_count": 1.0,
-                "bars_start": 1.04182,
-                "loudness": -16.079,
-                "tempo": 136.975,
-                "end_of_fade_in": 0.357,
-                "title": "Blame Canada ( From: South Park )",
-                "key_confidence": 0.582,
-                "duration": 106.81424,
-                "beats_start": 0.16646,
-                "bars_confidence": 0.005,
-                "mode": 1,
-                "artist_mbtags": "composer",
-                "start_of_fade_out": 99.66,
-                "time_signature_confidence": 0.0,
-                "id": "SOIVRUS12A8C133164",
-                "tatums_confidence": 0.813,
-                "key": 0.0,
-                "tatums_start": 0.16646,
-                "time_signature": 4.0
-              },
-              "artist": {
-                "similar": "ARU52PB1187FB58E46",
-                "familiarity": 0.5100109,
-                "hotttnesss": 0.37844273,
-                "terms": "soundtrack",
-                "latitude": 37.157356,
-                "name": "Marc Shaiman",
-                "location": "Not available",
-                "id": "AR8IEZO1187B99055E",
-                "terms_freq": 1.0,
-                "longitude": -63.933357
-              },
-              "release": {
-                "name": "The Bucket List",
-                "id": 190811
-              }
-            },
-            {
-              "song": {
-                "mode_confidence": 0.562,
-                "hotttnesss": 0.0,
-                "year": 1991,
-                "beats_confidence": 0.108,
-                "artist_mbtags_count": 0.0,
-                "bars_start": 0.80336,
-                "loudness": -8.615,
-                "tempo": 98.752,
-                "end_of_fade_in": 2.844,
-                "title": "When You Wish Upon A Star",
-                "key_confidence": 0.631,
-                "duration": 193.67139,
-                "beats_start": 0.16656,
-                "bars_confidence": 0.25,
-                "mode": 1,
-                "artist_mbtags": "",
-                "start_of_fade_out": 188.488,
-                "time_signature_confidence": 0.949,
-                "id": "SOEKGLO12A8C1363DE",
-                "tatums_confidence": 0.108,
-                "key": 4.0,
-                "tatums_start": 0.16656,
-                "time_signature": 3.0
-              },
-              "artist": {
-                "similar": "ARGT89Y1187FB5B07A",
-                "familiarity": 0.44831872,
-                "hotttnesss": 0.35661292,
-                "terms": "vocal jazz",
-                "latitude": 45.51228,
-                "name": "Cliff Edwards/Disney Studio Chorus",
-                "location": "Montreal, Quebec, Canada",
-                "id": "ARYTJPJ1187FB4ABCC",
-                "terms_freq": 0.96799535,
-                "longitude": -73.55439
-              },
-              "release": {
-                "name": "Julie Andrews Selects Her Favourite Disney Songs",
-                "id": 151155
-              }
-            },
-            {
-              "release": {
-                "id": 83355, 
-                "name": "Que Todo Mexico Se Entere"
-              }, 
-              "artist": {
-                "terms_freq": 1.0, 
-                "terms": "folk", 
-                "name": "Mercedes Castro", 
-                "familiarity": 0.435732004, 
-                "longitude": -63.933357868519515, 
-                "id": "ARPPTNG11F50C482A3", 
-                "location": "Not available", 
-                "latitude": 37.15735675013362, 
-                "similar": "ARWGVZO11F4C84241B", 
-                "hotttnesss": 0.373045954
-              }, 
-              "song": {
-                "key": 3.0, 
-                "mode_confidence": 0.63, 
-                "artist_mbtags_count": 0.0, 
-                "key_confidence": 0.791, 
-                "tatums_start": 0.08763, 
-                "year": 0, 
-                "duration": 129.74975, 
-                "hotttnesss": null, 
-                "beats_start": 0.32872, 
-                "time_signature_confidence": 0.0, 
-                "title": "El Cara Bonita", 
-                "bars_confidence": 0.557, 
-                "id": "SOBXFLQ12A6D4F3578", 
-                "bars_start": 0.32872, 
-                "artist_mbtags": "", 
-                "start_of_fade_out": 125.022, 
-                "tempo": 129.354, 
-                "end_of_fade_in": 0.0, 
-                "beats_confidence": 0.557, 
-                "tatums_confidence": 1.0, 
-                "mode": 1, 
-                "time_signature": 1.0, 
-                "loudness": -8.077
-              }
-            },
-            {
-              "release": {
-                "id": 162755, 
-                "name": "Long Road Out Of Eden"
-              }, 
-              "artist": {
-                "terms_freq": 1.0, 
-                "terms": "country rock", 
-                "name": "Eagles", 
-                "familiarity": 0.76702021, 
-                "longitude": -63.933357868519515, 
-                "id": "AR16GSC1187B9A6291", 
-                "location": "Los Angeles, California", 
-                "latitude": 37.15735675013362, 
-                "similar": "ARJ45QE1187FB423B8", 
-                "hotttnesss": 0.6295148
-              }, 
-              "song": {
-                "key": 9.0, 
-                "mode_confidence": 0.328, 
-                "artist_mbtags_count": 2.0, 
-                "key_confidence": 0.472, 
-                "tatums_start": 0.03219, 
-                "year": 2007, 
-                "duration": 427.36281, 
-                "hotttnesss": 0.558997327, 
-                "beats_start": 0.27798, 
-                "time_signature_confidence": 0.0, 
-                "title": "Last Good Time In Town", 
-                "bars_confidence": 1.0, 
-                "id": "SONISVG12A8C13EB34", 
-                "bars_start": 0.27798, 
-                "artist_mbtags": "rock", 
-                "start_of_fade_out": 423.985, 
-                "tempo": 115.277, 
-                "end_of_fade_in": 4.592, 
-                "beats_confidence": 1.0, 
-                "tatums_confidence": 1.0, 
-                "mode": 0, 
-                "time_signature": 1.0, 
-                "loudness": -6.991
-              }
-            }
-          ],
-          "playlistname": "Favorites"
-        }
-      ],
-      "username": "time"
-    },
-    {
-      "password": "Wright",
-      "playlists": [
-        {
-          "songs": [
-            {
-              "song": {
-                "mode_confidence": 0.636,
-                "hotttnesss": 0.60212,
-                "year": 0,
-                "beats_confidence": 0.834,
-                "artist_mbtags_count": 0.0,
-                "bars_start": 0.58521,
-                "loudness": -11.197,
-                "tempo": 92.198,
-                "end_of_fade_in": 0.247,
-                "title": "I Didn't Mean To",
-                "key_confidence": 0.736,
-                "duration": 218.9318,
-                "beats_start": 0.58521,
-                "bars_confidence": 0.643,
-                "mode": 0,
-                "artist_mbtags": "",
-                "start_of_fade_out": 218.932,
-                "time_signature_confidence": 0.778,
                 "id": "SOMZWCG12A8C13C480",
-                "tatums_confidence": 0.779,
-                "key": 1.0,
-                "tatums_start": 0.28519,
-                "time_signature": 4.0
+                "title": "I Didn't Mean To"
               },
               "artist": {
-                "similar": "ARV4KO21187FB38008",
-                "familiarity": 0.5817938,
-                "hotttnesss": 0.40199754,
                 "terms": "hip hop",
-                "latitude": 37.157356,
-                "name": "Casual",
-                "location": "California - LA",
-                "id": "ARD7TVE1187B99BFB1",
-                "terms_freq": 1.0,
-                "longitude": -63.933357
+                "name": "Casual"
               },
               "release": {
                 "name": "Fear Itself",
@@ -233,138 +21,37 @@
             },
             {
               "song": {
-                "mode_confidence": 0.332,
-                "hotttnesss": 0.6244255,
-                "year": 2004,
-                "beats_confidence": 0.692,
-                "artist_mbtags_count": 1.0,
-                "bars_start": 1.1904,
-                "loudness": -4.882,
-                "tempo": 105.206,
-                "end_of_fade_in": 0.0,
-                "title": "Let's Get It Started",
-                "key_confidence": 0.205,
-                "duration": 229.61588,
-                "beats_start": 0.63902,
-                "bars_confidence": 0.933,
-                "mode": 0,
-                "artist_mbtags": "pop and chart",
-                "start_of_fade_out": 213.664,
-                "time_signature_confidence": 1.0,
-                "id": "SOCHRXB12A8AE48069",
-                "tatums_confidence": 0.41,
-                "key": 11.0,
-                "tatums_start": 0.36332,
-                "time_signature": 4.0
+                "id": "SOCIWDW12A8C13D406",
+                "title": "Soul Deep"
               },
               "artist": {
-                "similar": "ARV4KO21187FB38008",
-                "familiarity": 0.8456019,
-                "hotttnesss": 1.005942,
-                "terms": "hip hop",
-                "latitude": 37.157356,
-                "name": "Black Eyed Peas",
-                "location": "Los Angeles, CA",
-                "id": "ARTDQRC1187FB4EFD4",
-                "terms_freq": 1.0,
-                "longitude": -63.933357
+                "terms": "blue-eyed soul",
+                "name": "The Box Tops"
               },
               "release": {
-                "name": "Total Workout Running 102 - 135 - 84bpm Ideal For Jogging_ Running_ Treadmill & General Fitness",
-                "id": 358442
+                "name": "Dimensions",
+                "id": 300822
               }
             },
             {
               "song": {
-                "mode_confidence": 0.507,
-                "hotttnesss": 0.0,
-                "year": 2004,
-                "beats_confidence": 0.712,
-                "artist_mbtags_count": 1.0,
-                "bars_start": 1.32488,
-                "loudness": -5.939,
-                "tempo": 107.199,
-                "end_of_fade_in": 0.165,
-                "title": "Let's Get It Started",
-                "key_confidence": 0.5,
-                "duration": 223.03302,
-                "beats_start": 0.21216,
-                "bars_confidence": 0.081,
-                "mode": 0,
-                "artist_mbtags": "pop and chart",
-                "start_of_fade_out": 219.847,
-                "time_signature_confidence": 1.0,
-                "id": "SOGBUUF12AB018B87E",
-                "tatums_confidence": 0.642,
-                "key": 6.0,
-                "tatums_start": 0.21216,
-                "time_signature": 4.0
+                "id": "SOXVLOJ12AB0189215",
+                "title": "Amor De Cabaret"
               },
               "artist": {
-                "similar": "ARV4KO21187FB38008",
-                "familiarity": 0.8456019,
-                "hotttnesss": 1.005942,
-                "terms": "hip hop",
-                "latitude": 37.157356,
-                "name": "Black Eyed Peas",
-                "location": "Los Angeles, CA",
-                "id": "ARTDQRC1187FB4EFD4",
-                "terms_freq": 1.0,
-                "longitude": -63.933357
+                "terms": "salsa",
+                "name": "Sonora Santanera"
               },
               "release": {
-                "name": "Kids Sing Along Pac",
-                "id": 673805
-              }
-            },
-            {
-              "song": {
-                "mode_confidence": 0.492,
-                "hotttnesss": 0.5701059,
-                "year": 2001,
-                "beats_confidence": 0.579,
-                "artist_mbtags_count": 1.0,
-                "bars_start": 2.95336,
-                "loudness": -10.296,
-                "tempo": 85.008,
-                "end_of_fade_in": 0.0,
-                "title": "WKYA (drop)",
-                "key_confidence": 0.074,
-                "duration": 124.18567,
-                "beats_start": 0.65164,
-                "bars_confidence": 0.058,
-                "mode": 0,
-                "artist_mbtags": "soul and reggae",
-                "start_of_fade_out": 121.005,
-                "time_signature_confidence": 1.0,
-                "id": "SORWHWY12A6702038E",
-                "tatums_confidence": 0.0,
-                "key": 1.0,
-                "tatums_start": 0.16161,
-                "time_signature": 5.0
-              },
-              "artist": {
-                "similar": "AR05OJD1187B9B99A6",
-                "familiarity": 0.7431298,
-                "hotttnesss": 0.49356684,
-                "terms": "hip hop",
-                "latitude": 37.157356,
-                "name": "Redman",
-                "location": "Newark, NJ",
-                "id": "ARXWAQQ1187B9AE954",
-                "terms_freq": 1.0,
-                "longitude": -63.933357
-              },
-              "release": {
-                "name": "Malpractice",
-                "id": 8552
+                "name": "Las Numero 1 De La Sonora Santanera",
+                "id": 514953
               }
             }
           ],
-          "playlistname": "Hip-Hop"
+          "playlistname": "NewPlaylist"
         }
       ],
-      "username": "Devon"
+      "username": "time"
     }
   ]
 }

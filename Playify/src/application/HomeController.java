@@ -24,8 +24,8 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import javazoom.jl.player.*;
-import javazoom.jl.decoder.JavaLayerException;
+//import javazoom.jl.player.*;
+//import javazoom.jl.decoder.JavaLayerException;
 
 public class HomeController {
 	@FXML

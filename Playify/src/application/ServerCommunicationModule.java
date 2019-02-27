@@ -20,9 +20,18 @@ import com.google.gson.JsonParser;
 
 public class ServerCommunicationModule extends Thread {
 
+	
+	
+	public static void main(String []args) throws IOException, ParseException {
+		ServerCommunicationModule test = new ServerCommunicationModule();
+		test.StartServer();
+		
+		
+	}
+	
 	private DatagramSocket dSocket;
 	private boolean currentlyRunning;
-	private byte[] sentMessage = new byte[1024];
+	private byte[] sentMessage = new byte[6000];
 	private Dispatcher dispatcher;
 
 	public ServerCommunicationModule() throws IOException {
@@ -32,26 +41,29 @@ public class ServerCommunicationModule extends Thread {
 	}
 
 	// Starts the server by firing the server communication module
-	public void StartServer() throws IOException {
+	public void StartServer() throws IOException, ParseException {
 		currentlyRunning = true;
 
 		while (currentlyRunning) {
 			DatagramPacket incomingRequest = new DatagramPacket(sentMessage, sentMessage.length);
 			
-			
-			
-			
 			dSocket.receive(incomingRequest);
 			
 			String requestMessage = new String(sentMessage, 0, incomingRequest.getLength());
 			
-			System.out.println(requestMessage);
+			System.out.println("OH YEAH : " + requestMessage);
+			
+			JsonObject requestAsJsonObject = new JsonParser().parse(requestMessage).getAsJsonObject();
+			sentMessage = this.startDispatcher(requestAsJsonObject);
+			
+			String msgInBytes = new String(sentMessage);
+			System.out.println("RETRIEVED MESSAGE " + msgInBytes);
 			
 			InetAddress clientAddress = incomingRequest.getAddress();
 			int clientPort = incomingRequest.getPort();
 			
 
-			DatagramPacket response =  new DatagramPacket(sentMessage, sentMessage.length, clientAddress, 80);
+			DatagramPacket response =  new DatagramPacket(msgInBytes.getBytes(), msgInBytes.getBytes().length, clientAddress, clientPort);
 
 			dSocket.send(response);
 //			
@@ -91,44 +103,82 @@ public class ServerCommunicationModule extends Thread {
 
 	// Fires up the dispatcher whenever a request comes in to the server
 	// communication model
-	public byte[] startDispatcher(JSONObject request) throws ParseException {
+	public byte[] startDispatcher(JsonObject request) throws ParseException {
 
 		dispatcher = new Dispatcher();
+		
+		boolean loginFlag= false;
+		boolean songFlag = false;
+		boolean registerFlag = false;
+		boolean playlistFlag = false;
+		
+		System.out.println("ENTER DISPATCHER HERE");
 		
 		LoginDispatcher loginDispatcher = new LoginDispatcher();
 		SongDispatcher songDispatcher = new SongDispatcher();
 		RegisterDispatcher registerDispatcher = new RegisterDispatcher();
+		PlaylistDispatcher playlistDispatcher = new PlaylistDispatcher();
 
-		RemoteRefInterface remoteRefInterface = new RemoteRef();
-		
-		
-		String remoteReferenceDetails = remoteRefInterface.getRemoteReference(request.get("remoteMethod").toString());
-		
-		if(remoteReferenceDetails !=null) {
-			JSONParser parser = new JSONParser();
-			JSONObject remoteRefJson = (JSONObject)parser.parse(remoteReferenceDetails);
+		//Determines if the JsonObject request contains an "objectName" property
+		if(request.has("objectName")) {
 			
-			String nameOfDispatcher = remoteRefJson.get("object").toString();
-			switch(nameOfDispatcher) {
+			String dispatcherName = request.get("objectName").getAsString();
+			switch(dispatcherName) {
 				case "LoginDispatcher":
-					loginDispatcher = new LoginDispatcher();
+					loginFlag = true;
 					break;
 				case "SongDispatcher":
-					songDispatcher = new SongDispatcher();
+					songFlag = true;
 					break;
 				case "RegisterDispatcher":
-					registerDispatcher = new RegisterDispatcher();
+					registerFlag = true;
+					break;
+				case "PlaylistDispatcher":
+					playlistFlag = true;
 					break;
 			}
 			
-			try {
-				dispatcher.registerObject(loginDispatcher, request.get("objectName").toString());
-				return (dispatcher.dispatch(request.toString())).getBytes();
-			} catch (Exception e) {
-				e.printStackTrace();
+			
+			if(loginFlag == true) {
+				try {
+					dispatcher.registerObject(loginDispatcher, request.get("objectName").toString());
+					return (dispatcher.dispatch(request.toString())).getBytes();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
-
+			else if(songFlag == true){
+				try {
+					dispatcher.registerObject(songDispatcher, request.get("objectName").toString());
+					return (dispatcher.dispatch(request.toString())).getBytes();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			else if(registerFlag == true) {
+				try {
+					dispatcher.registerObject(registerDispatcher, request.get("objectName").toString());
+					return (dispatcher.dispatch(request.toString())).getBytes();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			else if(playlistFlag == true) {
+				try {
+					dispatcher.registerObject(playlistDispatcher, request.get("objectName").toString());
+					return (dispatcher.dispatch(request.toString())).getBytes();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			
+			
+			}
+			
+			
+			
 		}
+		
+		
 		
 		
 		

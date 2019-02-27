@@ -51,12 +51,19 @@ public class Dispatcher implements DispatcherInterface {
         JsonObject jsonReturn = new JsonObject();
         JsonParser parser = new JsonParser();
         JsonObject jsonRequest = parser.parse(request).getAsJsonObject();
-        
-        System.out.println("What is exactly going on at this moment");
-        
+       
+        for(Map.Entry<String, Object> entry : ListOfObjects.entrySet()) {
+        	System.out.println(entry.getKey().toString() + " " + entry.getValue());
+        }
+      
         try {
             // Obtains the object pointing to SongServices
-            Object object = ListOfObjects.get(jsonRequest.get("objectName").getAsString());
+            //Object object = ListOfObjects.get(jsonRequest.get("objectName").getAsString());
+            
+        	Object object = new LoginDispatcher();
+        	
+            System.out.println("jackal "  + object.toString());
+            
             Method[] methods = object.getClass().getMethods();
             Method method = null;
             // Obtains the method
@@ -114,9 +121,12 @@ public class Dispatcher implements DispatcherInterface {
                     case "java.lang.String":
                     	System.out.println("Curiousity killed the cat twice " + parameter[0] + " " +parameter[1]);
                         ret = (String)method.invoke(object, parameter);
+                        
+                        
+                        
                         break;
                 }
-                jsonReturn.addProperty("ret", ret);
+                jsonReturn = (JsonObject) new JsonParser().parse(ret);
    
         } catch (InvocationTargetException | IllegalAccessException e)
         {
@@ -126,6 +136,7 @@ public class Dispatcher implements DispatcherInterface {
      
         //Replaces all backslashes in the json string, then return 
         String finalResult = (jsonReturn.toString()).replace("\\", "");
+        System.out.println("At Dispatcher, " + finalResult);
         return finalResult;
     }
 

@@ -1,5 +1,7 @@
 package application;
 	
+import com.google.gson.JsonObject;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -17,7 +19,11 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			//BorderPane root = new BorderPane();
+			
+		
+//			RemoteRefInterface refInterface = new RemoteRef();
+//			refInterface.getRemoteReference("verifyLoginInformation");
+			//BorderPane root = new BorderPane();	
 			Parent root = FXMLLoader.load(getClass().getResource("/application/Login.fxml"));
 			Scene scene = new Scene(root,1080,720);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());

@@ -26,8 +26,7 @@ public class Proxy implements ProxyInterface {
     ClientCommunicationModule communicationModule;
     
     public Proxy(ClientCommunicationModule communicationModule)
-    {
-        //this.dispacher = dispacher;   
+    {  
         this.communicationModule = communicationModule ;
     }
     
@@ -37,6 +36,8 @@ public class Proxy implements ProxyInterface {
     */
     public JsonObject synchExecution(String remoteMethod, String[] param)
     {
+    	
+    	String proxyReturn ="";
         JsonObject jsonRequest = new JsonObject();
         JsonObject jsonParam = new JsonObject();
         
@@ -51,7 +52,6 @@ public class Proxy implements ProxyInterface {
         	jsonRequest.addProperty("remoteMethod", remoteReferenceContents.get("name").getAsString());
         	jsonRequest.addProperty("objectName", remoteReferenceContents.get("object").getAsString());
         
-        	
         	
         	JsonElement element = remoteReferenceContents.get("param");
         	
@@ -76,56 +76,27 @@ public class Proxy implements ProxyInterface {
             		
             		String parameterName = splitContent[i].substring(0, splitContent[i].indexOf(':'));
             		jsonParam.addProperty(parameterName.substring(1, parameterName.length()-1), param[i] );
-            		
             	}
-            
         	}
         	
-        		
         	jsonRequest.add("param", jsonParam);
+        	
+        	System.out.println(jsonRequest.toString());
+        	try {
+        		jsonRequest = this.communicationModule.addRequestIdToRequest(jsonRequest);
+        		proxyReturn = this.communicationModule.send(jsonRequest);
+        	}
+        	catch(Exception e) {
+        		e.printStackTrace();
+        	}
         
         }
         
-//        
-//        
-//        // It is hardcoded. Instead it should be dynamic using  RemoteRef
-//        if (remoteMethod.equals("getSongChunk"))
-//        {
-//            
-//            jsonParam.addProperty("song", param[0]);
-//            jsonParam.addProperty("fragment", param[1]);       
-//        
-//        }
-//        else if (remoteMethod.equals("getFileSize"))
-//        {
-//            jsonParam.addProperty("song", param[0]);        
-//        }
-//        else if(remoteMethod.equals("verifyLoginInformation")) {
-//        	jsonParam.addProperty("username", param[0]);
-//        	jsonParam.addProperty("password", param[1]);
-//        }
-//        jsonRequest.add("param", jsonParam);
-//        
-//        
-//        String proxyReturn = "";
-//        
-//        //Send the marshalled file to the communication module in the client
-//        try {
-//        	jsonRequest = this.communicationModule.addRequestIdToRequest(jsonRequest);
-//			System.out.println(jsonRequest);
-//        	proxyReturn= this.communicationModule.send(jsonRequest);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//        
-//        if(proxyReturn.isEmpty() || proxyReturn !=null) {
-//        	JsonParser parser = new JsonParser();
-//        	JsonObject gsonProxyReturn = parser.parse(proxyReturn).getAsJsonObject();
-//        	
-//        	
-//        	return gsonProxyReturn.getAsJsonObject();
-//        }
+        if(!proxyReturn.isEmpty()) {
+        	JsonObject proxyReturnAsJson = (JsonObject)new JsonParser().parse(proxyReturn);
+        	return proxyReturnAsJson;
+        }
+
         
         return null;
 

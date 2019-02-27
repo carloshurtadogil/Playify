@@ -43,11 +43,13 @@ public class LoginDispatcher {
 		//If user has been found, then return the user processed as JSON data
 		if(userFound) {
 			String userCredentials = theGson.toJson(theUser);
+			System.out.println("FOUND! " + userCredentials);
 			return userCredentials;
 		}
 		
 		//else, return an error message stating that Login has failed
 		JsonObject errorMessage = new JsonObject();
+		System.out.println("not found");
 		errorMessage.addProperty("errorMessage", "Incorrect username or password");
 		return errorMessage.getAsString();
 	}

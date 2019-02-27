@@ -15,6 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public class LoginController {
 	@FXML
@@ -30,35 +31,22 @@ public class LoginController {
 	public void Login(ActionEvent event) {
 
 		try {
-			Gson theGson = new Gson();
-			boolean userFound = false;
-			User theUser = new User(null, null);
 			
-			//Reads the entire users.json file
-			UserResponse theResponse = theGson.fromJson(new FileReader("users.json"), UserResponse.class);
-			List<User> ultimateUserList = theResponse.getUsersList();
 			
-			//traverses the entire list of users, and attempts to find if a particular user exists
-			for (User u : ultimateUserList) {
-				if (u.getUsername().equals(usernameField.getText())
-						&& u.getPassword().equals(passwordField.getText())) {
-
-					if (u.getPlaylists() == null) {
-						System.out.println("no playlist found");
-					}
-					// for(int i=0;i<u.getPlaylists().size(); i++) {
-					// for(int j=0; j< u.getPlaylists().get(i).getSongs().size(); j++) {
-					// System.out.println(u.getPlaylists().get(i).getSongs().get(j).getSongName());
-					// }
-					// }
-					
-					//mark as found, and assign the recently found user
-					userFound = true;
-					theUser = u;
-					break;
-				}
-			}
-			if (!userFound) {
+			ProxyInterface proxy = new Proxy(new ClientCommunicationModule());
+			String [] param = new String[2];
+			param[0] =  usernameField.getText();
+			param[1] = passwordField.getText();
+			JsonObject result = proxy.synchExecution("verifyLoginInformation", param);
+			
+			
+			System.out.println(result.toString());
+			
+			
+			User retrievedUser = new Gson().fromJson(result, User.class);
+			
+			
+			if (retrievedUser ==null) {
 				labelStatus.setText("Unsuccessful login attempt, incorrect username or password");
 			} else {
 				labelStatus.setText("Success");
@@ -71,7 +59,7 @@ public class LoginController {
 				Scene homeScene = new Scene(root);
 
 				HomeController home = loader.getController();
-				home.setLoggedUser(theUser);
+				home.setLoggedUser(retrievedUser);
 
 				Stage homeStage = (Stage) labelStatus.getScene().getWindow();
 				homeStage.setScene(homeScene);
