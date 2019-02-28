@@ -11,6 +11,9 @@ public class Param {
 	@SerializedName("password")
 	@Expose
 	private String password;
+	@SerializedName("confirmPassword")
+	@Expose
+	private String confirmPassword;
 	@SerializedName("song")
 	@Expose
 	private String song;
@@ -18,6 +21,14 @@ public class Param {
 	@Expose
 	private String fragment;
 
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+	
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
+	
 	public String getUser() {
 		return user;
 	}

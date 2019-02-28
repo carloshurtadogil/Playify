@@ -13,6 +13,19 @@
      },
      
      {
+     	"name": "verifyRegisterInformation",
+     	"object": "RegisterDispatcher",
+     	"call-semantics": "at-most-one",
+     	"param":
+     		{
+     			"user":"string",
+     			"password":"string",
+     			"confirmPassword":"string"
+     		},
+     	"return":"String"
+     },
+     
+     {
         "name":"getSongChunk",
         "object":"SongServices",
         "call-semantics":"maybe",

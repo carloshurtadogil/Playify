@@ -51,16 +51,30 @@ public class Dispatcher implements DispatcherInterface {
         JsonObject jsonReturn = new JsonObject();
         JsonParser parser = new JsonParser();
         JsonObject jsonRequest = parser.parse(request).getAsJsonObject();
-       
-        for(Map.Entry<String, Object> entry : ListOfObjects.entrySet()) {
-        	System.out.println(entry.getKey().toString() + " " + entry.getValue());
-        }
-      
+		
         try {
+     		Object object = new Object();
+        	if (jsonRequest.has("objectName")) {
+
+        		String dispatcherName = jsonRequest.get("objectName").getAsString();
+    			switch(dispatcherName) {
+    				case "LoginDispatcher":
+    					object = new LoginDispatcher();
+    					break;
+    				case "SongDispatcher":
+    					object = new SongDispatcher();
+    					break;
+    				case "RegisterDispatcher":
+    					object = new RegisterDispatcher();
+    					break;
+    				case "PlaylistDispatcher":
+    					object = new PlaylistDispatcher();
+    					break;
+    			}
+        	}
+      
             // Obtains the object pointing to SongServices
             //Object object = ListOfObjects.get(jsonRequest.get("objectName").getAsString());
-            
-        	Object object = new LoginDispatcher();
         	
             System.out.println("jackal "  + object.toString());
             
