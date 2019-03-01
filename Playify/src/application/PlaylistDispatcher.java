@@ -11,7 +11,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 public class PlaylistDispatcher {
-
+	
 	//Adds a song to a playlist
 	public String addSongsToPlaylist(String username, String playlist, String songs) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		
@@ -37,7 +37,13 @@ public class PlaylistDispatcher {
 		
 	}
 	
-	//Removes a song 
+	/**
+	 * Remove a specific song from a specific playlist for a specific user
+	 * @param username The user's whose list of playlists is to be updated
+	 * @param playlist The user's playlist to be updated
+	 * @param songName The song to be removed from the playlist
+	 * @return All the songs left in a playlist after the removal, null if playlist does not exist
+	 */
 	public String removeSongFromPlaylist(String username, String playlist, String songName) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		
 		Gson theGson = new Gson();
@@ -55,24 +61,31 @@ public class PlaylistDispatcher {
 		
 		
 		//Reads the entire users.json file
-		Playlist selectedPlaylist = theGson.fromJson(playlist, Playlist.class);
-		List<Song> songsInPlaylist = selectedPlaylist.getSongs();
-		for(int i=0; i <songsInPlaylist.size(); i++) {
-			if(songsInPlaylist.get(i).getSongDetails().getTitle().equals(songName)) {
-				songsInPlaylist.remove(songsInPlaylist.get(i));
+		String result = null;
+		Playlist selectedPlaylist = foundUser.getSpecificPlaylist(playlist);
+		if(selectedPlaylist != null) {
+			//Search and remove the song in the playlist
+			List<Song> songsInPlaylist = selectedPlaylist.getSongs();
+			for(int i=0; i <songsInPlaylist.size(); i++) {
+				if(songsInPlaylist.get(i).getSongDetails().getTitle().equals(songName)) {
+					System.out.println("Found");
+					songsInPlaylist.remove(songsInPlaylist.get(i));
+					break;
+				}
 			}
-		}
-		
-		int index = 0;
-		for(int i=0;i<foundUser.getPlaylists().size();i++) {
-			if(foundUser.getPlaylists().get(i).getPlaylistName().equals(selectedPlaylist.getPlaylistName())) {
-				index= i;
-				foundUser.getPlaylists().set(i, selectedPlaylist);
-				foundUser.setPlaylists(foundUser.getPlaylists());
+			
+			//Update the user's playlist
+			for(int i=0;i<foundUser.getPlaylists().size();i++) {
+				if(foundUser.getPlaylists().get(i).getPlaylistName().equals(selectedPlaylist.getPlaylistName())) {
+					foundUser.getPlaylists().set(i, selectedPlaylist);
+					foundUser.setPlaylists(foundUser.getPlaylists());
+					break;
+				}
 			}
-		}
+			result = theGson.toJson(selectedPlaylist);
+		} 
 
-		return theGson.toJson(selectedPlaylist);
+		return result;
 	}
 	
 	
