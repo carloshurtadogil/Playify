@@ -32,13 +32,13 @@ public class RegisterController {
 	private TextField confirmPasswordField;
 	@FXML
 	private Label labelStatus;
-	
+
 	@FXML
-	 private AnchorPane rootPane;
-	
-	//Registers a new user into the system
+	private AnchorPane rootPane;
+
+	// Registers a new user into the system
 	@SuppressWarnings("unchecked")
-	public void Register(ActionEvent event) throws FileNotFoundException, IOException, ParseException{
+	public void Register(ActionEvent event) throws FileNotFoundException, IOException, ParseException {
 		try {
 			ProxyInterface proxy = new Proxy(new ClientCommunicationModule());
 			String[] param = new String[3];
@@ -46,10 +46,10 @@ public class RegisterController {
 			param[1] = passwordField.getText();
 			param[2] = confirmPasswordField.getText();
 			JsonObject result = proxy.synchExecution("verifyRegisterInformation", param);
-			
+
 			User retrieveNewUser = new Gson().fromJson(result, User.class);
-			
-			//Pass user to the home controller and launch view.
+
+			// Pass user to the home controller and launch view.
 			if (retrieveNewUser == null) {
 				labelStatus.setText("User could not be created");
 			} else {
@@ -70,10 +70,10 @@ public class RegisterController {
 				homeStage.show();
 
 			}
-			
-		}
-		catch(Exception e) {
-			
+
+		} catch (Exception e) {
+
 		}
 	}
+
 }

@@ -3,10 +3,12 @@ package application;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.simple.parser.ParseException;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import javafx.event.ActionEvent;
 import javafx.collections.FXCollections;
@@ -109,27 +111,33 @@ public class CreatePlaylistController {
 		volume = v;
 	}
 	
+	//Prepares a client request for searching for a song
 	public void Search(ActionEvent event) { 
 		try {
-			List<Song> songNames = new ArrayList<Song>();
-			Gson gson = new Gson();
-			List<Song> mySongs = gson.fromJson(new FileReader("music.json"), new TypeToken<List<Song>>(){}.getType());
-			Playlist masterPlaylist = new Playlist();
-			masterPlaylist.setSongs(mySongs);
 			
-			for(Song x : masterPlaylist.songs) {
-				if(x.getSongDetails().getTitle().equals(txtSearch.getText()) || 
-				   x.getArtistDetails().getName().equals(txtSearch.getText()) || 
-				   x.getArtistDetails().getTerms().equals(txtSearch.getText())) {
-					searchResults.add(x);
-					songNames.add(x);
-				}
+			if(!txtSearch.getText().isEmpty() || !txtSearch.getText().equals(null)) {
+
+				ProxyInterface proxy= new Proxy(new ClientCommunicationModule());
+				String [] param = new String[1];
+				param[0] = txtSearch.getText();
+				JsonObject result = proxy.synchExecution("searchForSongs", param);
+				
+				if(result.has("searchResults")) {
+					List<Song> searchResults = new Gson().fromJson(result.get("searchResults"), new TypeToken<List<Song>>() {}.getType());
 					
+					if(searchResults !=null) {
+						listOfSongs.setItems(FXCollections.observableList(searchResults));
+						listOfSongs.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+					}
+				}
+				else if(result.has("errorMessage")) {
+					
+				}
+
 			}
-			
-			listOfSongs.setItems(FXCollections.observableList(songNames));
-			listOfSongs.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-			
+			else {
+				pLabel.setText("Search field must have a value");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
@@ -210,35 +218,50 @@ public class CreatePlaylistController {
 		this.newPlaylist.setPlaylistName(txtPlaylistName.getText());
 	}
 	
-	public void createPlaylist(ActionEvent event) {
+	//Initiates the client request to create a new playlist
+	public void createPlaylist(ActionEvent event) throws SocketException {
 		newPlaylist = new Playlist();
 		newPlaylist.setPlaylistName(txtPlaylistName.getText());
 		
 		if(newSongs.size() !=0 && !(newPlaylist.getPlaylistName()).isEmpty()) {
-			for(Song s: newSongs) {
-				newPlaylist.addSong(s);
+			
+			ProxyInterface proxy = new Proxy(new ClientCommunicationModule());
+			String [] param = new String[2];
+			param[0]= selectedUser.getUsername();
+			param[1] = new Gson().toJson(newPlaylist);
+			JsonObject result = proxy.synchExecution("createAndAddPlaylist", param);
+			
+			if(result.has("successMessage")) {
+				for(Song s: newSongs) {
+					newPlaylist.addSong(s);
+				}
+				selectedUser.getPlaylists().add(newPlaylist);
+				try {
+					FXMLLoader homeControllerLoader = new FXMLLoader();
+					homeControllerLoader.setLocation(getClass().getResource("/application/Home.fxml"));
+					Parent root = homeControllerLoader.load();
+					
+					HomeController homeController = homeControllerLoader.getController();
+					homeController.setLoggedUser(selectedUser);
+					
+					Scene homeScene = new Scene(root);
+					Stage homeStage = (Stage) tempLabel.getScene().getWindow();
+					homeStage.setScene(homeScene);
+					homeStage.show();
+				}
+				catch(Exception e) {
+					e.printStackTrace();
+				}
 			}
-			selectedUser.addPlaylist(this.newPlaylist);
-			try {
-				FXMLLoader homeControllerLoader = new FXMLLoader();
-				homeControllerLoader.setLocation(getClass().getResource("/application/Home.fxml"));
-				Parent root = homeControllerLoader.load();
-				
-				HomeController homeController = homeControllerLoader.getController();
-				homeController.setLoggedUser(selectedUser);
-				
-				Scene homeScene = new Scene(root);
-				Stage homeStage = (Stage) tempLabel.getScene().getWindow();
-				homeStage.setScene(homeScene);
-				homeStage.show();
+			else if(result.has("errorMessage")) {
+				pLabel.setText("Some error has occurred, or playlist name is already used by you");
 			}
-			catch(Exception e) {
-				e.printStackTrace();
-			}
+			
+			
 		}
 		else {
-			System.out.println("Can't create a new playlist since there are no songs or missing playlistname");
-		}
+			pLabel.setText("Can't create a new playlist since there are no songs or missing playlistname");
+		};
 		
 		
 	}

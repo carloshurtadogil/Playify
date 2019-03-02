@@ -36,7 +36,8 @@ public class ServerCommunicationModule extends Thread {
 
 	public ServerCommunicationModule() throws IOException {
 
-		dSocket = new DatagramSocket(80);
+		System.out.println(InetAddress.getLocalHost());
+		dSocket = new DatagramSocket(5000);
 
 	}
 
@@ -66,37 +67,6 @@ public class ServerCommunicationModule extends Thread {
 			DatagramPacket response =  new DatagramPacket(msgInBytes.getBytes(), msgInBytes.getBytes().length, clientAddress, clientPort);
 
 			dSocket.send(response);
-//			
-//			if (dPacket.getData() != null) {
-//				try {
-//					byte[] packetData = dPacket.getData();
-//					System.out.println(packetData);
-//					String packetData64String = new String(packetData);
-//
-//					JSONParser parser = new JSONParser();
-//					
-//
-//					String packetDataString = packetData64String.toString();
-//					int lastBracket = packetDataString.lastIndexOf("}");
-//					
-//					packetDataString = packetDataString.substring(0,lastBracket+1);
-//					JSONObject packetDataRequest = new JSONObject();
-//
-//					packetDataRequest = (JSONObject) parser.parse(packetDataString);
-//
-//
-//					String dispatchedItem = startDispatcher(packetDataRequest);
-//
-//
-//					sentMessage = dispatchedItem.getBytes();
-//
-//
-//				}
-//				catch(Exception e) {
-//					e.printStackTrace();
-//				}
-//				
-//			}
 		}
 
 	}

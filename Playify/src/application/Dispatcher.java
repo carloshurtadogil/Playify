@@ -93,7 +93,7 @@ public class Dispatcher implements DispatcherInterface {
             }
             // Prepare the  parameters 
             Class[] types =  method.getParameterTypes();
-            System.out.println(types[0].getCanonicalName() + " " + types[1].getCanonicalName());
+
             Object[] parameter = new Object[types.length];
             String[] strParam = new String[types.length];
             JsonObject jsonParam = jsonRequest.get("param").getAsJsonObject();
@@ -133,18 +133,16 @@ public class Dispatcher implements DispatcherInterface {
                         ret = method.invoke(object, parameter).toString();
                         break;
                     case "java.lang.String":
-                    	System.out.println("Curiousity killed the cat twice " + parameter[0] + " " +parameter[1]);
                         ret = (String)method.invoke(object, parameter);
-                        
-                        
-                        
+                        System.out.println("Result from remote method: " + ret.toString());
                         break;
                 }
+            	
                 jsonReturn = (JsonObject) new JsonParser().parse(ret);
    
         } catch (InvocationTargetException | IllegalAccessException e)
         {
-        //    System.out.println(e);
+        	
             jsonReturn.addProperty("error", "Error on " + jsonRequest.get("objectName").getAsString() + "." + jsonRequest.get("remoteMethod").getAsString());
         }
      
@@ -152,7 +150,7 @@ public class Dispatcher implements DispatcherInterface {
         String finalResult = (jsonReturn.toString()).replace("\\", "");
         System.out.println("At Dispatcher, " + finalResult);
         return finalResult;
-    }
+}
 
     /* 
     * registerObject: It register the objects that handle the request

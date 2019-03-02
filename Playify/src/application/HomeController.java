@@ -3,11 +3,13 @@ package application;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.simple.parser.ParseException;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import javafx.collections.FXCollections;
@@ -44,75 +46,60 @@ public class HomeController {
 	private Label errorLabel;
 	@FXML
 	private Button playButton;
-	@FXML 
+	@FXML
 	private Button pauseButton;
-	@FXML 
+	@FXML
 	private Button stopButton;
 	@FXML
 	private Button removeSongButton;
 	@FXML
 	private Slider volumeSlider;
-	
+
 	private User selectedUser;
 	private List<Song> mySongs;
 	private Playlist master;
 	private PlayifyPlayer musicPlayer;
 	private int volume;
-	
 
 	/**
-	 * This method executes after the HomeController is loaded, to set the user 
-	 * as a logged in user
-	 * @param user The current user
+	 * This method executes after the HomeController is loaded, to set the user as a
+	 * logged in user
+	 * 
+	 * @param user
+	 *            The current user
 	 */
 	public void setLoggedUser(User user) throws FileNotFoundException, IOException, ParseException {
 		this.selectedUser = user;
 		temporaryLabel.setText(user.getUsername());
-		loadPlaylists(selectedUser);
 		loadAllSongs();
 		populatePlaylists(selectedUser);
-		
-		/* For Testing purposes
-		if(selectedUser.getPlaylists().size() > 0) {
-			
-			String playlistToRemove = selectedUser.getPlaylists().get(0).getPlaylistName();
-			if(removePlaylist(selectedUser, playlistToRemove)) {
-				System.out.println("Success in removing playlist: " + playlistToRemove);
-				System.out.println("password:" + selectedUser.getPassword());
-				System.out.println("username:" + selectedUser.getUsername());
-				System.out.println("playlists: ");
-				for(Playlist p : selectedUser.getPlaylists()) {
-					p.printPlaylistDetails();
-				}
-			} else {
-				System.out.println("Failed to remove playlist: " + playlistToRemove);
-			}
-		} else {
-			System.out.println("No playlists to remove");
-		}*/
 
 	}
-	
+
 	/**
 	 * Retrieve the player
+	 * 
 	 * @return The music player found in this class
 	 */
 	public PlayifyPlayer getMusicPlayer() {
 		return musicPlayer;
 	}
-	
+
 	/**
 	 * For the transfer of a music player from the previous controller
-	 * @param p The player to be transferred
+	 * 
+	 * @param p
+	 *            The player to be transferred
 	 */
 	public void setMusicPlayer(PlayifyPlayer p) {
 		musicPlayer = p;
 	}
-	
-	
+
 	/**
 	 * Transfer the volume from the previous controller
-	 * @param v The volume level that the song is playing at
+	 * 
+	 * @param v
+	 *            The volume level that the song is playing at
 	 */
 	public void setVolume(int v) {
 		volume = v;
@@ -120,18 +107,20 @@ public class HomeController {
 
 	/**
 	 * Populates all of the user's playlists into the ListView of Home.fxml
-	 * @param someUser The current user
+	 * 
+	 * @param someUser
+	 *            The current user
 	 */
 	public void populatePlaylists(User someUser) {
 
 		logoutButton.setOnAction(new EventHandler<ActionEvent>() {
-			
+
 			@Override
 			public void handle(ActionEvent arg0) {
 				try {
-					// Load the Login.fxml page 
+					// Load the Login.fxml page
 					FXMLLoader portalLoader = new FXMLLoader();
-				    portalLoader.setLocation(getClass().getResource("/application/Login.fxml"));
+					portalLoader.setLocation(getClass().getResource("/application/Login.fxml"));
 					Parent root = portalLoader.load();
 					Scene portalScene = new Scene(root);
 
@@ -143,22 +132,22 @@ public class HomeController {
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} 
+				}
 			}
 		});
-		
+
 		// Populate the list of playlists into the ListView as an observable list
-		
+
 		List<Playlist> masterPlaylist = new ArrayList<Playlist>();
 		masterPlaylist.add(master);
-		
-		for(Playlist p : someUser.getPlaylists()) {
+
+		for (Playlist p : someUser.getPlaylists()) {
 			masterPlaylist.add(p);
 		}
 		playlistView.setItems(FXCollections.observableList(masterPlaylist));
 
 		allSongsView.setOnMouseClicked(event -> {
-			if(event.getClickCount() == 1) {
+			if (event.getClickCount() == 1) {
 				playButton.setOnAction((buttonPressed) -> {
 					String name = allSongsView.getSelectionModel().getSelectedItem().getSongDetails().getTitle();
 					String id = allSongsView.getSelectionModel().getSelectedItem().getSongDetails().getSongId();
@@ -171,83 +160,67 @@ public class HomeController {
 
 			// User must click on an item in order to delete it
 			if (event.getClickCount() == 1) {
-				if(playlistView.getSelectionModel().getSelectedIndex() == 0) {
+				if (playlistView.getSelectionModel().getSelectedIndex() == 0) {
 					allSongsView.setItems(FXCollections.observableList(master.getSongs()));
 					removeSongButton.setVisible(false);
 				} else {
+
 					String playlistname = playlistView.getSelectionModel().getSelectedItem().getPlaylistName();
-					allSongsView.setItems(FXCollections.observableList(someUser.getSpecificPlaylist(playlistname).getSongs()));
+					allSongsView.setItems(
+							FXCollections.observableList(someUser.getSpecificPlaylist(playlistname).getSongs()));
 					removeSongButton.setVisible(true);
 				}
 				deletePlaylistButton.setOnAction((buttonPressed) -> {
-					//Call method that will delete the playlist
-					if(playlistView.getSelectionModel().getSelectedIndex() != 0)
-					{
-						this.removePlaylist(selectedUser, playlistView.getSelectionModel().getSelectedItem().getPlaylistName());
+					// Call method that will delete the playlist
+					if (playlistView.getSelectionModel().getSelectedIndex() != 0) {
+						try {
+							this.removePlaylist(selectedUser,
+									playlistView.getSelectionModel().getSelectedItem().getPlaylistName());
+						} catch (SocketException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						System.out.println("This button will delete this playlist...");
 						errorLabel.setVisible(false);
-					}
-					else
-					{
+					} else {
 						errorLabel.setVisible(true);
 					}
+
+				}
+						
+						
+				);
+				
+				removeSongButton.setOnAction((buttonPressed)-> {
 					
+					try {
+						this.removeSongFromPlaylist(allSongsView.getSelectionModel().getSelectedItem(), playlistView.getSelectionModel().getSelectedItem());
+					} catch (SocketException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				});
 			}
-			
-
-			/*
-			// User must click twice on the playlist to go to its page
-			if (event.getClickCount() == 2) {
-				// assign the selected playlist to a Playlist object/variable
-				Playlist selectedPlaylist = playlistView.getSelectionModel().getSelectedItem();
-
-				try {
-					// Load the Playlist.fxml page for that particular playlist
-					FXMLLoader playlistLoader = new FXMLLoader();
-					playlistLoader.setLocation(getClass().getResource("/application/Playlist.fxml"));
-					Parent root = playlistLoader.load();
-					Scene playlistScene = new Scene(root);
-
-					// Obtain the controller to set selected user and playlist
-					PlaylistController playlistControl = playlistLoader.getController();
-					
-					//Checks if a selected playlist is not null,
-					//or in other words if a user clicks on an empty item in the ListView
-					if(selectedPlaylist!=null) {
-						playlistControl.setUserAndPlaylist(selectedUser, selectedPlaylist);
-						// Load the current stage to prevent from generating a new window/popup
-						Stage playlistStage = (Stage) temporaryLabel.getScene().getWindow();
-						playlistStage.setScene(playlistScene);
-						playlistStage.show();
-					}
-					
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}*/
-
 		});
 	}
 
 	/**
 	 * Allows a user to add a playlist to the list of playlists created
-	 */ 
+	 */
 	public void GoToPlaylistPage(ActionEvent event) {
 
 		try {
-			//Load the CreatePlaylist.fxml page
+			// Load the CreatePlaylist.fxml page
 			FXMLLoader createPlaylistLoader = new FXMLLoader();
 			createPlaylistLoader.setLocation(getClass().getResource("/application/CreatePlaylist.fxml"));
 			Parent root = createPlaylistLoader.load();
 			Scene createPlaylistScene = new Scene(root);
-			
-			//Obtain the controller to set the selected user
+
+			// Obtain the controller to set the selected user
 			CreatePlaylistController createPlaylistControl = createPlaylistLoader.getController();
 			createPlaylistControl.setLoggedUser(selectedUser);
 
-			//Load the current stage to prevent from generating a new window/popup
+			// Load the current stage to prevent from generating a new window/popup
 			Stage createPlaylistStage = (Stage) temporaryLabel.getScene().getWindow();
 			createPlaylistStage.setScene(createPlaylistScene);
 			createPlaylistStage.show();
@@ -257,146 +230,98 @@ public class HomeController {
 			System.out.println("An exception has occurred");
 		}
 	}
-
-	/**
-	 * Traverse the list of users, identify their playlists, and upload information
-	 * on said play lists
-	 * 
-	 * @param user User whose playlists are being read
-	 */ 
-	public boolean loadPlaylists(User user) throws FileNotFoundException, IOException, ParseException {
-//		JSONParser parsing = new JSONParser();
-//		JSONObject mainObject = (JSONObject) parsing.parse(new FileReader("users.json"));
-//		JSONArray userArray = (JSONArray) mainObject.get("users");
-//
-//		List<Playlist> usersPlaylist = new ArrayList<Playlist>();
-//
-//		for (int i = 0; i < userArray.size(); i++) {
-//			// Search for the user
-//			JSONObject traverseUser = (JSONObject) userArray.get(i);
-//			if (user.getUsername().equals(traverseUser.get("username"))) {
-//
-//				// grab the playlists
-//				JSONArray playlistArray = (JSONArray) traverseUser.get("playlists");
-//
-//				if (playlistArray.size() > 0) {
-//
-//					for (int j = 0; j < playlistArray.size(); j++) {
-//
-//						JSONObject pl = (JSONObject) playlistArray.get(j);
-//
-//						Playlist playlistObject = new Playlist();
-//
-//						playlistObject.setPlaylistName(pl.get("playlistname").toString());
-//
-//						JSONArray songs = (JSONArray) pl.get("songs");
-//
-//						if (songs.size() > 0) {
-//							List<Song> songList = new ArrayList<Song>();
-//							for (int k = 0; k < songs.size(); k++) {
-//								JSONObject song = (JSONObject) songs.get(k);
-//								Song songObject = new Song();
-//								songObject.artist.familiarity = 
-//								songObject.setKey(Double.parseDouble(song.get("key").toString()));
-//								songObject.setModeConfidence(Double.parseDouble(song.get(	"mode_confidence"	).toString()));
-//								songObject.setArtistMBTagsCount(Double.parseDouble(song.get(	"artist_mbtags_count"	).toString()));
-//								songObject.setKeyConfidence(Double.parseDouble(song.get(	"key_confidence"	).toString()));
-//								songObject.setTatumsStart(Double.parseDouble(song.get(	"tatums_start"	).toString()));
-//								songObject.setYear(Integer.parseInt(song.get(	"year"	).toString()));
-//								songObject.setDuration(Double.parseDouble(song.get(	"duration"	).toString()));
-//								songObject.setHotttnesss(Double.parseDouble(song.get(	"hotttnesss"	).toString()));
-//								songObject.setBeatsStart(Double.parseDouble(song.get(	"beats_start"	).toString()));
-//								songObject.setTimeSignatureConfidence	(Double.parseDouble(song.get(	"time_signature_confidence"	).toString()));
-//								songObject.setTitle	(song.get(	"title"	).toString());
-//								songObject.setBarsConfidence(Double.parseDouble(song.get(	"bars_confidence"	).toString()));
-//								songObject.setID(song.get(	"id"	).toString());
-//								songObject.setBarsStart	(Double.parseDouble(song.get(	"bars_start"	).toString()));
-//								songObject.setArtistMBTags(song.get(	"artist_mbtags"	).toString());
-//								songObject.setStartOfFadeOut	(Double.parseDouble(song.get(	"start_of_fade_out"	).toString()));
-//								songObject.setTempo(Double.parseDouble(song.get(	"tempo"	).toString()));
-//								songObject.setEndOfFadeIn(Double.parseDouble(song.get(	"end_of_fade_in"	).toString()));
-//								songObject.setBeatsConfidence(Double.parseDouble(song.get(	"beats_confidence"	).toString()));
-//								songObject.setTatusmConfidence(Double.parseDouble(song.get(	"tatums_confidence"	).toString()));
-//								songObject.setMode(Integer.parseInt(song.get(	"mode"	).toString()));
-//								songObject.setTimeSignature(Double.parseDouble(song.get(	"time_signature"	).toString()));
-//								songObject.setLoudness(Double.parseDouble(song.get(	"loudness"	).toString()));
-//						
-//								
-//								songList.add(songObject);
-//							}
-//							playlistObject.setSongs(songList);
-//						}
-//						usersPlaylist.add(playlistObject);
-//						user.setPlaylists(usersPlaylist);
-//
-//					}
-//					return true;
-//				}
-//				break;
-//			}
-//		}
-
-		return false;
-	}
 	
-	/**
-	 * Remove a playlist from the user's playlist array 
-	 * @param user User who's playlists will be updated
-	 * @param name The name of the playlist to be removed
-	 * @return True if the playlist has been found and subsequently removed, false otherwise
-	 */
-	public void removePlaylist(User user, String name)  {
-		List<Playlist> playlists = user.getPlaylists();
-		if(playlists.size() > 0) {
+	//Prepares the client request for calling the song removal from a playlist method
+	public void removeSongFromPlaylist(Song selectedSong, Playlist selectedPlaylist) throws SocketException {
+		
+		ProxyInterface proxy = new Proxy(new ClientCommunicationModule());
+		
+		String [] param = new String[2];
+		param[0] = selectedUser.getUsername();
+		param[1] = new Gson().toJson(selectedPlaylist);
+		param[2] = selectedSong.getSongDetails().getSongId();
+		
+		JsonObject result = proxy.synchExecution("removeSongFromPlaylist", param);
+		Playlist playlistFromResult = new Gson().fromJson(result, Playlist.class);
+		
+		if(playlistFromResult == null) {
 			
-			for(int i = 0; i < playlists.size(); i++) {
-				if(playlists.get(i).getPlaylistName().equals(name)) {
-					playlists.remove(i);
-					user.setPlaylists(playlists);
+		}
+		else {
+			int index = 0;
+			for(int i=0;i<selectedUser.getPlaylists().size(); i++) {
+				if(selectedUser.getPlaylists().get(i).getPlaylistName().equals(playlistFromResult.getPlaylistName())) {
+					selectedUser.getPlaylists().set(index, playlistFromResult);
 					break;
 				}
+				index++;
 			}
-			
-			selectedUser =user;
 			populatePlaylists(selectedUser);
+			
 		}
-		
 	}
-	
+
+	/**
+	 * Remove a playlist from the user's playlist array
+	 * 
+	 * @param user
+	 *            User who's playlists will be updated
+	 * @param name
+	 *            The name of the playlist to be removed
+	 * @return True if the playlist has been found and subsequently removed, false
+	 *         otherwise
+	 * @throws SocketException
+	 */
+	public void removePlaylist(User user, String playlistName) throws SocketException {
+
+		ProxyInterface proxy = new Proxy(new ClientCommunicationModule());
+
+		String[] param = new String[2];
+		param[0] = selectedUser.getUsername();
+		param[1] = playlistName;
+		JsonObject result = proxy.synchExecution("removePlaylist", param);
+
+		selectedUser = user;
+		populatePlaylists(selectedUser);
+
+	}
+
 	/**
 	 * Load all songs to user's homepage
 	 */
-	public void loadAllSongs () {
+	public void loadAllSongs() {
 		try {
 			Gson gson = new Gson();
-			mySongs = gson.fromJson(new FileReader("music.json"), new TypeToken<List<Song>>(){}.getType());
+			mySongs = gson.fromJson(new FileReader("music.json"), new TypeToken<List<Song>>() {
+			}.getType());
 			master = new Playlist();
 			master.setPlaylistName("All");
 			master.setSongs(mySongs);
 			allSongsView.setItems(FXCollections.observableList(master.getSongs()));
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void loadPlaylistSongs(ArrayList<Playlist> p) {
 		playlistView.setItems(FXCollections.observableList(p));
 	}
-	
+
 	public void AddActionToSongsView() {
 		allSongsView.setOnMouseClicked(event -> {
-			if(playlistView.getSelectionModel() != null && playlistView.getSelectionModel().getSelectedIndex() != 0) {
-				if(event.getClickCount() == 1) {
-					if(removeSongButton.isVisible()) {
+			if (playlistView.getSelectionModel() != null && playlistView.getSelectionModel().getSelectedIndex() != 0) {
+				if (event.getClickCount() == 1) {
+					if (removeSongButton.isVisible()) {
 						removeSongButton.setOnAction((buttonPressed) -> {
-							System.out.println("Song to be removed: " + allSongsView.getSelectionModel().getSelectedItem());
+							System.out.println(
+									"Song to be removed: " + allSongsView.getSelectionModel().getSelectedItem());
 						});
 					}
 				}
 			}
 		});
-		
+
 	}
 
 }

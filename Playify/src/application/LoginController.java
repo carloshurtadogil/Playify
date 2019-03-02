@@ -37,6 +37,7 @@ public class LoginController {
 			String [] param = new String[2];
 			param[0] =  usernameField.getText();
 			param[1] = passwordField.getText();
+			
 			JsonObject result = proxy.synchExecution("verifyLoginInformation", param);
 			
 			

@@ -20,7 +20,32 @@ public class Param {
 	@SerializedName("fragment")
 	@Expose
 	private String fragment;
+	@SerializedName("songID")
+	@Expose
+	private String songID;
+	@SerializedName("playlist")
+	@Expose
+	private String playlist;
+	@SerializedName("searchInput")
+	@Expose
+	private String searchInput;
 
+	public String getSongID() {
+		return songID;
+	}
+	
+	public void setSongID(String songID) {
+		this.songID = songID;
+	}
+	
+	public String getPlaylist() {
+		return playlist;
+	}
+	
+	public void setPlaylist(String playlist) {
+		this.playlist = playlist;
+	}
+	
 	public String getConfirmPassword() {
 		return confirmPassword;
 	}
@@ -28,6 +53,15 @@ public class Param {
 	public void setConfirmPassword(String confirmPassword) {
 		this.confirmPassword = confirmPassword;
 	}
+	
+	public String getSearchInput() {
+		return searchInput;
+	}
+	
+	public void setSearchInput(String searchInput) {
+		this.searchInput = searchInput;
+	}
+	
 	
 	public String getUser() {
 		return user;

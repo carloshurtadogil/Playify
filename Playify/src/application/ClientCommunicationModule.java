@@ -56,7 +56,7 @@ public class ClientCommunicationModule implements CommunicationModule {
 		InetAddress iAddress = InetAddress.getLocalHost();
 				
 		//Get ready to send the packet from the client communication module to the server communication module
-		DatagramPacket thePacket = new DatagramPacket(messageBuffer, messageBuffer.length, iAddress, 80);
+		DatagramPacket thePacket = new DatagramPacket(messageBuffer, messageBuffer.length, iAddress, 5000);
 		ds.send(thePacket);
 		System.out.println("Packet has been sent");
 		
@@ -69,6 +69,7 @@ public class ClientCommunicationModule implements CommunicationModule {
 		String receivedMessage = new String(thePacket.getData(), 0, thePacket.getLength());
 		System.out.println("OKEY DOKEY" + receivedMessage + " " + thePacket.getLength());
 		
+		ds.close();
 		return receivedMessage;
 	}
 

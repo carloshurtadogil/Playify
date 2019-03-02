@@ -25,9 +25,36 @@
      	"return":"String"
      },
      
+     
+     {
+	"name":"removeSongFromPlaylist",
+     "object":"PlaylistDispatcher",
+     "call-semantics":"at-most-one",
+     "param":
+          {
+              "user":"string",
+              "playlist":"string",
+              "songID" : "string"
+          },
+        "return":"String"
+     },
+     
+     {
+	"name":"createAndAddPlaylist",
+     "object":"PlaylistDispatcher",
+     "call-semantics":"at-most-one",
+     "param":
+          {
+              "user":"string",
+              "playlist":"string"
+          },
+        "return":"String"
+     },
+     
+     
      {
         "name":"getSongChunk",
-        "object":"SongServices",
+        "object":"SongDispatcher",
         "call-semantics":"maybe",
         "param":
           {
@@ -35,9 +62,19 @@
               "fragment":"Long"
           },
         "return":"Byte[]"
-   	}
+   	},
+   	
+   	{
+   	"name":"searchForSongs",
+     "object":"SongDispatcher",
+     "call-semantics":"at-most-one",
+     "param":
+          {
+              "searchInput":"string"
+          },
+        "return":"String"
+     }
+   	
 
 	]
 }
-
-

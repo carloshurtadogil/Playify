@@ -19,6 +19,8 @@ import java.util.Base64;
 import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -66,6 +68,14 @@ public class SongDispatcher
         return total;
     }
     
+   /**
+    * Searches for available songs in music.json
+    * @param searchInput
+    * @return
+    * @throws JsonIOException
+    * @throws JsonSyntaxException
+    * @throws FileNotFoundException
+    */
     public String searchForSongs(String searchInput) throws JsonIOException, JsonSyntaxException, FileNotFoundException {
     	
     	List<Song> masterPlaylist = new Gson().fromJson(new FileReader("music.json"), new TypeToken<List<Song>>() {}.getType() );
@@ -85,17 +95,18 @@ public class SongDispatcher
     	
     	//If more than one song has been found, then send the list of songs as a Json string
     	if(searchResults.size() >0) {
-    		return new Gson().toJson(searchResults);
-        	
+
+    		JsonElement element = new Gson().toJsonTree(searchResults, new TypeToken<List<Song>>() {}.getType());
+    		JsonArray songsArray= element.getAsJsonArray();
+    		
+    		JsonObject searchResultsInJson = new JsonObject();
+    		searchResultsInJson.add("searchResults", songsArray);
+    		return searchResultsInJson.toString();
+    		
     	}
     	//else, return an error message stating that Login has failed
     	JsonObject errorMessage = new JsonObject();
     	errorMessage.addProperty("errorMessage", "Incorrect username or password");
     	return errorMessage.getAsString();
-    	
-    	
     }
-    
-    
-    
 }

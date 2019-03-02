@@ -3,9 +3,6 @@ package application;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 public class RemoteMethod {
 
 	@SerializedName("name")
