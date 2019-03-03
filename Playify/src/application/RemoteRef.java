@@ -31,7 +31,6 @@ public class RemoteRef implements RemoteRefInterface{
 						 break;
 					}
 				}
-				System.out.println(jsonString);
 				return jsonString;
 			}
 			

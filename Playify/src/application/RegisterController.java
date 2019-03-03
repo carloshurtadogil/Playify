@@ -39,6 +39,7 @@ public class RegisterController {
 	// Registers a new user into the system
 	@SuppressWarnings("unchecked")
 	public void Register(ActionEvent event) throws FileNotFoundException, IOException, ParseException {
+		
 		try {
 			ProxyInterface proxy = new Proxy(new ClientCommunicationModule());
 			String[] param = new String[3];
@@ -47,13 +48,12 @@ public class RegisterController {
 			param[2] = confirmPasswordField.getText();
 			JsonObject result = proxy.synchExecution("verifyRegisterInformation", param);
 
-			User retrieveNewUser = new Gson().fromJson(result, User.class);
-
-			// Pass user to the home controller and launch view.
-			if (retrieveNewUser == null) {
+			if (result.has("error") || result.has("errorMessage")) {
 				labelStatus.setText("User could not be created");
 			} else {
+
 				labelStatus.setText("Success");
+				User retrieveNewUser = new Gson().fromJson(result, User.class);
 
 				// Pass the logged in user from this controller to the HomeController
 				FXMLLoader loader = new FXMLLoader();
@@ -68,11 +68,10 @@ public class RegisterController {
 				Stage homeStage = (Stage) labelStatus.getScene().getWindow();
 				homeStage.setScene(homeScene);
 				homeStage.show();
-
 			}
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 	}
 

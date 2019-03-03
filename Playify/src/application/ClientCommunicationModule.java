@@ -16,8 +16,8 @@ import com.google.gson.JsonObject;
 
 public class ClientCommunicationModule implements CommunicationModule {
 	
-	private byte [] messageBuffer = new byte[6000];
-	private byte[] retrievedReply = new byte[6000];
+	private byte [] messageBuffer;
+	private byte[] retrievedReply;
 	public ClientCommunicationModule() throws SocketException {
 		
 		
@@ -49,6 +49,7 @@ public class ClientCommunicationModule implements CommunicationModule {
 		
 		
 		System.out.println("The following request is the following : " + request.toString());
+		messageBuffer = new byte[65535];
 		messageBuffer = request.toString().getBytes();
 		
 		//Create a new socket
@@ -56,18 +57,16 @@ public class ClientCommunicationModule implements CommunicationModule {
 		InetAddress iAddress = InetAddress.getLocalHost();
 				
 		//Get ready to send the packet from the client communication module to the server communication module
-		DatagramPacket thePacket = new DatagramPacket(messageBuffer, messageBuffer.length, iAddress, 5000);
-		ds.send(thePacket);
-		System.out.println("Packet has been sent");
-		
-		
-		//Get ready to receive the response from the server communication module
-		thePacket = new DatagramPacket(retrievedReply, retrievedReply.length); 
-		ds.receive(thePacket);
-		
+		DatagramPacket packetToBeSent = new DatagramPacket(messageBuffer, messageBuffer.length, iAddress, 5000);
+		ds.send(packetToBeSent);
+	
+		messageBuffer = new byte[65535];
+		DatagramPacket packetToBeReceived = new DatagramPacket(messageBuffer, messageBuffer.length);
+		ds.receive(packetToBeReceived);
 		System.out.println("Reply has been received");
-		String receivedMessage = new String(thePacket.getData(), 0, thePacket.getLength());
-		System.out.println("OKEY DOKEY" + receivedMessage + " " + thePacket.getLength());
+		
+		String receivedMessage = new String(messageBuffer, 0, messageBuffer.length);
+		System.out.println("OKEY DOKEY" + receivedMessage);
 		
 		ds.close();
 		return receivedMessage;

@@ -155,6 +155,7 @@ public class CreatePlaylistController {
 		System.out.println("Pause clicked");
 	}
 	
+	//Adds a collection of songs to the 
 	public void Add(ActionEvent event) {
 		System.out.println("Clicked");
 		try {
@@ -187,7 +188,7 @@ public class CreatePlaylistController {
 			System.out.println("Add Song Error");
 			e.printStackTrace();
 		}
-	}
+}
 	
 	public void Remove(ActionEvent event) {
 		try {
@@ -225,16 +226,20 @@ public class CreatePlaylistController {
 		
 		if(newSongs.size() !=0 && !(newPlaylist.getPlaylistName()).isEmpty()) {
 			
+			for(int i=0; i<newSongs.size(); i++) {
+				newPlaylist.addSong(newSongs.get(i));
+			}
+			
+			
 			ProxyInterface proxy = new Proxy(new ClientCommunicationModule());
 			String [] param = new String[2];
 			param[0]= selectedUser.getUsername();
 			param[1] = new Gson().toJson(newPlaylist);
+			System.out.println("here it is now : " + param[1]);
 			JsonObject result = proxy.synchExecution("createAndAddPlaylist", param);
 			
 			if(result.has("successMessage")) {
-				for(Song s: newSongs) {
-					newPlaylist.addSong(s);
-				}
+				
 				selectedUser.getPlaylists().add(newPlaylist);
 				try {
 					FXMLLoader homeControllerLoader = new FXMLLoader();

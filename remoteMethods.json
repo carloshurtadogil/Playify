@@ -40,6 +40,19 @@
      },
      
      {
+	"name":"removePlaylist",
+     "object":"PlaylistDispatcher",
+     "call-semantics":"at-most-one",
+     "param":
+          {
+              "user":"string",
+              "playlist":"string"
+          },
+        "return":"String"
+     },
+     
+     
+     {
 	"name":"createAndAddPlaylist",
      "object":"PlaylistDispatcher",
      "call-semantics":"at-most-one",

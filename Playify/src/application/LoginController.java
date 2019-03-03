@@ -1,9 +1,6 @@
 package application;
 
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -24,32 +20,30 @@ public class LoginController {
 	private TextField usernameField;
 	@FXML
 	private TextField passwordField;
-
 	@FXML
 	private AnchorPane rootPane;
 
 	public void Login(ActionEvent event) {
 
 		try {
-			
-			
+
 			ProxyInterface proxy = new Proxy(new ClientCommunicationModule());
-			String [] param = new String[2];
-			param[0] =  usernameField.getText();
+			String[] param = new String[2];
+			param[0] = usernameField.getText();
 			param[1] = passwordField.getText();
-			
+
 			JsonObject result = proxy.synchExecution("verifyLoginInformation", param);
-			
-			
-			System.out.println(result.toString());
-			
-			
-			User retrievedUser = new Gson().fromJson(result, User.class);
-			
-			
-			if (retrievedUser ==null) {
+
+			// Checks if there are any error messages in the JSON to see if user has been
+			// found or not
+			if (result.has("error") || result.has("errorMessage")) {
 				labelStatus.setText("Unsuccessful login attempt, incorrect username or password");
-			} else {
+			}
+
+			// otherwise, proceed to obtain user information and generate it to a User object
+			else {
+
+				User retrievedUser = new Gson().fromJson(result, User.class);
 				labelStatus.setText("Success");
 
 				// Pass the logged in user from this controller to the HomeController
@@ -81,7 +75,4 @@ public class LoginController {
 
 	}
 
-	public void Logout(ActionEvent event) {
-
-	}
 }

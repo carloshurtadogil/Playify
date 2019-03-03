@@ -13,33 +13,35 @@ import com.google.gson.reflect.TypeToken;
 
 public class PlaylistDispatcher {
 
-	// Adds a song to a playlist
-	public String addSongsToPlaylist(String username, String playlist, String songs)
-			throws JsonSyntaxException, JsonIOException, FileNotFoundException {
-
-		Gson theGson = new Gson();
-		UserResponse theResponse = theGson.fromJson(new FileReader("users.json"), UserResponse.class);
-		User foundUser = new User(null, null);
-
-		List<User> usersList = theResponse.getUsersList();
-		// traverses the entire list of users, and attempts to find if a particular user
-		// exists
-		for (User u : usersList) {
-			if (u.getUsername().equals(username)) {
-				foundUser = u;
-			}
+	/**
+	 * Removes a specific playlist from the user's list of playlists
+	 * @return
+	 * @throws FileNotFoundException 
+	 * @throws JsonIOException 
+	 * @throws JsonSyntaxException 
+	 */
+	public String removePlaylist(String username, String playlistName) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+		UserDB userDatabase = new UserDB();
+		User foundUser = userDatabase.getParticularUser(username);
+		Playlist particularPlaylist = foundUser.getSpecificPlaylist(playlistName);
+		
+		if(particularPlaylist == null) {
+			JsonObject errorMessage = new JsonObject();
+			errorMessage.addProperty("errorMessage", "");
+			return errorMessage.toString();
+		}
+		else {
+			foundUser.getPlaylists().remove(particularPlaylist);
+			foundUser.setPlaylists(foundUser.getPlaylists());
+			JsonObject successMessage = new JsonObject();
+			successMessage.addProperty("successMessage", "");
+			return successMessage.toString();
 		}
 
-		List<Song> songsToBeAdded = theGson.fromJson(songs, new TypeToken<List<Song>>() {
-		}.getType());
-
-		Playlist temporaryPlaylist = new Playlist();
-		temporaryPlaylist.setSongs(songsToBeAdded);
-
-		return theGson.toJson(temporaryPlaylist, Playlist[].class);
-
 	}
-
+	
+	
+	
 	/**
 	 * Remove a specific song from a specific playlist for a specific user
 	 * 
@@ -52,22 +54,11 @@ public class PlaylistDispatcher {
 	 * @return All the songs left in a playlist after the removal, null if playlist
 	 *         does not exist
 	 */
-	public String removeSongFromPlaylist(String username, String playlist, String songName)
+	public String removeSongFromPlaylist(String username, String playlist, String songID)
 			throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 
-		Gson theGson = new Gson();
-
-		UserResponse theResponse = theGson.fromJson(new FileReader("users.json"), UserResponse.class);
-		List<User> ultimateUserList = theResponse.getUsersList();
-
-		User foundUser = new User(null, null);
-		// traverses the entire list of users, and attempts to find if a particular user
-		// exists
-		for (User u : ultimateUserList) {
-			if (u.getUsername().equals(username)) {
-				foundUser = u;
-			}
-		}
+		UserDB userDatabase = new UserDB();
+		User foundUser = userDatabase.getParticularUser(username);
 
 		// Reads the entire users.json file
 		String result = null;
@@ -76,7 +67,7 @@ public class PlaylistDispatcher {
 			// Search and remove the song in the playlist
 			List<Song> songsInPlaylist = selectedPlaylist.getSongs();
 			for (int i = 0; i < songsInPlaylist.size(); i++) {
-				if (songsInPlaylist.get(i).getSongDetails().getTitle().equals(songName)) {
+				if (songsInPlaylist.get(i).getSongDetails().getSongId().equals(songID)) {
 					System.out.println("Found");
 					songsInPlaylist.remove(songsInPlaylist.get(i));
 					break;
@@ -91,7 +82,11 @@ public class PlaylistDispatcher {
 					break;
 				}
 			}
-			result = theGson.toJson(selectedPlaylist);
+			result = new Gson().toJson(selectedPlaylist);
+			return result;
+		}
+		else {
+			
 		}
 
 		return result;
@@ -113,11 +108,15 @@ public class PlaylistDispatcher {
 	public String createAndAddPlaylist(String username, String playlist)
 			throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 
-		boolean addPlaylist = false;
+		System.out.println("in the playlist dispatcher now with " + username + " " + playlist);
+		
+		
+		boolean addPlaylist = true;
 		UserDB userDatabase = new UserDB();
 		User retrievedUser = userDatabase.getParticularUser(username);
 
 		Playlist thePlaylist = new Gson().fromJson(playlist, Playlist.class);
+		System.out.println(thePlaylist.toString());
 
 		// traverse the entire user's list of playlists to determine if the name of the
 		// to be added
@@ -125,27 +124,28 @@ public class PlaylistDispatcher {
 		List<Playlist> songsInPlaylist = retrievedUser.getPlaylists();
 		for (Playlist pl : songsInPlaylist) {
 			if (pl.getPlaylistName().equals(thePlaylist.getPlaylistName())) {
-				addPlaylist = true;
+				addPlaylist = false;
 				break;
-
 			}
 		}
 		//If the prerequisite to add a playlist to the list works, then proceed to generate a success message
 		//and update users.json accordingly
 		if (addPlaylist) {
+			System.out.println("Adding new playlist now....");
 			retrievedUser.addPlaylist(thePlaylist);
 			JsonObject successMessage = new JsonObject();
 			successMessage.addProperty("successMessage", "");
+			return successMessage.toString();
 		
 		//else, generate an error message
 		} else {
+			System.out.println("failing to add new playlist now....");
 			// else, return an error message stating that creating a dispatcher has failed
 			JsonObject errorMessage = new JsonObject();
 			errorMessage.addProperty("errorMessage", "");
-			return errorMessage.getAsString();
+			return errorMessage.toString();
 		}
 
-		return null;
 	}
 
 }

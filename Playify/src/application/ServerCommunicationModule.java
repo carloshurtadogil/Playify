@@ -20,19 +20,18 @@ import com.google.gson.JsonParser;
 
 public class ServerCommunicationModule extends Thread {
 
+	private DatagramSocket dSocket;
+	private DatagramPacket packetToBeReceived;
+	private DatagramPacket packetToBeSent;
+	private boolean currentlyRunning;
+	private byte[] messageBuffer =null;
+	private Dispatcher dispatcher;
 	
 	
 	public static void main(String []args) throws IOException, ParseException {
 		ServerCommunicationModule test = new ServerCommunicationModule();
 		test.StartServer();
-		
-		
 	}
-	
-	private DatagramSocket dSocket;
-	private boolean currentlyRunning;
-	private byte[] sentMessage = new byte[6000];
-	private Dispatcher dispatcher;
 
 	public ServerCommunicationModule() throws IOException {
 
@@ -46,27 +45,25 @@ public class ServerCommunicationModule extends Thread {
 		currentlyRunning = true;
 
 		while (currentlyRunning) {
-			DatagramPacket incomingRequest = new DatagramPacket(sentMessage, sentMessage.length);
+			messageBuffer = new byte[65535];
+			packetToBeReceived = new DatagramPacket(messageBuffer, messageBuffer.length);
+			dSocket.receive(packetToBeReceived);
 			
-			dSocket.receive(incomingRequest);
 			
-			String requestMessage = new String(sentMessage, 0, incomingRequest.getLength());
+			String receivedMessage = new String(packetToBeReceived.getData(), 0, packetToBeReceived.getLength());
+
+			JsonObject requestAsJsonObject = new JsonParser().parse(receivedMessage).getAsJsonObject();
+			messageBuffer = this.startDispatcher(requestAsJsonObject);
 			
-			System.out.println("OH YEAH : " + requestMessage);
+			InetAddress clientAddress = packetToBeReceived.getAddress();
+			int clientPort = packetToBeReceived.getPort();
 			
-			JsonObject requestAsJsonObject = new JsonParser().parse(requestMessage).getAsJsonObject();
-			sentMessage = this.startDispatcher(requestAsJsonObject);
-			
-			String msgInBytes = new String(sentMessage);
+			String msgInBytes = new String(messageBuffer);
 			System.out.println("RETRIEVED MESSAGE " + msgInBytes);
 			
-			InetAddress clientAddress = incomingRequest.getAddress();
-			int clientPort = incomingRequest.getPort();
-			
+			packetToBeSent =  new DatagramPacket(messageBuffer, messageBuffer.length, clientAddress, clientPort);
 
-			DatagramPacket response =  new DatagramPacket(msgInBytes.getBytes(), msgInBytes.getBytes().length, clientAddress, clientPort);
-
-			dSocket.send(response);
+			dSocket.send(packetToBeSent);
 		}
 
 	}

@@ -45,7 +45,6 @@ public class Proxy implements ProxyInterface {
         RemoteRefInterface remoteReference =  new RemoteRef();
         String remoteReferenceResult = remoteReference.getRemoteReference(remoteMethod);
         
-        System.out.println(remoteReferenceResult.toString());
   
         if(remoteReferenceResult !=null) {
         	JsonObject remoteReferenceContents = new Gson().fromJson(remoteReferenceResult, JsonObject.class);
@@ -75,7 +74,10 @@ public class Proxy implements ProxyInterface {
             	for(int i=0; i<splitContent.length; i++) {
             		
             		String parameterName = splitContent[i].substring(0, splitContent[i].indexOf(':'));
+
             		jsonParam.addProperty(parameterName.substring(1, parameterName.length()-1), param[i] );
+            		System.out.println("parameter to be added " + param[i]);
+            		
             	}
         	}
         	
@@ -93,7 +95,9 @@ public class Proxy implements ProxyInterface {
         }
         
         if(!proxyReturn.isEmpty()) {
-        	JsonObject proxyReturnAsJson = (JsonObject)new JsonParser().parse(proxyReturn);
+        	JsonElement trimmedElement = new JsonParser().parse(proxyReturn.trim());
+        	JsonObject proxyReturnAsJson = trimmedElement.getAsJsonObject();
+        	System.out.println(proxyReturnAsJson.toString() + " rocky balboa");
         	return proxyReturnAsJson;
         }
 

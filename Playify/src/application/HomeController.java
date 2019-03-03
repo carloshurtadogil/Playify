@@ -236,9 +236,10 @@ public class HomeController {
 		
 		ProxyInterface proxy = new Proxy(new ClientCommunicationModule());
 		
-		String [] param = new String[2];
+		String [] param = new String[3];
 		param[0] = selectedUser.getUsername();
-		param[1] = new Gson().toJson(selectedPlaylist);
+		param[1] = selectedPlaylist.getPlaylistName();
+		System.out.println(selectedSong.getSongDetails().getSongId());
 		param[2] = selectedSong.getSongDetails().getSongId();
 		
 		JsonObject result = proxy.synchExecution("removeSongFromPlaylist", param);
@@ -281,8 +282,14 @@ public class HomeController {
 		param[1] = playlistName;
 		JsonObject result = proxy.synchExecution("removePlaylist", param);
 
-		selectedUser = user;
-		populatePlaylists(selectedUser);
+		if(result.has("errorMessage") || result.has("error")) {
+			
+		}
+		else if(result.has("successMessage")) {
+			Playlist playlistToDelete = selectedUser.getSpecificPlaylist(playlistName);
+			selectedUser.getPlaylists().remove(playlistToDelete);
+			populatePlaylists(selectedUser);
+		}
 
 	}
 

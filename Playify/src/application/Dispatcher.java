@@ -76,7 +76,6 @@ public class Dispatcher implements DispatcherInterface {
             // Obtains the object pointing to SongServices
             //Object object = ListOfObjects.get(jsonRequest.get("objectName").getAsString());
         	
-            System.out.println("jackal "  + object.toString());
             
             Method[] methods = object.getClass().getMethods();
             Method method = null;
@@ -100,7 +99,6 @@ public class Dispatcher implements DispatcherInterface {
             int j = 0;
             for (Map.Entry<String, JsonElement>  entry  :  jsonParam.entrySet())
             {
-            	System.out.println(entry.getValue().getAsString() + "yahoo");
                 strParam[j++] = entry.getValue().getAsString();
             }
             // Prepare parameters
@@ -116,7 +114,6 @@ public class Dispatcher implements DispatcherInterface {
                         break;
                     case "java.lang.String":
                         parameter[i] = new String(strParam[i]);
-                        System.out.println(parameter[i] + " sweet");
                         break;
                 }
             }
@@ -134,15 +131,13 @@ public class Dispatcher implements DispatcherInterface {
                         break;
                     case "java.lang.String":
                         ret = (String)method.invoke(object, parameter);
-                        System.out.println("Result from remote method: " + ret.toString());
                         break;
                 }
-            	
                 jsonReturn = (JsonObject) new JsonParser().parse(ret);
    
         } catch (InvocationTargetException | IllegalAccessException e)
         {
-        	
+        	e.printStackTrace();
             jsonReturn.addProperty("error", "Error on " + jsonRequest.get("objectName").getAsString() + "." + jsonRequest.get("remoteMethod").getAsString());
         }
      
