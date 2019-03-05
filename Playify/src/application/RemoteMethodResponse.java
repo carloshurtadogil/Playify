@@ -10,10 +10,11 @@ public class RemoteMethodResponse{
 	@Expose
 	private List<RemoteMethod> remoteMethods;
 	
+	//sets the remote methods
 	public void setRemoteMethods(ArrayList<RemoteMethod> remoteMethods) {
 		this.remoteMethods = remoteMethods;
 	}
-	
+	//gets the remote methods
 	public List<RemoteMethod> getRemoteMethods(){
 		return this.remoteMethods;
 	}

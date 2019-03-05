@@ -14,11 +14,11 @@ public class UserResponse {
 	@SerializedName("users")
 	@Expose
 	private List<User> usersList = new ArrayList<User>();
-	
+	//gets the user list
 	public List<User> getUsersList(){
 		return usersList;
 	}
-	
+	//sets the user list 
 	public void setUsersList(List<User> list) {
 		this.usersList = list;
 	}

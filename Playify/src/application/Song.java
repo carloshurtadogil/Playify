@@ -13,23 +13,23 @@ public class Song {
 	@Expose
 	private SongDetails song;
 	
-	
+	//gets the song title
 	public String toString() {
 		return song.getTitle();
 	}
-	
+	//gets the artist
 	public ArtistDetails getArtistDetails() {
 		return this.artist;
 	}
-	
+	//gets the release 
 	public ReleaseDetails getRelease() {
 		return this.release;
 	}
-	
+	//gets the song details
 	public SongDetails getSongDetails() {
 		return this.song;
 	}
-	
+	//gets the release details
 	public class ReleaseDetails{
 		private int id;
 		private String name;
@@ -47,7 +47,7 @@ public class Song {
 			this.name= name;
 		}
 	}
-	
+	//gets the artist details
 	public class ArtistDetails{
 	    private String terms;
 	    private String name; 
