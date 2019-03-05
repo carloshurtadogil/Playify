@@ -46,7 +46,12 @@ public class SongDispatcher
     public String getSongChunk(String key, Long fragment) throws FileNotFoundException, IOException
     {
         byte buf[] = new byte[FRAGMENT_SIZE];
-        String fileDir = System.getProperty("user.dir") + "/Playify/src/Music/" + key + ".mp3";
+        String fileDir = System.getProperty("user.dir");
+        if(OsUtils.isWindows()) {
+        	fileDir += ("\\Playify\\src\\Music\\" + key + ".mp3");
+        } else if(OsUtils.isMac()) {
+        	fileDir += ("/Playify/src/Music/" + key + ".mp3");
+        }
         File file = new File(fileDir);
         FileInputStream inputStream = new FileInputStream(file);
         inputStream.skip(fragment * FRAGMENT_SIZE);
@@ -64,7 +69,12 @@ public class SongDispatcher
      */
     
     public String getFileSize(String key) throws FileNotFoundException, IOException{
-    	String fileDir = System.getProperty("user.dir") + "/Playify/src/Music/" + key + ".mp3";
+    	String fileDir = System.getProperty("user.dir");
+        if(OsUtils.isWindows()) {
+        	fileDir += ("\\Playify\\src\\Music\\" + key + ".mp3");
+        } else if(OsUtils.isMac()) {
+        	fileDir += ("/Playify/src/Music/" + key + ".mp3");
+        }
     	System.out.println(fileDir);
     	File file = new File(fileDir);
     	Long total = file.length();
