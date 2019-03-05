@@ -36,7 +36,7 @@ public class Proxy implements ProxyInterface {
     */
     public JsonObject synchExecution(String remoteMethod, String[] param)
     {
-    	
+    	System.out.println("RM: "  + remoteMethod);
     	String proxyReturn ="";
         JsonObject jsonRequest = new JsonObject();
         JsonObject jsonParam = new JsonObject();
@@ -46,7 +46,8 @@ public class Proxy implements ProxyInterface {
         String remoteReferenceResult = remoteReference.getRemoteReference(remoteMethod);
         
   
-        if(remoteReferenceResult !=null) {
+        if(remoteReferenceResult.length() > 0) {
+        	System.out.println("RRR" + remoteReferenceResult);
         	JsonObject remoteReferenceContents = new Gson().fromJson(remoteReferenceResult, JsonObject.class);
         	jsonRequest.addProperty("remoteMethod", remoteReferenceContents.get("name").getAsString());
         	jsonRequest.addProperty("objectName", remoteReferenceContents.get("object").getAsString());

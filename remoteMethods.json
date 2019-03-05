@@ -66,12 +66,23 @@
      
      
      {
+          "name":"getFileSize",
+          "object":"SongDispatcher",
+          "call-semantics":"maybe",
+          "param": 
+          {
+               "song":"string"
+          },
+          "return":"String"
+     },
+
+     {
         "name":"getSongChunk",
         "object":"SongDispatcher",
         "call-semantics":"maybe",
         "param":
           {
-              "song":"Long",
+              "song":"string",
               "fragment":"Long"
           },
         "return":"Byte[]"

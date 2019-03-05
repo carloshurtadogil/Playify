@@ -47,7 +47,7 @@ public class CECS327InputStream extends InputStream {
      /**
      * File name to stream
      */
-    protected Long fileName;
+    protected String fileName;
     /**
     * Instance of an implementation of proxyInterface
     */
@@ -61,7 +61,7 @@ public class CECS327InputStream extends InputStream {
      * frament in nextBuf
      * @param fileName The name of the file
     */
-    public CECS327InputStream(Long fileName, ProxyInterface proxy) throws IOException {
+    public CECS327InputStream(String fileName, ProxyInterface proxy) throws IOException {
         sem = new Semaphore(1); 
         try
         {
@@ -76,7 +76,8 @@ public class CECS327InputStream extends InputStream {
         String[] param = new String[1];
         param[0] =  String.valueOf(this.fileName);
         JsonObject jsonRet = proxy.synchExecution("getFileSize", param);
-        this.total = Integer.parseInt(jsonRet.get("ret").getAsString());
+        System.out.println("JSONRET: " + jsonRet.toString());
+        this.total = Integer.parseInt(jsonRet.get("fileSize").getAsString());//1983249;
         getBuff(fragment);
         fragment++;
      }

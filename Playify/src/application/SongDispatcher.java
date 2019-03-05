@@ -43,29 +43,36 @@ public class SongDispatcher
     * @param fragment: The chunk corresponds to 
     * [fragment * FRAGMENT_SIZE, FRAGMENT_SIZE]
     */
-    public String getSongChunk(Long key, Long fragment) throws FileNotFoundException, IOException
+    public String getSongChunk(String key, Long fragment) throws FileNotFoundException, IOException
     {
         byte buf[] = new byte[FRAGMENT_SIZE];
-
-        File file = new File("./" + key);
+        String fileDir = System.getProperty("user.dir") + "/Playify/src/Music/" + key + ".mp3";
+        File file = new File(fileDir);
         FileInputStream inputStream = new FileInputStream(file);
         inputStream.skip(fragment * FRAGMENT_SIZE);
         inputStream.read(buf);
-        inputStream.close(); 
+        inputStream.close();
+        JsonObject obj = new JsonObject();
+        obj.addProperty("ret", Base64.getEncoder().encodeToString(buf));
         // Encode in base64 so it can be transmitted 
-         return Base64.getEncoder().encodeToString(buf);
+         return obj.toString();//Base64.getEncoder().encodeToString(buf);
     }
     
     /* 
     * getFileSize: Gets a size of the file
     * @param key: Song ID. Each song has a unique ID 
      */
-    public Integer getFileSize(Long key) throws FileNotFoundException, IOException
-    {
-        File file = new File("./" + key);        
-        Integer total =  (int)file.length();
-        
-        return total;
+    
+    public String getFileSize(String key) throws FileNotFoundException, IOException{
+    	String fileDir = System.getProperty("user.dir") + "/Playify/src/Music/" + key + ".mp3";
+    	System.out.println(fileDir);
+    	File file = new File(fileDir);
+    	Long total = file.length();
+    	String fileSizeInString = Long.toString(total);
+    	JsonObject fileSize = new JsonObject();
+    	fileSize.addProperty("fileSize", fileSizeInString);
+    	System.out.println("FileSize: " + fileSizeInString);
+    	return fileSize.toString();
     }
     
    /**

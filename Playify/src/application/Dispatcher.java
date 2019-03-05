@@ -124,15 +124,19 @@ public class Dispatcher implements DispatcherInterface {
             switch (returnType.getCanonicalName())
                 {
                     case "java.lang.Long":
+                    	System.out.println("Is Long");
                         ret = method.invoke(object, parameter).toString();
                         break;
                     case "java.lang.Integer":
+                    	System.out.println("Is Integer");
                         ret = method.invoke(object, parameter).toString();
                         break;
                     case "java.lang.String":
+                    	System.out.println("Is String");
                         ret = (String)method.invoke(object, parameter);
                         break;
                 }
+            	System.out.println("Ret: " + ret);
                 jsonReturn = (JsonObject) new JsonParser().parse(ret);
    
         } catch (InvocationTargetException | IllegalAccessException e)

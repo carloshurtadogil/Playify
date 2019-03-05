@@ -1,5 +1,8 @@
 package application;
 
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -25,6 +28,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
 
 //import javazoom.jl.player.*;
 //import javazoom.jl.decoder.JavaLayerException;
@@ -152,6 +157,7 @@ public class HomeController {
 					String name = allSongsView.getSelectionModel().getSelectedItem().getSongDetails().getTitle();
 					String id = allSongsView.getSelectionModel().getSelectedItem().getSongDetails().getSongId();
 					System.out.println("Song to be played: " + name + " " + id);
+					PlaySong(id);
 				});
 			}
 		});
@@ -165,10 +171,14 @@ public class HomeController {
 					removeSongButton.setVisible(false);
 				} else {
 
-					String playlistname = playlistView.getSelectionModel().getSelectedItem().getPlaylistName();
-					allSongsView.setItems(
-							FXCollections.observableList(someUser.getSpecificPlaylist(playlistname).getSongs()));
-					removeSongButton.setVisible(true);
+					if(playlistView.getSelectionModel().getSelectedItem() != null){
+						String playlistname = playlistView.getSelectionModel().getSelectedItem().getPlaylistName();
+						allSongsView.setItems(
+								FXCollections.observableList(someUser.getSpecificPlaylist(playlistname).getSongs()));
+						removeSongButton.setVisible(true);
+					} else {
+						System.out.println("Null Playlist");
+					}
 				}
 				deletePlaylistButton.setOnAction((buttonPressed) -> {
 					// Call method that will delete the playlist
@@ -329,6 +339,26 @@ public class HomeController {
 			}
 		});
 
+	}
+	
+	public void PlaySong(String id) {
+		ProxyInterface proxy;
+		try {
+			proxy = new Proxy(new ClientCommunicationModule());
+			InputStream is = new CECS327InputStream(id, proxy);
+			Player mp3player = new Player(is);
+			mp3player.play();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException ex) {
+	        System.out.println("Error playing the audio file.");
+	        ex.printStackTrace();
+	        
+	    } catch (JavaLayerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 	}
 
 }

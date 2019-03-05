@@ -49,9 +49,86 @@
             }
           ],
           "playlistname": "NewPlaylist"
+        },
+        {
+          "songs": [
+            {
+              "song": {
+                "id": "SOEKGLO12A8C1363DE",
+                "title": "When You Wish Upon A Star"
+              },
+              "artist": {
+                "terms": "vocal jazz",
+                "name": "Cliff Edwards/Disney Studio Chorus"
+              },
+              "release": {
+                "name": "Julie Andrews Selects Her Favourite Disney Songs",
+                "id": 151155
+              }
+            },
+            {
+              "song": {
+                "id": "SOIVRUS12A8C133164",
+                "title": "Blame Canada ( From: South Park )"
+              },
+              "artist": {
+                "terms": "soundtrack",
+                "name": "Marc Shaiman"
+              },
+              "release": {
+                "name": "The Bucket List",
+                "id": 190811
+              }
+            }
+          ],
+          "playlistname": "Favorites"
         }
       ],
       "username": "time"
+    },
+    {
+      "password": "carlos",
+      "playlists": [
+        {
+          "songs": [
+            {
+              "song": {
+                "id": "SOEKGLO12A8C1363DE",
+                "title": "When You Wish Upon A Star"
+              },
+              "artist": {
+                "terms": "vocal jazz",
+                "name": "Cliff Edwards/Disney Studio Chorus"
+              },
+              "release": {
+                "name": "Julie Andrews Selects Her Favourite Disney Songs",
+                "id": 151155
+              }
+            }
+          ],
+          "playlistname": "canada"
+        },
+        {
+          "songs": [
+            {
+              "song": {
+                "id": "SOIVRUS12A8C133164",
+                "title": "Blame Canada ( From: South Park )"
+              },
+              "artist": {
+                "terms": "soundtrack",
+                "name": "Marc Shaiman"
+              },
+              "release": {
+                "name": "The Bucket List",
+                "id": 190811
+              }
+            }
+          ],
+          "playlistname": "south"
+        }
+      ],
+      "username": "carlos"
     }
   ]
 }
