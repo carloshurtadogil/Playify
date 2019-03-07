@@ -53,7 +53,7 @@ public class CECS327InputStream extends InputStream {
     */
     protected ProxyInterface proxy;
     
-    Semaphore sem; 
+    static Semaphore sem; 
 
 
     /**
