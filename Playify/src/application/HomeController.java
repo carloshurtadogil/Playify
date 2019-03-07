@@ -126,6 +126,9 @@ public class HomeController {
 			@Override
 			public void handle(ActionEvent arg0) {
 				try {
+					if(playSongThread.isAlive()) {
+						playSongThread.stop();
+					}
 					// Load the Login.fxml page
 					FXMLLoader portalLoader = new FXMLLoader();
 					portalLoader.setLocation(getClass().getResource("/application/Login.fxml"));
@@ -226,6 +229,16 @@ public class HomeController {
 		});
 	}
 
+	/**
+	 * Stop any and all song threads
+	 */
+	public void Stop() {
+		if(playSongThread.isAlive()) {
+			playSongThread.stop();
+			currentSongID = "";
+		}
+	}
+	
 	/**
 	 * Allows a user to add a playlist to the list of playlists created
 	 */

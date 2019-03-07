@@ -3,6 +3,7 @@ package application;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +77,9 @@ public class CreatePlaylistController {
 	private Playlist newPlaylist = new Playlist();
 	private int volume;
 	
+	static Thread playSongThread;
+	static String currentSongID = "";
+	
 	
 	public void setLoggedUser(User theUser) throws FileNotFoundException, IOException, ParseException {
 		this.selectedUser = theUser;
@@ -143,8 +147,16 @@ public class CreatePlaylistController {
 		}	
 	}
 	
+	/**
+	 * Play a song as long as it is not null
+	 * @param event The ActionEvent that is captured the moment that the button is clicked
+	 */
 	public void Play(ActionEvent event) {
-		System.out.println("Play clicked");
+		Song s = listOfSongs.getSelectionModel().getSelectedItem();
+		if (s != null) {
+			System.out.println("Song ID: " + s.getSongDetails().getSongId());
+			PlaySong(s.getSongDetails().getSongId());
+		}
 	}
 	
 	public void Stop(ActionEvent event) {
@@ -306,5 +318,114 @@ public class CreatePlaylistController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Plays a song or resumes a song that is currently paused
+	 * @param id
+	 */
+	public void PlaySong(String id) {
+		//checks if the current song id doesn't matches the one song id selected 
+		if(!currentSongID.equals(id)) {
+			System.out.println("Lets play a different song now " + id + " " + currentSongID);
+			//proceed to update the current song id and stop the song
+			//that is currently playing
+			if(playSongThread !=null) {
+				currentSongID = id;
+				playSongThread.stop();
+				
+				//plays the new song selected
+				playSongThread = new Thread() {
+					public void run() {
+						ProxyInterface proxy;
+						try {
+							proxy = new Proxy(new ClientCommunicationModule());
+							InputStream is = new CECS327InputStream(id, proxy);
+							Player mp3player = new Player(is);
+							mp3player.play();
+							
+						} catch (SocketException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException ex) {
+					        System.out.println("Error playing the audio file.");
+					        ex.printStackTrace();
+					        
+					    } catch (JavaLayerException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} 
+					}
+				};
+				playSongThread.start();
+			}
+			
+			else {
+				if(playSongThread!=null) {
+					playSongThread.notify();
+				}
+				
+				//then proceed to play the song
+				playSongThread = new Thread() {
+					public void run() {
+						ProxyInterface proxy;
+						try {
+							proxy = new Proxy(new ClientCommunicationModule());
+							InputStream is = new CECS327InputStream(id, proxy);
+							Player mp3player = new Player(is);
+							mp3player.play();
+						} catch (SocketException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException ex) {
+					        System.out.println("Error playing the audio file.");
+					        ex.printStackTrace();
+					        
+					    } catch (JavaLayerException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} 
+					}
+				};
+				playSongThread.start();
+			}
+			
+			
+		}
+		else if(currentSongID.equals(id)){
+			
+		}
+		
+//		
+//		if(playSongThread !=null) {
+//			playSongThread.notify();
+//		}
+//		else {
+//
+//			 playSongThread = new Thread() {
+//				public void run() {
+//					ProxyInterface proxy;
+//					try {
+//						proxy = new Proxy(new ClientCommunicationModule());
+//						InputStream is = new CECS327InputStream(id, proxy);
+//						Player mp3player = new Player(is);
+//						mp3player.play();
+//					} catch (SocketException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					} catch (IOException ex) {
+//				        System.out.println("Error playing the audio file.");
+//				        ex.printStackTrace();
+//				        
+//				    } catch (JavaLayerException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					} 
+//				}
+//			};
+//			playSongThread.start();
+//		}
+		
+		
 	}
 }
