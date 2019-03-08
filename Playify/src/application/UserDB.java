@@ -17,11 +17,12 @@ public class UserDB {
 		UserResponse theResponse = theGson.fromJson(new FileReader("users.json"), UserResponse.class);
 		List<User> ultimateUserList = theResponse.getUsersList();
 		
-		User foundUser = new User(null,null);
+		User foundUser = null;
 		//traverses the entire list of users, and attempts to find if a particular user exists
 		for (User u : ultimateUserList) {
 			if (u.getUsername().equals(username)) {
 				foundUser = u;
+				break;
 			}
 		}
 		

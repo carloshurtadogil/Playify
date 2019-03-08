@@ -124,6 +124,6 @@ public class SongDispatcher
     	//else, return an error message stating that Login has failed
     	JsonObject errorMessage = new JsonObject();
     	errorMessage.addProperty("errorMessage", "Incorrect username or password");
-    	return errorMessage.getAsString();
+    	return errorMessage.toString();
     }
 }

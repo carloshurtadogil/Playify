@@ -5,18 +5,25 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 public class RegisterDispatcher {
 
+	/**
+	 * Verifies if the registration information is valid to 
+	 * proceed with user creation or not
+	 * @param username
+	 * @param password
+	 * @param confirmPassword
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ParseException
+	 */
 	public String verifyRegisterInformation(String username, String password, String confirmPassword ) throws FileNotFoundException, IOException, ParseException {
 		if(this.checkUsername(username) && this.checkIfPasswordsMatch(password, confirmPassword)) {
 			JSONObject newUser = new JSONObject();
@@ -52,10 +59,16 @@ public class RegisterDispatcher {
 			//else, return an error message stating that Registration has failed
 			JsonObject errorMessage = new JsonObject();
 			errorMessage.addProperty("errorMessage", "Username already in use");
-			return errorMessage.getAsString();
+			return errorMessage.toString();
 		}
 	}
 
+	/**
+	 * Checks if the passwords match
+	 * @param password (entered password)
+	 * @param confirmPassword (entered password again for confirimation
+	 * @return boolean
+	 */
 	public boolean checkIfPasswordsMatch(String password, String confirmPassword) {
 		if(password.equals(confirmPassword)) {
 			return true;
@@ -65,31 +78,19 @@ public class RegisterDispatcher {
 		}
 	}
 
-	// Checks if the following entered username is not taken by another user
-	// Return true if user has not been found
-	// Return false if user has been found
+	/**
+	 * Checks if the following username is taken or not taken by another user
+	 * @param username
+	 * @return
+	 */
 	public boolean checkUsername(String username) {
 
 		try {
-			Gson theGson = new Gson();
-			boolean userFound = false;
-
-			// Reads the entire users.json file
-			UserResponse theResponse = theGson.fromJson(new FileReader("users.json"), UserResponse.class);
-
-			if (theResponse != null) {
-				// Retrieves all users from the users.json file and traverses the entire list
-				List<User> ultimateUserList = theResponse.getUsersList();
-
-				for (User theUser : ultimateUserList) {
-					if (theUser.getUsername().equals(username)) {
-						userFound = true;
-						break;
-					}
-				}
-				// If particular user hasn't been found, return true
-				if (!userFound)
-					return true;
+			UserDB userDatabase = new UserDB();
+			User foundUser = userDatabase.getParticularUser(username);
+			//if the user is null, then the user has not been found
+			if(foundUser==null) {
+				return true;
 			}
 
 		} catch (Exception e) {

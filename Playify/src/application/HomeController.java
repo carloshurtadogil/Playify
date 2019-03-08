@@ -10,11 +10,9 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.simple.parser.ParseException;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -66,8 +64,10 @@ public class HomeController {
 	private PlayifyPlayer musicPlayer;
 	private int volume;
 	
+	boolean paused = false;
 	static Thread playSongThread;
 	static String currentSongID = "";
+	static InputStream currentInputStream = null;
 
 	/**
 	 * This method executes after the HomeController is loaded, to set the user as a
@@ -179,22 +179,26 @@ public class HomeController {
 		// Sets a mouse clicked event for each of the Playlists
 		playlistView.setOnMouseClicked(event -> {
 
-			// User must click on an item in order to delete it
+			// User must click on an item in order to interact with it
 			if (event.getClickCount() == 1) {
+				
 				if (playlistView.getSelectionModel().getSelectedIndex() == 0) {
 					allSongsView.setItems(FXCollections.observableList(master.getSongs()));
 					removeSongButton.setVisible(false);
 				} else {
-
+					//showcase all songs in a playlist if playlist is selected
 					if(playlistView.getSelectionModel().getSelectedItem() != null){
 						String playlistname = playlistView.getSelectionModel().getSelectedItem().getPlaylistName();
 						allSongsView.setItems(
 								FXCollections.observableList(someUser.getSpecificPlaylist(playlistname).getSongs()));
 						removeSongButton.setVisible(true);
-					} else {
+					}
+					//indicate this is a null playlist
+					else {
 						System.out.println("Null Playlist");
 					}
 				}
+				//set a listener for the delete playlist button
 				deletePlaylistButton.setOnAction((buttonPressed) -> {
 					// Call method that will delete the playlist
 					if (playlistView.getSelectionModel().getSelectedIndex() != 0) {
@@ -211,13 +215,11 @@ public class HomeController {
 						errorLabel.setVisible(true);
 					}
 
-				}
-						
-						
+				}	
 				);
 				
+				//adds listener for removing a song 
 				removeSongButton.setOnAction((buttonPressed)-> {
-					
 					try {
 						this.removeSongFromPlaylist(allSongsView.getSelectionModel().getSelectedItem(), playlistView.getSelectionModel().getSelectedItem());
 					} catch (SocketException e) {
@@ -266,7 +268,12 @@ public class HomeController {
 		}
 	}
 	
-	//Prepares the client request for calling the song removal from a playlist method
+	/**
+	 * Prepares the client request for calling the song removal from a playlist method
+	 * @param selectedSong
+	 * @param selectedPlaylist
+	 * @throws SocketException
+	 */
 	public void removeSongFromPlaylist(Song selectedSong, Playlist selectedPlaylist) throws SocketException {
 		
 		ProxyInterface proxy = new Proxy(new ClientCommunicationModule());
@@ -366,12 +373,16 @@ public class HomeController {
 
 	}
 	
-	//Pauses the song if and only if the play song thread is playing
+	/**
+	 * //Pauses the song if a current song thread is executing 
+	 * @throws InterruptedException
+	 */
 	public void PauseSong() throws InterruptedException {
-		if(playSongThread!=null) {
-			if(playSongThread.isAlive()) {
-				System.out.println("attempting to pause");
-				playSongThread.wait();
+		
+		if(playSongThread!=null) {	
+			if(playSongThread.isAlive() && currentInputStream !=null) {
+				paused = true;
+				playSongThread.stop();
 			}
 		}
 	}
@@ -383,7 +394,7 @@ public class HomeController {
 	public void PlaySong(String id) {
 		//checks if the current song id doesn't matches the one song id selected 
 		if(!currentSongID.equals(id)) {
-			System.out.println("Lets play a different song now " + id + " " + currentSongID);
+
 			//proceed to update the current song id and stop the song
 			//that is currently playing
 			if(playSongThread !=null) {
@@ -397,6 +408,7 @@ public class HomeController {
 						try {
 							proxy = new Proxy(new ClientCommunicationModule());
 							InputStream is = new CECS327InputStream(id, proxy);
+							currentInputStream = is;
 							Player mp3player = new Player(is);
 							mp3player.play();
 							
@@ -415,19 +427,16 @@ public class HomeController {
 				};
 				playSongThread.start();
 			}
-			
+			//otherwise play the selected song
 			else {
-				if(playSongThread!=null) {
-					playSongThread.notify();
-				}
-				
-				//then proceed to play the song
+				//Create a play song thread to play the song
 				playSongThread = new Thread() {
 					public void run() {
 						ProxyInterface proxy;
 						try {
 							proxy = new Proxy(new ClientCommunicationModule());
 							InputStream is = new CECS327InputStream(id, proxy);
+							currentInputStream = is;
 							Player mp3player = new Player(is);
 							mp3player.play();
 						} catch (SocketException e) {
@@ -445,44 +454,36 @@ public class HomeController {
 				};
 				playSongThread.start();
 			}
-			
+		}
+		//else if the current song id matches the id sent, and if the current song is playing
+		else if(currentSongID.equals(id) && paused== true){
+				System.out.println("Lets continue playing another song now");
+				paused = false;
+				//then proceed to play the song
+				playSongThread = new Thread() {
+					public void run() {
+						ProxyInterface proxy;
+						try {
+							proxy = new Proxy(new ClientCommunicationModule());
+							InputStream is = currentInputStream;
+							Player mp3player = new Player(is);
+							mp3player.play();
+						} catch (SocketException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException ex) {
+					        System.out.println("Error playing the audio file.");
+					        ex.printStackTrace();
+					        
+					    } catch (JavaLayerException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} 
+					}
+				};
+				playSongThread.start();
 			
 		}
-		else if(currentSongID.equals(id)){
-			
-		}
-		
-//		
-//		if(playSongThread !=null) {
-//			playSongThread.notify();
-//		}
-//		else {
-//
-//			 playSongThread = new Thread() {
-//				public void run() {
-//					ProxyInterface proxy;
-//					try {
-//						proxy = new Proxy(new ClientCommunicationModule());
-//						InputStream is = new CECS327InputStream(id, proxy);
-//						Player mp3player = new Player(is);
-//						mp3player.play();
-//					} catch (SocketException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (IOException ex) {
-//				        System.out.println("Error playing the audio file.");
-//				        ex.printStackTrace();
-//				        
-//				    } catch (JavaLayerException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} 
-//				}
-//			};
-//			playSongThread.start();
-//		}
-		
-		
 	}
 
 }
