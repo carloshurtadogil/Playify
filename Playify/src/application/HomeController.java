@@ -248,6 +248,9 @@ public class HomeController {
 
 		try {
 			// Load the CreatePlaylist.fxml page
+			if(playSongThread!=null) {
+				playSongThread.stop();
+			}
 			FXMLLoader createPlaylistLoader = new FXMLLoader();
 			createPlaylistLoader.setLocation(getClass().getResource("/application/CreatePlaylist.fxml"));
 			Parent root = createPlaylistLoader.load();

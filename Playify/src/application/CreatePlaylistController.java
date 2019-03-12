@@ -76,9 +76,12 @@ public class CreatePlaylistController {
 	private User selectedUser;
 	private Playlist newPlaylist = new Playlist();
 	private int volume;
+	boolean paused = false;
+	
 	
 	static Thread playSongThread;
 	static String currentSongID = "";
+	static InputStream currentInputStream = null;
 	
 	
 	public void setLoggedUser(User theUser) throws FileNotFoundException, IOException, ParseException {
@@ -135,7 +138,7 @@ public class CreatePlaylistController {
 					}
 				}
 				else if(result.has("errorMessage")) {
-					
+					pLabel.setText("No songs have been found or some other type error has occurred");
 				}
 
 			}
@@ -254,6 +257,9 @@ public class CreatePlaylistController {
 				
 				selectedUser.getPlaylists().add(newPlaylist);
 				try {
+					if(playSongThread!=null) {
+						playSongThread.stop();
+					}
 					FXMLLoader homeControllerLoader = new FXMLLoader();
 					homeControllerLoader.setLocation(getClass().getResource("/application/Home.fxml"));
 					Parent root = homeControllerLoader.load();
@@ -341,6 +347,7 @@ public class CreatePlaylistController {
 						try {
 							proxy = new Proxy(new ClientCommunicationModule());
 							InputStream is = new CECS327InputStream(id, proxy);
+							currentInputStream = is;
 							Player mp3player = new Player(is);
 							mp3player.play();
 							
@@ -361,10 +368,6 @@ public class CreatePlaylistController {
 			}
 			
 			else {
-				if(playSongThread!=null) {
-					playSongThread.notify();
-				}
-				
 				//then proceed to play the song
 				playSongThread = new Thread() {
 					public void run() {
@@ -372,6 +375,7 @@ public class CreatePlaylistController {
 						try {
 							proxy = new Proxy(new ClientCommunicationModule());
 							InputStream is = new CECS327InputStream(id, proxy);
+							currentInputStream = is;
 							Player mp3player = new Player(is);
 							mp3player.play();
 						} catch (SocketException e) {
@@ -392,8 +396,33 @@ public class CreatePlaylistController {
 			
 			
 		}
-		else if(currentSongID.equals(id)){
-			
+		else if(currentSongID.equals(id) && paused == true){
+			System.out.println("Lets continue playing another song now");
+			paused = false;
+			//then proceed to play the song
+			playSongThread = new Thread() {
+				public void run() {
+					ProxyInterface proxy;
+					try {
+						proxy = new Proxy(new ClientCommunicationModule());
+						InputStream is = currentInputStream;
+						Player mp3player = new Player(is);
+						mp3player.play();
+					} catch (SocketException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException ex) {
+				        System.out.println("Error playing the audio file.");
+				        ex.printStackTrace();
+				        
+				    } catch (JavaLayerException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} 
+				}
+			};
+			playSongThread.start();
+		
 		}
 		
 //		
