@@ -1,4 +1,4 @@
-package application;
+package application.Server;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -7,6 +7,9 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
+
+import application.Models.User;
+import application.Models.UserResponse;
 
 public class UserDB {
 

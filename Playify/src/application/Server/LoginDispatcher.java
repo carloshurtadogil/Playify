@@ -1,10 +1,12 @@
-package application;
+package application.Server;
 
 import java.io.FileNotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+
+import application.Models.User;
 
 public class LoginDispatcher {
 	

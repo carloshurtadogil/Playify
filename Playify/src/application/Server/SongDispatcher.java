@@ -1,4 +1,4 @@
-package application;
+package application.Server;
 
 /**
 * SongDispatcher is the main responsable for obtaining the songs 
@@ -25,6 +25,9 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+
+import application.OsUtils;
+import application.Models.Song;
 
 import java.io.FileNotFoundException;
 

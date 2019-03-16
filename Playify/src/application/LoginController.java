@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import application.Models.User;
+
 public class LoginController {
 	@FXML
 	private Label labelStatus;

@@ -11,6 +11,10 @@ import org.json.simple.parser.ParseException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+
+import application.Models.Playlist;
+import application.Models.Song;
+import application.Models.User;
 import javafx.event.ActionEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -68,8 +72,6 @@ public class CreatePlaylistController {
 	private List<Song> newSongs;
 	private List<Song> mySongs;
 	
-	private PlayifyPlayer musicPlayer;
-	
 	//List to hold songs that match search results
 	private List<Song> searchResults = new ArrayList<Song>();
 	//User logged in
@@ -92,22 +94,6 @@ public class CreatePlaylistController {
 			loadAllSongs();
 		});
 		newSongs = new ArrayList<Song>();
-	}
-	
-	/**
-	 * Retrieve the player
-	 * @return The music player found in this class
-	 */
-	public PlayifyPlayer getMusicPlayer() {
-		return musicPlayer;
-	}
-	
-	/**
-	 * For the transfer of a music player from the previous controller
-	 * @param p The player to be transferred
-	 */
-	public void setMusicPlayer(PlayifyPlayer p) {
-		musicPlayer = p;
 	}
 	
 	/**

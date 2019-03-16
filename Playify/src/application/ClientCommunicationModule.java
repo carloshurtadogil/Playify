@@ -13,6 +13,8 @@ import javax.xml.bind.DatatypeConverter;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import application.Server.DispatcherInterface;
+
 
 public class ClientCommunicationModule implements CommunicationModule {
 	

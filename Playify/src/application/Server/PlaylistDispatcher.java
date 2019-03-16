@@ -1,4 +1,4 @@
-package application;
+package application.Server;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,6 +10,10 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+
+import application.Models.Playlist;
+import application.Models.Song;
+import application.Models.User;
 
 public class PlaylistDispatcher {
 

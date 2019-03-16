@@ -1,4 +1,4 @@
-package application;
+package application.Server;
 
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -10,6 +10,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import com.google.gson.JsonObject;
+
+import application.Models.User;
 
 public class RegisterDispatcher {
 

@@ -7,6 +7,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
+import application.Models.RemoteMethod;
+import application.Models.RemoteMethodResponse;
+
 public class RemoteRef implements RemoteRefInterface{
 
 	//Fetches the remote reference from a json file containing all remote methods

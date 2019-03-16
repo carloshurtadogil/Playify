@@ -13,6 +13,7 @@ import org.json.simple.parser.ParseException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import application.Models.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

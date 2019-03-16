@@ -13,6 +13,10 @@ import org.json.simple.parser.ParseException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+
+import application.Models.Playlist;
+import application.Models.Song;
+import application.Models.User;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -61,7 +65,6 @@ public class HomeController {
 	private User selectedUser;
 	private List<Song> mySongs;
 	private Playlist master;
-	private PlayifyPlayer musicPlayer;
 	private int volume;
 	
 	boolean paused = false;
@@ -82,25 +85,6 @@ public class HomeController {
 		loadAllSongs();
 		populatePlaylists(selectedUser);
 
-	}
-
-	/**
-	 * Retrieve the player
-	 * 
-	 * @return The music player found in this class
-	 */
-	public PlayifyPlayer getMusicPlayer() {
-		return musicPlayer;
-	}
-
-	/**
-	 * For the transfer of a music player from the previous controller
-	 * 
-	 * @param p
-	 *            The player to be transferred
-	 */
-	public void setMusicPlayer(PlayifyPlayer p) {
-		musicPlayer = p;
 	}
 
 	/**
@@ -235,9 +219,13 @@ public class HomeController {
 	 * Stop any and all song threads
 	 */
 	public void Stop() {
-		if(playSongThread.isAlive()) {
-			playSongThread.stop();
-			currentSongID = "";
+		if(playSongThread !=null) {
+			if(playSongThread.isAlive() && currentInputStream != null) {
+				playSongThread.stop();
+				currentSongID = "";
+				currentInputStream = null;
+			}
+			
 		}
 	}
 	
