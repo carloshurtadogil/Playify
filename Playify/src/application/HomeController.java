@@ -231,6 +231,7 @@ public class HomeController {
 	
 	/**
 	 * Allows a user to add a playlist to the list of playlists created
+	 * @param event The button-clicked event that will trigger the code
 	 */
 	public void GoToPlaylistPage(ActionEvent event) {
 
@@ -256,6 +257,33 @@ public class HomeController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("An exception has occurred");
+		}
+	}
+	
+	/**
+	 * Go to the DFS controller
+	 * @param event The button-clicked event that will trigger the code
+	 */
+	public void GoToDFS(ActionEvent event) {
+		System.out.println("Reached1");
+		try {
+			FXMLLoader dfsLoader = new FXMLLoader();
+			dfsLoader.setLocation(getClass().getResource("/application/DFS.fxml"));
+			System.out.println("Reached2");
+			Parent root = dfsLoader.load();
+			System.out.println("Reached3");
+			Scene dfsScene = new Scene(root);
+
+			// Obtain the controller to set the selected user
+			DFSController dfsControl = dfsLoader.getController();
+			dfsControl.setLoggedUser(selectedUser);
+
+			// Load the current stage to prevent from generating a new window/popup
+			Stage createPlaylistStage = (Stage) temporaryLabel.getScene().getWindow();
+			createPlaylistStage.setScene(dfsScene);
+			createPlaylistStage.show();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -344,6 +372,11 @@ public class HomeController {
 		}
 	}
 
+	/**
+	 * Load all the user's playlists to the playlist view
+	 * @param p The List of playlists to be added
+	 * 
+	 */
 	public void loadPlaylistSongs(ArrayList<Playlist> p) {
 		playlistView.setItems(FXCollections.observableList(p));
 	}

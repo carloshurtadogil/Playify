@@ -77,6 +77,7 @@ public class CreatePlaylistController {
 	//User logged in
 	private User selectedUser;
 	private Playlist newPlaylist = new Playlist();
+	@SuppressWarnings("unused")
 	private int volume;
 	boolean paused = false;
 	
@@ -104,7 +105,10 @@ public class CreatePlaylistController {
 		volume = v;
 	}
 	
-	//Prepares a client request for searching for a song
+	/**
+	 * Prepares a client request for searching for a song
+	 * @param event The button-clicked event that will trigger the code
+	 */
 	public void Search(ActionEvent event) { 
 		try {
 			
@@ -156,7 +160,10 @@ public class CreatePlaylistController {
 		System.out.println("Pause clicked");
 	}
 	
-	//Adds a collection of songs to the 
+	/**
+	 * Adds a collection of songs to the list of selectedsongs
+	 * @param event The button-clicked event that will trigger the code
+	 */
 	public void Add(ActionEvent event) {
 		System.out.println("Clicked");
 		try {
@@ -189,8 +196,12 @@ public class CreatePlaylistController {
 			System.out.println("Add Song Error");
 			e.printStackTrace();
 		}
-}
+	}
 	
+	/**
+	 * Remove a song from the list of selected songs
+	 * @param event The button-clicked event that will trigger the code
+	 */
 	public void Remove(ActionEvent event) {
 		try {
 			ObservableList<Song> selectedSongs;
@@ -216,11 +227,21 @@ public class CreatePlaylistController {
 		}
 	}
 	
+	
+	/**
+	 * Set the Playlistname for the new playlist; this new playlist will then be added
+	 * @param event The button-clicked event that will trigger the code
+	 */
 	public void SetPlaylistName(ActionEvent event) {
 		this.newPlaylist.setPlaylistName(txtPlaylistName.getText());
 	}
 	
-	//Initiates the client request to create a new playlist
+	/**
+	 * Initiates the client request to create a new playlist
+	 * @param event The button-clicked event that will trigger the code
+	 * @throws SocketException in the event that the socket could not be connected to
+	 */
+	@SuppressWarnings("deprecation")
 	public void createPlaylist(ActionEvent event) throws SocketException {
 		newPlaylist = new Playlist();
 		newPlaylist.setPlaylistName(txtPlaylistName.getText());
@@ -275,6 +296,10 @@ public class CreatePlaylistController {
 		
 	}
 	
+	/**
+	 * Return to the home controller for more options
+	 * @param event The button clicked event that will trigger the code.
+	 */
 	public void goBackToHomePage(ActionEvent event) {
 		try {
 			FXMLLoader homeControllerLoader = new FXMLLoader();
@@ -295,6 +320,9 @@ public class CreatePlaylistController {
 		}
 	}
 	
+	/**
+	 * Load all songs from the music.json file to allow the user to select a song
+	 */
 	public void loadAllSongs () {
 		try {
 			Gson gson = new Gson();
@@ -316,6 +344,7 @@ public class CreatePlaylistController {
 	 * Plays a song or resumes a song that is currently paused
 	 * @param id
 	 */
+	@SuppressWarnings("deprecation")
 	public void PlaySong(String id) {
 		//checks if the current song id doesn't matches the one song id selected 
 		if(!currentSongID.equals(id)) {
@@ -338,14 +367,14 @@ public class CreatePlaylistController {
 							mp3player.play();
 							
 						} catch (SocketException e) {
-							// TODO Auto-generated catch block
+							
 							e.printStackTrace();
 						} catch (IOException ex) {
 					        System.out.println("Error playing the audio file.");
 					        ex.printStackTrace();
 					        
 					    } catch (JavaLayerException e) {
-							// TODO Auto-generated catch block
+							
 							e.printStackTrace();
 						} 
 					}
@@ -365,14 +394,14 @@ public class CreatePlaylistController {
 							Player mp3player = new Player(is);
 							mp3player.play();
 						} catch (SocketException e) {
-							// TODO Auto-generated catch block
+							
 							e.printStackTrace();
 						} catch (IOException ex) {
 					        System.out.println("Error playing the audio file.");
 					        ex.printStackTrace();
 					        
 					    } catch (JavaLayerException e) {
-							// TODO Auto-generated catch block
+							
 							e.printStackTrace();
 						} 
 					}
@@ -387,6 +416,7 @@ public class CreatePlaylistController {
 			paused = false;
 			//then proceed to play the song
 			playSongThread = new Thread() {
+				@SuppressWarnings({ "unused", "hiding" })
 				public void run() {
 					ProxyInterface proxy;
 					try {
@@ -395,14 +425,14 @@ public class CreatePlaylistController {
 						Player mp3player = new Player(is);
 						mp3player.play();
 					} catch (SocketException e) {
-						// TODO Auto-generated catch block
+						
 						e.printStackTrace();
 					} catch (IOException ex) {
 				        System.out.println("Error playing the audio file.");
 				        ex.printStackTrace();
 				        
 				    } catch (JavaLayerException e) {
-						// TODO Auto-generated catch block
+						
 						e.printStackTrace();
 					} 
 				}
@@ -426,14 +456,14 @@ public class CreatePlaylistController {
 //						Player mp3player = new Player(is);
 //						mp3player.play();
 //					} catch (SocketException e) {
-//						// TODO Auto-generated catch block
+//						
 //						e.printStackTrace();
 //					} catch (IOException ex) {
 //				        System.out.println("Error playing the audio file.");
 //				        ex.printStackTrace();
 //				        
 //				    } catch (JavaLayerException e) {
-//						// TODO Auto-generated catch block
+//						
 //						e.printStackTrace();
 //					} 
 //				}
