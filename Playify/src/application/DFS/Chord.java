@@ -13,6 +13,12 @@ import java.rmi.registry.*;
 import java.rmi.server.*;
 import java.net.*;
 import java.util.*;
+
+import application.ClientCommunicationModule;
+import application.Proxy;
+import application.ProxyInterface;
+import application.Server.ServerCommunicationModule;
+
 import java.io.*;
 
 /**
@@ -50,8 +56,11 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 	 *            another process, it throw RemoteException.
 	 * @param guid
 	 *            the global unique id of the peer.
+	 * @throws IOException 
 	 */
-	public Chord(int port, long guid) throws RemoteException {
+	public Chord(int port, long guid) throws IOException {
+		
+		
 		int j;
 		// Initialize the variables
 		prefix = "./" + guid + "/repository/";

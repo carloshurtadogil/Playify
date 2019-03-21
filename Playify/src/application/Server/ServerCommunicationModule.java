@@ -30,7 +30,6 @@ public class ServerCommunicationModule extends Thread {
 	
 	
 	public static void main(String []args) throws IOException, ParseException {
-		File f = new File("SOEKGLO12A8C1363DE.mp3");
 		ServerCommunicationModule test = new ServerCommunicationModule();
 		test.StartServer();
 	}

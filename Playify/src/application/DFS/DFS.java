@@ -35,6 +35,9 @@ import java.util.*;
 
 public class DFS {
 
+	
+	
+	
 	public class PagesJson {
 		Long guid;
 		Long size;
@@ -64,6 +67,11 @@ public class DFS {
 	public class FileJson {
 		String name;
 		Long size;
+		String creationTimeStamp;
+		String readTimeStamp;
+		String writeTimeStamp;
+		String referenceCount;
+
 		ArrayList<PagesJson> pages;
 
 		public FileJson() {
@@ -84,6 +92,31 @@ public class DFS {
 
 		public Long getSize() {
 			return size;
+		}
+		
+		public void setCreationTimeStamp(String creationTS) {
+			this.creationTimeStamp = creationTS;
+		}
+		public String getCreationTimeStap() {
+			return creationTimeStamp;
+		}
+		
+		public void setReadTimeStamp(String readTS) {
+			this.readTimeStamp = readTS;
+		}
+		public String getReadTimeStamp() {
+			return readTimeStamp;
+		}
+		public void setWriteTimeStamp(String writeTS) {
+			this.writeTimeStamp = writeTS;
+		}
+		
+		public void setReferenceCount(String refCount) {
+			this.referenceCount = refCount;
+		}
+		
+		public String getReferenceCount() {
+			return referenceCount;
 		}
 
 		public void setPages(ArrayList<PagesJson> pages) {
@@ -269,7 +302,8 @@ public class DFS {
 	 *            Name of the file
 	 */
 	public void delete(String fileName) throws Exception {
-
+		//Retrieve the current metadata data structure
+		FilesJson retrievedMetadata = this.readMetaData();
 	}
 
 	/**
