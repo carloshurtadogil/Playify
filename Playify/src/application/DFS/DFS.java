@@ -3,11 +3,16 @@ package application.DFS;
 import java.rmi.*;
 import java.net.*;
 import java.util.*;
+
+import org.json.simple.JSONObject;
+
 import java.io.*;
 import java.nio.file.*;
 import java.math.BigInteger;
 import java.security.*;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import java.io.InputStream;
 import java.util.*;
 
@@ -327,6 +332,33 @@ public class DFS {
 	 *            RemoteInputStream.
 	 */
 	public void append(String filename, RemoteInputFileStream data) throws Exception {
+		boolean found = false;
+		FilesJson metadata = this.readMetaData();
+		
+		int index =0;
+		for(int i=0;i<metadata.getFiles().size();i++)
+		{
+			if(filename == metadata.getFiles().get(i).getName())
+			{
+				index = i;
+				found = true;
+				FileJson foundfileJson =metadata.getFiles().get(i);
+				
+				byte[] pageContent = data.buf;
+				
+				String pageContentInString = new String(pageContent, 0, pageContent.length);
+				
+				
+				PagesJson page = new Gson().fromJson(pageContentInString, PagesJson.class);
+				
+				foundfileJson.getPages().add(page);
+				
+				metadata.getFiles().set(i, foundfileJson);
+				
+				this.writeMetaData(metadata);
+				
+			}
+		}
 		
 	}
 
