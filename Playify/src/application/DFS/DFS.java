@@ -3,83 +3,61 @@ package application.DFS;
 import java.rmi.*;
 import java.net.*;
 import java.util.*;
-
 import org.json.simple.JSONObject;
-
 import java.io.*;
 import java.nio.file.*;
 import java.math.BigInteger;
 import java.security.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import java.io.InputStream;
-import java.util.*;
-
-/* JSON Format
-
-{"file":
-  [
-     {"name":"MyFile",
-      "size":128000000,
-      "pages":
-      [
-         {
-            "guid":11,
-            "size":64000000
-         },
-         {
-            "guid":13,
-            "size":64000000
-         }
-      ]
-      }
-   ]
-} 
-*/
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+import application.Models.Playlist;
+import application.Models.Song;
 
 public class DFS {
 
-	
-	
-	
-	public class PagesJson {
-		Long guid;
-		Long size;
+	public class FilesJson {
+		@SerializedName("files")
+		@Expose
+		List<FileJson> files;
 
-		public PagesJson() {
-
+		public FilesJson() {
+			
 		}
 
-		public void setGuid(Long guid) {
-			this.guid = guid;
+		public void setFiles(ArrayList<FileJson> files) {
+			this.files = files;
 		}
 
-		public Long getGuid() {
-			return guid;
+		public List<FileJson> getFiles() {
+			return files;
 		}
-
-		public void setSize(Long size) {
-			this.size = size;
-		}
-
-		public Long getSize() {
-			return size;
-		}
-
 	};
-
+	
+	
 	public class FileJson {
+		@SerializedName("name")
+		@Expose
 		String name;
+		@SerializedName("size")
+		@Expose
 		Long size;
+		@SerializedName("createTS")
+		@Expose
 		String creationTimeStamp;
+		@SerializedName("readTS")
+		@Expose
 		String readTimeStamp;
+		@SerializedName("writeTS")
+		@Expose
 		String writeTimeStamp;
+		@SerializedName("referenceCount")
+		@Expose
 		String referenceCount;
-
+		@SerializedName("pages")
+		@Expose
 		ArrayList<PagesJson> pages;
 
 		public FileJson() {
@@ -119,6 +97,10 @@ public class DFS {
 			this.writeTimeStamp = writeTS;
 		}
 		
+		public String getWriteTimeStamp(String readTS) {
+			return writeTimeStamp;
+		}
+		
 		public void setReferenceCount(String refCount) {
 			this.referenceCount = refCount;
 		}
@@ -137,21 +119,153 @@ public class DFS {
 
 	};
 
-	public class FilesJson {
-		List<FileJson> files;
 
-		public FilesJson() {
+
+	public class PagesJson {
+		@SerializedName("guid")
+		@Expose
+		Guid guid;
+		@SerializedName("size")
+		@Expose
+		Long size;
+		@SerializedName("createTS")
+		@Expose
+		String creationTimeStamp;
+		@SerializedName("readTS")
+		@Expose
+		String readTimeStamp;
+		@SerializedName("writeTS")
+		@Expose
+		String writeTimeStamp;
+		@SerializedName("playlists")
+		@Expose
+		List<Playlist> playlists;
+		@SerializedName("username")
+		@Expose
+		String username;
+		@SerializedName("password")
+		@Expose
+		String password;
+
+		public PagesJson() {
 
 		}
 
-		public void setFile(ArrayList<FileJson> files) {
-			this.files = files;
+		public void setGuid(Guid guid) {
+			this.guid = guid;
 		}
 
-		public List<FileJson> getFiles() {
-			return files;
+		public Guid getGuid() {
+			return guid;
 		}
+
+		public void setSize(Long size) {
+			this.size = size;
+		}
+
+		public Long getSize() {
+			return size;
+		}
+		
+		public void setCreationTimeStamp(String creationTS) {
+			this.creationTimeStamp = creationTS;
+		}
+		public String getCreationTimeStap() {
+			return creationTimeStamp;
+		}
+		
+		public void setReadTimeStamp(String readTS) {
+			this.readTimeStamp = readTS;
+		}
+		public String getReadTimeStamp() {
+			return readTimeStamp;
+		}
+		public void setWriteTimeStamp(String writeTS) {
+			this.writeTimeStamp = writeTS;
+		}
+		
+		public String getWriteTimeStamp(String readTS) {
+			return writeTimeStamp;
+		}
+		
+		public void setPlaylists(List<Playlist> playlists) {
+			this.playlists = playlists;
+		}
+		public List<Playlist> getPlaylists(){
+			return playlists;
+		}
+		
+		public void setUsername(String username) {
+			this.username = username;
+		}
+		public String getUsername() {
+			return username;
+		}
+		public void setPassword(String password) {
+			this.password = password;
+		}
+		public String getPassword() {
+			return password;
+		}
+
 	};
+
+	public class Guid{
+		@SerializedName("release")
+		@Expose
+		String release;
+		@SerializedName("artist")
+		@Expose
+		String artist;
+		@SerializedName("genre")
+		@Expose
+		String genre;
+		@SerializedName("title")
+		@Expose
+		String title;
+		@SerializedName("songID")
+		@Expose
+		String songID;
+		
+		
+		public void setRelease(String releaseID) {
+			this.release = releaseID;
+		}
+		public String getRelease() {
+			return release;
+		}
+		
+		public void setArtist(String artist) {
+			this.artist = artist;
+		}
+		public String getArtist() {
+			return artist;
+		}
+		public void setGenre(String genre) {
+			this.genre = genre;
+		}
+		public String getGenre() {
+			return genre;
+		}
+		public void setSongId(String songID) {
+			this.songID = songID;
+		}
+		public String getSongId() {
+			return songID;
+		}
+		public void setSongTitle(String title) {
+			this.title = title;
+		}
+		public String getSongTitle() {
+			return title;
+		}
+		
+	}
+	
+	
+	
+	
+	
 
 	int port;
 	Chord chord;
@@ -334,6 +448,69 @@ public class DFS {
 		//update the meta data
 		this.writeMetaData(retrievedMetadata);
 	}
+	
+	
+	/**
+	 * Deletes a component from a page in DFS
+	 * @param fileName
+	 * @param component
+	 * @throws Exception 
+	 */
+	public void deleteComponent(String fileName, String[] component) throws Exception {
+		FilesJson retrievedMetadata = this.readMetaData();
+		int index=0;
+		//traverse all the files in the metadata to see if the desired file is in the list of files
+		for(int i=0; i<retrievedMetadata.getFiles().size(); i++) {
+			if(retrievedMetadata.getFiles().get(i).equals(fileName)) {
+				FileJson foundFileJson = retrievedMetadata.getFiles().get(i);
+				//indicates that a song must be deleted from a particular playlist
+				if(component.length==2) {
+					String playlistName = component[1];
+					for(int j=0;j<foundFileJson.getPages().size(); j++) {
+						PagesJson currentPage = foundFileJson.getPages().get(j);
+						for(int k=0; k<currentPage.getPlaylists().size();k++) {
+							Playlist currentPlaylist = currentPage.getPlaylists().get(k);
+							if(currentPlaylist.getPlaylistName().equals(playlistName));
+								currentPage.getPlaylists().remove(k);
+								currentPage.setPlaylists(currentPage.getPlaylists());
+								this.writeMetaData(retrievedMetadata);
+								return;
+						}
+					}
+				}
+				//indicates that a song must be deleted from a playlist
+				else if(component.length==3) {
+					String playlistName= component[1];
+					String songName = component[2];
+					//traverse all pages in a FileJson
+					for(int j=0; j<foundFileJson.getPages().size();j++) {
+						PagesJson currentPage = foundFileJson.getPages().get(j);
+						//traverse all playlists in a current page
+						for(int k=0; k<currentPage.getPlaylists().size();k++) {
+							Playlist currentPlaylist = currentPage.getPlaylists().get(k);
+							if(currentPlaylist.getPlaylistName().equals(playlistName))
+							{
+								List<Song> songsForPlaylist = currentPlaylist.getSongs();
+								for(int l=0; l<songsForPlaylist.size(); l++) {
+									if(songsForPlaylist.get(index).getSongDetails().getTitle().equals(songName)) {
+										songsForPlaylist.remove(index);
+										currentPlaylist.setSongs(songsForPlaylist);
+										currentPage.getPlaylists().set(k, currentPlaylist);
+										this.writeMetaData(retrievedMetadata);
+										return;
+									}
+								}
+							}
+						}
+					}
+				}	
+			}
+		}
+	}
+		
+	
+	
+	
 
 	/**
 	 * Read block pageNumber of fileName
