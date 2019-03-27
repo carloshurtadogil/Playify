@@ -1,0 +1,31 @@
+{
+	"name": "chordusers.json",
+	"pages": [
+		{
+			"guid": "",
+			"username": "",
+			"password": "",
+			"playlists": [
+				{
+					"songs": [
+						{
+							"song": {
+								"id": "SOEKGLO12A8C1363DE",
+								"title": "When You Wish Upon A Star"
+							},
+							"artist": {
+								"terms": "vocal jazz",
+								"name": "Cliff Edwards/Disney Studio Chorus"
+							},
+							"release": {
+								"name": "Julie Andrews Selects Her Favourite Disney Songs",
+								"id": 151155
+							}
+						}
+					]
+				}
+				
+			]
+		}
+	]
+}

@@ -10,6 +10,9 @@ import java.io.*;
 import java.nio.file.*;
 import java.math.BigInteger;
 import java.security.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -254,7 +257,12 @@ public class DFS {
 		for(FileJson file : retrievedMetadata.getFiles()) {
 			//change the name of the file
 			if(file.getName().equals(oldName)) {
+				Date currentDate =  new Date();
+				DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss a");
+				String formattedReadTS=dateFormat.format(currentDate);
 				file.setName(newName);
+				file.setReadTimeStamp(formattedReadTS);
+				file.setWriteTimeStamp(formattedReadTS);
 				break;
 			}
 		}
@@ -309,6 +317,22 @@ public class DFS {
 	public void delete(String fileName) throws Exception {
 		//Retrieve the current metadata data structure
 		FilesJson retrievedMetadata = this.readMetaData();
+		
+		boolean fileFound = false;
+		int index=0;
+		//traverse all the files in the metadata to see if the desired file is in the list of files
+		for(int i=0; i<retrievedMetadata.getFiles().size(); i++) {
+			if(retrievedMetadata.getFiles().get(i).equals(fileName)) {
+				fileFound = true;
+			}
+			index++;
+		}
+		//if file has been found, then remove it from the list of files
+		if(fileFound ==true) {
+			retrievedMetadata.getFiles().remove(index);
+		}
+		//update the meta data
+		this.writeMetaData(retrievedMetadata);
 	}
 
 	/**

@@ -1,0 +1,36 @@
+{
+	"name": "chordmusic.json",
+	"pages": [
+		{
+			"guid": {
+				"release": "2001",
+				"artist": "",
+				"genre": "",
+				"title":"",
+				"songID": ""
+			},
+			"readTS": "",
+			"writeTS": "",
+			"createTS": "",
+			"referenceCount": "",
+			"size": ""
+		},
+		{
+			"guid": {
+				"release": "2001",
+				"artist": "",
+				"genre": "",
+				"title":"",
+				"songID": ""
+			},
+			"readTS": "",
+			"writeTS": "",
+			"createTS": "",
+			"referenceCount": "",
+			"size": ""
+		}
+	],
+	"createTS": "",
+	"readTS": "",
+	"writeTS": ""
+}
