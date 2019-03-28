@@ -37,6 +37,19 @@ public class User{
 		this.password = pass;
 		this.playlists = new ArrayList<Playlist>();
 	}
+	
+	/**
+	 * A overloaded constructor that intializes a username, password, and list of playlists
+	 * @param user
+	 * @param pass
+	 * @param playlists
+	 */
+	public User(String user, String pass, List<Playlist> playlists) {
+		this.username = user;
+		this.password = pass;
+		this.playlists = playlists; 
+	}
+	
 	public String getUsername()
 	{
 		return username;

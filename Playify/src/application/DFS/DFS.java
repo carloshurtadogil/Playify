@@ -63,6 +63,20 @@ public class DFS {
 		public FileJson() {
 
 		}
+		
+		/**
+		 * Searches for a page based on a given username
+		 * @return
+		 */
+		public PagesJson searchForPageByUsername(String username) {
+			for(int i=0;i<pages.size();i++) {
+				if(pages.get(i).getUsername().equals(username)) {
+					return pages.get(i);
+					
+				}
+			}
+			return null;
+		}
 
 		public void setName(String name) {
 			this.name = name;

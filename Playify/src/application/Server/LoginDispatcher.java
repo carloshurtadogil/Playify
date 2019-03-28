@@ -1,11 +1,13 @@
 package application.Server;
 
-import java.io.FileNotFoundException;
+import java.util.List;
 import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-
+import application.DFS.DFS;
+import application.DFS.DFS.FileJson;
+import application.DFS.DFS.FilesJson;
+import application.DFS.DFS.PagesJson;
+import application.Models.Playlist;
 import application.Models.User;
 
 public class LoginDispatcher {
@@ -16,18 +18,20 @@ public class LoginDispatcher {
 	 * @param password: Submitted password 
 	 * @return JSON message that contains an error message or username/password credentials
 	 */
-	public String verifyLoginInformation(String username, String password) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+	public String verifyLoginInformation(String username, String password) throws Exception {
 		
 		Gson theGson = new Gson();
-		User theUser=null;
+		DFS dfs = new DFS(0);
+		FilesJson metaData = dfs.readMetaData();
+		FileJson chordUsersJsonFile = metaData.getFiles().get(0);
+		PagesJson userPage = chordUsersJsonFile.searchForPageByUsername(username);
 		
-		//Attempt to retrieve the user from the users.json file
-		UserDB userDatabase = new UserDB();
-		theUser = userDatabase.getParticularUser(username);
 
-		//If user has been found, then return the user processed as JSON data
-		if(theUser!=null) {
-			String userCredentials = theGson.toJson(theUser);
+		//If the page has been found, then return the user processed as JSON data
+		if(userPage!=null) {
+			List<Playlist> userPlaylists = userPage.getPlaylists();
+			User loggedUser = new User(username, password, userPlaylists);
+			String userCredentials = theGson.toJson(loggedUser);
 			System.out.println("FOUND! " + userCredentials);
 			return userCredentials;
 		}
