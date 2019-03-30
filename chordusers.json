@@ -3,29 +3,41 @@
 	"pages": [
 		{
 			"guid": "",
-			"username": "",
-			"password": "",
-			"playlists": [
+			"readTS": "",
+			"writeTS": "",
+			"createTS": "",
+			"referenceCount": "",
+			"size": "",
+			"users": [
 				{
-					"songs": [
+					"username":"",
+					"password":"",
+					"playlists": [
 						{
-							"song": {
-								"id": "SOEKGLO12A8C1363DE",
-								"title": "When You Wish Upon A Star"
-							},
-							"artist": {
-								"terms": "vocal jazz",
-								"name": "Cliff Edwards/Disney Studio Chorus"
-							},
-							"release": {
-								"name": "Julie Andrews Selects Her Favourite Disney Songs",
-								"id": 151155
-							}
+							"songs": [
+								{
+									"song": {
+										"id": "SOEKGLO12A8C1363DE",
+										"title": "When You Wish Upon A Star"
+									},
+									"artist": {
+										"terms": "vocal jazz",
+										"name": "Cliff Edwards/Disney Studio Chorus"
+									},
+									"release": {
+										"name": "Julie Andrews Selects Her Favourite Disney Songs",
+										"id": 151155
+									}
+								}
+							],
+							"playlistname": "MyPlaylist"
 						}
 					]
 				}
-				
 			]
 		}
-	]
+	],
+	"createTS": "",
+	"readTS": "",
+	"writeTS": ""
 }

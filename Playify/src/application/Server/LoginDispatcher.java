@@ -24,12 +24,12 @@ public class LoginDispatcher {
 		DFS dfs = new DFS(0);
 		FilesJson metaData = dfs.readMetaData();
 		FileJson chordUsersJsonFile = metaData.getFiles().get(0);
-		PagesJson userPage = chordUsersJsonFile.searchForPageByUsername(username);
+		User foundUser = chordUsersJsonFile.searchForUserInPage(username);
 		
 
 		//If the page has been found, then return the user processed as JSON data
-		if(userPage!=null) {
-			List<Playlist> userPlaylists = userPage.getPlaylists();
+		if(foundUser!=null) {
+			List<Playlist> userPlaylists = foundUser.getPlaylists();
 			User loggedUser = new User(username, password, userPlaylists);
 			String userCredentials = theGson.toJson(loggedUser);
 			System.out.println("FOUND! " + userCredentials);

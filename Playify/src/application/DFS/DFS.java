@@ -15,6 +15,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import application.Models.Playlist;
 import application.Models.Song;
+import application.Models.User;
 
 public class DFS {
 
@@ -65,17 +66,29 @@ public class DFS {
 		}
 		
 		/**
-		 * Searches for a page based on a given username
+		 * Searches for a user by traversing all users in a single page
 		 * @return
 		 */
-		public PagesJson searchForPageByUsername(String username) {
+		public User searchForUserInPage(String username) {
+			User foundUser = null;
 			for(int i=0;i<pages.size();i++) {
-				if(pages.get(i).getUsername().equals(username)) {
-					return pages.get(i);
-					
+				
+				//for every page, update its read timestamp 
+				Date currentDate =  new Date();
+				DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss a");
+				String formattedReadTS=dateFormat.format(currentDate);
+				pages.get(i).setReadTimeStamp(formattedReadTS);
+				
+				//retrieve the list of users on the current page
+				List<User> usersInPage = pages.get(i).getUsersInPage();
+				for(int j=0; j<usersInPage.size(); j++) {
+					if(usersInPage.get(j).getUsername().equals(username)) {
+						foundUser = usersInPage.get(j);
+						return foundUser;
+					}
 				}
 			}
-			return null;
+			return foundUser;
 		}
 
 		public void setName(String name) {
@@ -138,7 +151,7 @@ public class DFS {
 	public class PagesJson {
 		@SerializedName("guid")
 		@Expose
-		Guid guid;
+		Long guid;
 		@SerializedName("size")
 		@Expose
 		Long size;
@@ -151,28 +164,18 @@ public class DFS {
 		@SerializedName("writeTS")
 		@Expose
 		String writeTimeStamp;
-		@SerializedName("playlists")
+		@SerializedName("users")
 		@Expose
-		List<Playlist> playlists;
-		@SerializedName("username")
-		@Expose
-		String username;
-		@SerializedName("password")
-		@Expose
-		String password;
+		List<User> usersInPage;
 
-		public PagesJson() {
-
-		}
-
-		public void setGuid(Guid guid) {
+		public void setGuid(long guid) {
 			this.guid = guid;
 		}
-
-		public Guid getGuid() {
+		
+		public Long getGuid() {
 			return guid;
 		}
-
+		
 		public void setSize(Long size) {
 			this.size = size;
 		}
@@ -202,84 +205,16 @@ public class DFS {
 			return writeTimeStamp;
 		}
 		
-		public void setPlaylists(List<Playlist> playlists) {
-			this.playlists = playlists;
-		}
-		public List<Playlist> getPlaylists(){
-			return playlists;
+		public void setUsersInPage(List<User> usersInPage) {
+			this.usersInPage = usersInPage;
 		}
 		
-		public void setUsername(String username) {
-			this.username = username;
+		public List<User> getUsersInPage(){
+			return usersInPage;
 		}
-		public String getUsername() {
-			return username;
-		}
-		public void setPassword(String password) {
-			this.password = password;
-		}
-		public String getPassword() {
-			return password;
-		}
-
+		
 	};
 
-	public class Guid{
-		@SerializedName("release")
-		@Expose
-		String release;
-		@SerializedName("artist")
-		@Expose
-		String artist;
-		@SerializedName("genre")
-		@Expose
-		String genre;
-		@SerializedName("title")
-		@Expose
-		String title;
-		@SerializedName("songID")
-		@Expose
-		String songID;
-		
-		
-		public void setRelease(String releaseID) {
-			this.release = releaseID;
-		}
-		public String getRelease() {
-			return release;
-		}
-		
-		public void setArtist(String artist) {
-			this.artist = artist;
-		}
-		public String getArtist() {
-			return artist;
-		}
-		public void setGenre(String genre) {
-			this.genre = genre;
-		}
-		public String getGenre() {
-			return genre;
-		}
-		public void setSongId(String songID) {
-			this.songID = songID;
-		}
-		public String getSongId() {
-			return songID;
-		}
-		public void setSongTitle(String title) {
-			this.title = title;
-		}
-		public String getSongTitle() {
-			return title;
-		}
-		
-	}
-	
-	
-	
-	
-	
 
 	int port;
 	Chord chord;
@@ -416,7 +351,7 @@ public class DFS {
 			//traverse the pages in the current file
 			for(int j=0; j< currentFile.getPages().size(); j++) {
 				PagesJson currentPage = currentFile.getPages().get(j);
-				System.out.println(currentPage.getGuid() + " " + currentPage.getSize());
+				//System.out.println(currentPage.getGuid() + " " + currentPage.getSize());
 			}
 		}
 		String listOfFiles = "";
@@ -465,7 +400,8 @@ public class DFS {
 	
 	
 	/**
-	 * Deletes a component from a page in DFS
+	 * Deletes a component from a page in DFS, either deletes a song from a playlist
+	 * or simply deletes a playlist from a list of playlists 
 	 * @param fileName
 	 * @param component
 	 * @throws Exception 
@@ -477,16 +413,17 @@ public class DFS {
 		for(int i=0; i<retrievedMetadata.getFiles().size(); i++) {
 			if(retrievedMetadata.getFiles().get(i).equals(fileName)) {
 				FileJson foundFileJson = retrievedMetadata.getFiles().get(i);
-				//indicates that a song must be deleted from a particular playlist
+				//indicates that a playlist must be deleted from the user's list of playlists
 				if(component.length==2) {
 					String playlistName = component[1];
 					for(int j=0;j<foundFileJson.getPages().size(); j++) {
 						PagesJson currentPage = foundFileJson.getPages().get(j);
-						for(int k=0; k<currentPage.getPlaylists().size();k++) {
-							Playlist currentPlaylist = currentPage.getPlaylists().get(k);
-							if(currentPlaylist.getPlaylistName().equals(playlistName));
-								currentPage.getPlaylists().remove(k);
-								currentPage.setPlaylists(currentPage.getPlaylists());
+						for(int k=0; k<currentPage.getUsersInPage().size();k++) {
+							User currentUser = currentPage.getUsersInPage().get(k);
+							
+							if(currentUser.removePlaylist(playlistName)==true);
+								currentPage.getUsersInPage().set(k, currentUser);
+								foundFileJson.getPages().set(j, currentPage);
 								this.writeMetaData(retrievedMetadata);
 								return;
 						}
@@ -500,19 +437,21 @@ public class DFS {
 					for(int j=0; j<foundFileJson.getPages().size();j++) {
 						PagesJson currentPage = foundFileJson.getPages().get(j);
 						//traverse all playlists in a current page
-						for(int k=0; k<currentPage.getPlaylists().size();k++) {
-							Playlist currentPlaylist = currentPage.getPlaylists().get(k);
-							if(currentPlaylist.getPlaylistName().equals(playlistName))
-							{
-								List<Song> songsForPlaylist = currentPlaylist.getSongs();
-								for(int l=0; l<songsForPlaylist.size(); l++) {
-									if(songsForPlaylist.get(index).getSongDetails().getTitle().equals(songName)) {
-										songsForPlaylist.remove(index);
-										currentPlaylist.setSongs(songsForPlaylist);
-										currentPage.getPlaylists().set(k, currentPlaylist);
-										this.writeMetaData(retrievedMetadata);
-										return;
+						for(int k=0; k<currentPage.getUsersInPage().size();k++) {
+							User currentUser = currentPage.getUsersInPage().get(k);
+							
+							for(int l=0; l<currentUser.getPlaylists().size(); l++) {
+								Playlist currentPlaylist = currentUser.getPlaylists().get(l);
+								for(int m=0; m<currentPlaylist.getSongs().size();m++) {
+									Song currentSong = currentPlaylist.getSongs().get(index);
+									if(currentSong.getSongDetails().getTitle().equals(songName)) {
+										currentPlaylist.getSongs().remove(m);
+										currentUser.getPlaylists().set(l, currentPlaylist);
+										currentPage.getUsersInPage().set(k, currentUser);
+										foundFileJson.getPages().set(j, currentPage);
+										
 									}
+									
 								}
 							}
 						}

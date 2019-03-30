@@ -2,32 +2,23 @@
 	"name": "chordmusic.json",
 	"pages": [
 		{
-			"guid": {
-				"release": "2001",
-				"artist": "",
-				"genre": "",
-				"title":"",
-				"songID": ""
-			},
+			"guid": 9034340,
 			"readTS": "",
 			"writeTS": "",
 			"createTS": "",
 			"referenceCount": "",
-			"size": ""
+			"size": "",
+			"users":[]
+			
 		},
 		{
-			"guid": {
-				"release": "2001",
-				"artist": "",
-				"genre": "",
-				"title":"",
-				"songID": ""
-			},
+			"guid":290833,
 			"readTS": "",
 			"writeTS": "",
 			"createTS": "",
 			"referenceCount": "",
-			"size": ""
+			"size": "",
+			"users":""
 		}
 	],
 	"createTS": "",

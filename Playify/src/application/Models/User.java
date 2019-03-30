@@ -75,6 +75,20 @@ public class User{
 		return found;
 	}
 	
+	/**
+	 * Removes a playlist from a user's list of playlists 
+	 */
+	public boolean removePlaylist(String playlistName) {
+		for(int i=0;i<playlists.size();i++) {
+			Playlist currentPlaylist = playlists.get(i);
+			if(currentPlaylist.getPlaylistName().equals(playlistName)) {
+				playlists.remove(i);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public List<String> getPlaylistNames() {
 		List<String> names = new ArrayList<String>();
 		for(Playlist p: this.playlists) {

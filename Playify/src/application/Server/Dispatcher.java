@@ -32,20 +32,7 @@ public class Dispatcher implements DispatcherInterface {
     {
         ListOfObjects = new HashMap<String, Object>();
     }
-    
-    /* 
-    * dispatch: Executes the remote method in the corresponding Object
-    * @param request: Request: it is a Json file
-    {
-        "remoteMethod":"getSongChunk",
-        "objectName":"SongServices",
-        "param":
-          {
-              "song":490183,
-              "fragment":2
-          }
-    }
-    */
+
     public String dispatch(String request)
     {
         JsonObject jsonReturn = new JsonObject();
@@ -163,29 +150,5 @@ public class Dispatcher implements DispatcherInterface {
         ListOfObjects.put(objectName, remoteMethod);
     }
     
-    /*  Testing
-    public static void main(String[] args) {
-        // Instance of the Dispatcher
-        Dispatcher dispatcher = new Dispatcher();
-        // Instance of the services that te dispatcher can handle
-        SongDispatcher songDispatcher = new SongDispatcher();
-        
-        dispatcher.registerObject(songDispatcher, "SongServices");  
-    
-        // Testing  the dispatcher function
-        // First we read the request. In the final implementation the jsonRequest
-        // is obtained from the communication module
-        try {
-            String jsonRequest = new String(Files.readAllBytes(Paths.get("./getSongChunk.json")));
-            String ret = dispatcher.dispatch(jsonRequest);
-            System.out.println(ret);
-
-            //System.out.println(jsonRequest);
-        } catch (Exception e)
-        {
-            System.out.println(e);
-        }
-        
-    }*/
 }
 
