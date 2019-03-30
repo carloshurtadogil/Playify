@@ -24,7 +24,7 @@ public class PlaylistDispatcher {
 	 * @throws JsonIOException 
 	 * @throws JsonSyntaxException 
 	 */
-	public String removePlaylist(String username, String playlistName) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+	public String removePlaylist(String username, String playlistName) throws JsonSyntaxException, JsonIOException, FileNotFoundException, Exception {
 		UserDB userDatabase = new UserDB();
 		User foundUser = userDatabase.getParticularUser(username);
 		Playlist particularPlaylist = foundUser.getSpecificPlaylist(playlistName);
@@ -59,7 +59,7 @@ public class PlaylistDispatcher {
 	 *         does not exist
 	 */
 	public String removeSongFromPlaylist(String username, String playlist, String songID)
-			throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+			throws JsonSyntaxException, JsonIOException, FileNotFoundException, Exception {
 
 		UserDB userDatabase = new UserDB();
 		User foundUser = userDatabase.getParticularUser(username);
@@ -110,7 +110,7 @@ public class PlaylistDispatcher {
 	 *         does not exist
 	 */
 	public String createAndAddPlaylist(String username, String playlist)
-			throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+			throws JsonSyntaxException, JsonIOException, FileNotFoundException, Exception {
 
 		System.out.println("in the playlist dispatcher now with " + username + " " + playlist);
 		

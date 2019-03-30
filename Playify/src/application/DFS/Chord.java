@@ -26,6 +26,7 @@ import java.io.*;
  * ChordMessageInterface
  *
  */
+@SuppressWarnings({ "unused", "serial" })
 public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordMessageInterface {
 	// Numbers of fingers
 	public static final int M = 2;
@@ -59,7 +60,7 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 	 * @throws IOException 
 	 */
 	public Chord(int port, long guid) throws IOException {
-		
+		System.out.println("Chord Constructor Called: Currently Inside");
 		
 		int j;
 		// Initialize the variables
@@ -83,13 +84,21 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 				checkPredecessor();
 			}
 		}, 1000, 1000); // Every second
+		System.out.println("Stabilized, Fingers Fixed, Successors and Predecessors checked");
 		try {
 			// create the registry and bind the name and object.
 			System.out.println(guid + " is starting RMI at port=" + port);
 			registry = LocateRegistry.createRegistry(port);
+			System.out.println("CHORD: Registry created");
 			registry.rebind("Chord", this);
+			System.out.println("CHORD: Registry bounded");
 		} catch (RemoteException e) {
-			throw e;
+			System.err.println("CHORD: RemoteException Caught");
+			if (e.getMessage().contains("Port already in use")) {
+	            System.out.println("Port already in use. Trying to restart with a new one...");
+	        } else {
+	            throw e;
+	        }
 		}
 	}
 

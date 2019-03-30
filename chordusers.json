@@ -2,7 +2,7 @@
 	"name": "chordusers.json",
 	"pages": [
 		{
-			"guid": "",
+			"guid": "0",
 			"readTS": "",
 			"writeTS": "",
 			"createTS": "",
@@ -10,8 +10,8 @@
 			"size": "",
 			"users": [
 				{
-					"username":"",
-					"password":"",
+					"username":"time",
+					"password":"time",
 					"playlists": [
 						{
 							"songs": [

@@ -20,17 +20,33 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 
+import application.DFS.DFS;
+import application.DFS.DFS.FileJson;
+import application.DFS.DFS.FilesJson;
 
 
 
 
+
+@SuppressWarnings("unused")
 public class Dispatcher implements DispatcherInterface {
     HashMap<String, Object> ListOfObjects;
     
 
     public Dispatcher()
     {
+    	
         ListOfObjects = new HashMap<String, Object>();
+        try {
+			DFS dfs = new DFS(5000);
+			System.out.println("DFS Call Complete");
+			FilesJson mfiles = dfs.readMetaData();
+			List<FileJson> fileslist = mfiles.getFiles();
+			System.out.println(mfiles.toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     public String dispatch(String request)
@@ -44,6 +60,7 @@ public class Dispatcher implements DispatcherInterface {
         	if (jsonRequest.has("objectName")) {
 
         		String dispatcherName = jsonRequest.get("objectName").getAsString();
+        		System.out.println("\n\n\n\nCalling Dispatcher: " + dispatcherName + "\n\n\n");
     			switch(dispatcherName) {
     				case "LoginDispatcher":
     					object = new LoginDispatcher();

@@ -12,13 +12,13 @@
 			
 		},
 		{
-			"guid":290833,
+			"guid": 290833,
 			"readTS": "",
 			"writeTS": "",
 			"createTS": "",
 			"referenceCount": "",
 			"size": "",
-			"users":""
+			"users":[]
 		}
 	],
 	"createTS": "",

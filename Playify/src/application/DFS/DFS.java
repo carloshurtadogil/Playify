@@ -17,6 +17,7 @@ import application.Models.Playlist;
 import application.Models.Song;
 import application.Models.User;
 
+@SuppressWarnings("unused")
 public class DFS {
 
 	public class FilesJson {
@@ -24,14 +25,25 @@ public class DFS {
 		@Expose
 		List<FileJson> files;
 
+		/**
+		 * <p>Default Constructor</p>
+		 */
 		public FilesJson() {
 			
 		}
 
+		/**
+		 * <p>Set the current instance of the files ArrayList with a new instance</p>
+		 * @param files Files to be added
+		 */
 		public void setFiles(ArrayList<FileJson> files) {
 			this.files = files;
 		}
 
+		/**
+		 * <p>Retrieve the current list of files</p>
+		 * @return The current list of files
+		 */
 		public List<FileJson> getFiles() {
 			return files;
 		}
@@ -91,6 +103,9 @@ public class DFS {
 			return foundUser;
 		}
 
+		/**
+		 * 
+		 */
 		public void setName(String name) {
 			this.name = name;
 		}
@@ -142,6 +157,23 @@ public class DFS {
 
 		public ArrayList<PagesJson> getPages() {
 			return this.pages;
+		}
+		
+		@Override
+		public String toString() {
+			String result = 
+			"Name: " + name + "\n" +
+			"Size: " + size + "\n" +
+			"Creation TimeStamp: " + creationTimeStamp + "\n" +
+			"Read Time: " + readTimeStamp + "\n" + 
+			"Write Time: " + writeTimeStamp + "\n" + 
+			"Reference Count: " + referenceCount + "\n" + 
+			"Pages: {\n";
+			for(PagesJson tpages : pages) {
+				result += (tpages.toString() + "\n");
+			}
+			result += "}\n";
+			return result;
 		}
 
 	};
@@ -213,6 +245,26 @@ public class DFS {
 			return usersInPage;
 		}
 		
+		/**
+		 * <p>Retrieve the string representation of this subclass</p>
+		 * @return The String representation of this subclass
+		 */
+		@Override
+		public String toString() {
+			String result = 
+			"GUID: " + guid + "\n" + 
+			"Size: " + size + "\n" +
+			"Creation TimeStamp: " + creationTimeStamp + "\n" +
+			"Read Time: " + readTimeStamp + "\n" + 
+			"Write Time: " + writeTimeStamp + "\n" + 
+			"Users: {\n";
+			for(User u : usersInPage) {
+				result += (u.toString() + "\n");
+			}
+			result += "}\n";
+			return result;
+		}
+		
 	};
 
 
@@ -234,12 +286,16 @@ public class DFS {
 	}
 
 	public DFS(int port) throws Exception {
-
+		System.out.println("Called DFS Constructor");
 		this.port = port;
+		System.out.println("Calling GUID");
 		long guid = md5("" + port);
+		System.out.println("Generated GUID: " + guid);
 		chord = new Chord(port, guid);
+		System.out.println("Chord Created");
 		Files.createDirectories(Paths.get(guid + "/repository"));
 		Files.createDirectories(Paths.get(guid + "/tmp"));
+		System.out.println("File Directories created");
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				chord.leave();
@@ -290,6 +346,7 @@ public class DFS {
 			String strMetaData = scan.next();
 			System.out.println(strMetaData);
 			filesJson = gson.fromJson(strMetaData, FilesJson.class);
+			scan.close();
 		} catch (NoSuchElementException ex) {
 			filesJson = new FilesJson();
 		}

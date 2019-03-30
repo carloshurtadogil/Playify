@@ -72,7 +72,7 @@ public class ServerCommunicationModule extends Thread {
 	// Fires up the dispatcher whenever a request comes in to the server
 	// communication model
 	public byte[] startDispatcher(JsonObject request) throws ParseException {
-
+		System.out.println("Dispatcher called");
 		dispatcher = new Dispatcher();
 		return (dispatcher.dispatch(request.toString())).getBytes();
 	}

@@ -21,6 +21,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 
+@SuppressWarnings("unused")
 public class Proxy implements ProxyInterface {
 	
     ClientCommunicationModule communicationModule;
@@ -65,8 +66,7 @@ public class Proxy implements ProxyInterface {
 
             	String parameterName = paramsContent.substring(0,paramsContent.indexOf(':'));
             	jsonParam.addProperty(parameterName.substring(1, parameterName.length()-1), param[0] );
-        	}
-        	else {
+        	} else {
         		//Split to retrieve different parameters e.g. "John : Snow" and "Bob : Stone"
             	String[] splitContent = paramsContent.split(",");
             	

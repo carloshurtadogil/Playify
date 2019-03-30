@@ -76,7 +76,8 @@ public class User{
 	}
 	
 	/**
-	 * Removes a playlist from a user's list of playlists 
+	 * <p> Removes a playlist from a user's list of playlists </p>
+	 * @return True if successful in removing playlist, false otherwise
 	 */
 	public boolean removePlaylist(String playlistName) {
 		for(int i=0;i<playlists.size();i++) {
@@ -89,6 +90,10 @@ public class User{
 		return false;
 	}
 	
+	/**
+	 * <p> Retrieve the list of playlistnames that is found in the user's list of playlists</p>
+	 * @return List of playlistsnames
+	 */
 	public List<String> getPlaylistNames() {
 		List<String> names = new ArrayList<String>();
 		for(Playlist p: this.playlists) {
@@ -98,6 +103,10 @@ public class User{
 		return names;
 	}
 
+	/**
+	 * <p>Set the username that the user has selected</p>
+	 * @param uname The user's new username
+	 */
 	public void setUsername(String uname) {
 		this.username = uname;
 		try {
@@ -109,6 +118,10 @@ public class User{
 		}
 	}
 
+	/**
+	 * <p>Set the users password to a new one once changed/added</p>
+	 * @param pass The password selected by the user
+	 */
 	public void setPassword(String pass) {
 		this.password = pass;
 		try {
@@ -120,6 +133,10 @@ public class User{
 		}
 	}
 
+	/**
+	 * <p>For initialization, set the users playlists</p>
+	 * @param thePlaylists Playlist list retrieved from the file
+	 */
 	public void setPlaylists(List<Playlist> thePlaylists){
 		this.playlists = thePlaylists;
 		try {
@@ -243,8 +260,30 @@ public class User{
 		}
 	}
 	
+	/**
+	 * <p>Add a playlist to the users current list of playlists </p>
+	 * @param newPlaylist New playlist to be added
+	 */
 	public void addPlaylist(Playlist newPlaylist) {
 		this.playlists.add(newPlaylist);
 		setPlaylists(this.playlists);
+	}
+	
+	/**
+	 * <p>Retrieve the String representation of the current class</p>
+	 * @return The String representation of the current class
+	 */
+	@Override
+	public String toString() {
+		List<String> playlistsnames = this.getPlaylistNames();
+		String result = 
+		"User Name: " + username + "\n" + 
+		"Password: " + password + "\n" + 
+		"Names: {\n";
+		for(String name : playlistsnames) {
+			result += (name + "\n");
+		}
+		result += ("}\n");
+		return result;
 	}
 }

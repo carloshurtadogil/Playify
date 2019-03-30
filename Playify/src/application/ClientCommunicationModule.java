@@ -16,6 +16,7 @@ import com.google.gson.JsonObject;
 import application.Server.DispatcherInterface;
 
 
+@SuppressWarnings("unused")
 public class ClientCommunicationModule implements CommunicationModule {
 	
 	private byte [] messageBuffer;

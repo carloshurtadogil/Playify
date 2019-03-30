@@ -1,16 +1,19 @@
 package application.Server;
 
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import com.google.gson.JsonObject;
 
+import application.DFS.DFS;
+import application.DFS.DFS.FileJson;
+import application.DFS.DFS.FilesJson;
 import application.Models.User;
 
 public class RegisterDispatcher {
@@ -22,12 +25,23 @@ public class RegisterDispatcher {
 	 * @param password
 	 * @param confirmPassword
 	 * @return
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws ParseException
+	 * @throws Exception 
 	 */
-	public String verifyRegisterInformation(String username, String password, String confirmPassword ) throws FileNotFoundException, IOException, ParseException {
+	@SuppressWarnings("unchecked")
+	public String verifyRegisterInformation(String username, String password, String confirmPassword ) throws Exception {
+		System.out.println("Verifying user information");
+		//DFS dfs = new DFS(5010);
+		
+		System.out.println("Retrieving DFS Metadata");
+		//FilesJson files = dfs.readMetaData();
+		//List<FileJson> filelist = files.getFiles();
+		//filelist.get(0).searchForUserInPage(username);
+		//filelist.get(0).searchForPageByUsername(username);
+		
+		
 		if(this.checkUsername(username) && this.checkIfPasswordsMatch(password, confirmPassword)) {
+			
+			
 			JSONObject newUser = new JSONObject();
 			newUser.put("username", username);
 			newUser.put("password", password);
@@ -56,8 +70,7 @@ public class RegisterDispatcher {
 			
 			
 			return newUser.toString();
-		}
-		else {
+		} else {
 			//else, return an error message stating that Registration has failed
 			JsonObject errorMessage = new JsonObject();
 			errorMessage.addProperty("errorMessage", "Username already in use");
@@ -68,7 +81,7 @@ public class RegisterDispatcher {
 	/**
 	 * Checks if the passwords match
 	 * @param password (entered password)
-	 * @param confirmPassword (entered password again for confirimation
+	 * @param confirmPassword (entered password again for confirmation
 	 * @return boolean
 	 */
 	public boolean checkIfPasswordsMatch(String password, String confirmPassword) {
@@ -87,6 +100,7 @@ public class RegisterDispatcher {
 	 */
 	public boolean checkUsername(String username) {
 
+		/*
 		try {
 			UserDB userDatabase = new UserDB();
 			User foundUser = userDatabase.getParticularUser(username);
@@ -97,7 +111,7 @@ public class RegisterDispatcher {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 		// return false since user has been found
 		return false;
 	}

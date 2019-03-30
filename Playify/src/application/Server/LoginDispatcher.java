@@ -20,15 +20,18 @@ public class LoginDispatcher {
 	 */
 	public String verifyLoginInformation(String username, String password) throws Exception {
 		
+		System.out.println("Called LoginDispatcher.Carlos");
 		Gson theGson = new Gson();
+		/*
 		DFS dfs = new DFS(0);
 		FilesJson metaData = dfs.readMetaData();
-		FileJson chordUsersJsonFile = metaData.getFiles().get(0);
-		User foundUser = chordUsersJsonFile.searchForUserInPage(username);
+		FileJson chordUsersJsonFile = metaData.getFiles().get(0);*/
+		//User foundUser = chordUsersJsonFile.searchForUserInPage(username);
+		UserDB db = new UserDB();
+		User foundUser = db.getParticularUser(username);
 		
-
 		//If the page has been found, then return the user processed as JSON data
-		if(foundUser!=null) {
+		if(foundUser != null) {
 			List<Playlist> userPlaylists = foundUser.getPlaylists();
 			User loggedUser = new User(username, password, userPlaylists);
 			String userCredentials = theGson.toJson(loggedUser);
