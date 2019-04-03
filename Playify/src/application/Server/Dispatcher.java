@@ -26,19 +26,18 @@ import application.DFS.DFS.FilesJson;
 
 
 
-
-
 @SuppressWarnings("unused")
 public class Dispatcher implements DispatcherInterface {
     HashMap<String, Object> ListOfObjects;
     
-
+    public static DFS dfs;
+    
     public Dispatcher()
     {
     	
         ListOfObjects = new HashMap<String, Object>();
         try {
-			DFS dfs = new DFS(5000);
+			dfs = new DFS(5000);
 			System.out.println("DFS Call Complete");
 			FilesJson mfiles = dfs.readMetaData();
 			List<FileJson> fileslist = mfiles.getFiles();
