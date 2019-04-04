@@ -48,7 +48,8 @@ public class Dispatcher implements DispatcherInterface {
 		}
     }
 
-    public String dispatch(String request)
+    @SuppressWarnings("rawtypes")
+	public String dispatch(String request)
     {
         JsonObject jsonReturn = new JsonObject();
         JsonParser parser = new JsonParser();

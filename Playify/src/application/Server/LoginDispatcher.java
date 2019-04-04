@@ -12,6 +12,8 @@ import application.Models.User;
 
 public class LoginDispatcher {
 	
+	public static DFS dfs;
+	
 	/* 
 	 * verifyLoginInformation: Verifies if a user has entered correct login credentials
 	 * @param username: Submitted username
@@ -19,14 +21,19 @@ public class LoginDispatcher {
 	 * @return JSON message that contains an error message or username/password credentials
 	 */
 	public String verifyLoginInformation(String username, String password) throws Exception {
+		dfs = Dispatcher.dfs;
 		
 		System.out.println("Called LoginDispatcher.Carlos");
 		Gson theGson = new Gson();
+		Gson gson = new Gson();
 		/*
 		DFS dfs = new DFS(0);
 		FilesJson metaData = dfs.readMetaData();
 		FileJson chordUsersJsonFile = metaData.getFiles().get(0);*/
 		//User foundUser = chordUsersJsonFile.searchForUserInPage(username);
+		
+		dfs.readMetaData();
+		
 		UserDB db = new UserDB();
 		User foundUser = db.getParticularUser(username);
 		

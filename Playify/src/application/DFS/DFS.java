@@ -47,6 +47,15 @@ public class DFS {
 		public List<FileJson> getFiles() {
 			return files;
 		}
+		
+		@Override
+		public String toString() {
+			String str = "";
+			for(FileJson j: files) {
+				str += j.toString();
+			}
+			return str;
+		}
 	};
 	
 	
@@ -92,7 +101,7 @@ public class DFS {
 				pages.get(i).setReadTimeStamp(formattedReadTS);
 				
 				//retrieve the list of users on the current page
-				List<User> usersInPage = pages.get(i).getUsersInPage();
+				List<User> usersInPage = null;
 				for(int j=0; j<usersInPage.size(); j++) {
 					if(usersInPage.get(j).getUsername().equals(username)) {
 						foundUser = usersInPage.get(j);
@@ -196,9 +205,9 @@ public class DFS {
 		@SerializedName("writeTS")
 		@Expose
 		String writeTimeStamp;
-		@SerializedName("users")
+		@SerializedName("referenceCount")
 		@Expose
-		List<User> usersInPage;
+		Long referenceCount;
 
 		public void setGuid(long guid) {
 			this.guid = guid;
@@ -237,12 +246,12 @@ public class DFS {
 			return writeTimeStamp;
 		}
 		
-		public void setUsersInPage(List<User> usersInPage) {
-			this.usersInPage = usersInPage;
+		public void setReferenceCount(Long referenceCount) {
+			this.referenceCount = referenceCount;
 		}
 		
-		public List<User> getUsersInPage(){
-			return usersInPage;
+		public Long getReferenceCount() {
+			return referenceCount;
 		}
 		
 		/**
@@ -257,11 +266,7 @@ public class DFS {
 			"Creation TimeStamp: " + creationTimeStamp + "\n" +
 			"Read Time: " + readTimeStamp + "\n" + 
 			"Write Time: " + writeTimeStamp + "\n" + 
-			"Users: {\n";
-			for(User u : usersInPage) {
-				result += (u.toString() + "\n");
-			}
-			result += "}\n";
+			"Reference Count: " + referenceCount + "\n";  
 			return result;
 		}
 		
@@ -338,14 +343,19 @@ public class DFS {
 		try {
 			Gson gson = new Gson();
 			long guid = md5("Metadata");
+			System.out.println("GUID From ReadMetadata: " + guid);
 			ChordMessageInterface peer = chord.locateSuccessor(guid);
 			RemoteInputFileStream metadataraw = peer.get(guid);
 			metadataraw.connect();
 			Scanner scan = new Scanner(metadataraw);
 			scan.useDelimiter("\\A");
-			String strMetaData = scan.next();
-			System.out.println(strMetaData);
-			filesJson = gson.fromJson(strMetaData, FilesJson.class);
+			String strMetaData = "";
+			while(scan.hasNext()) {
+				strMetaData+= scan.next();
+			}
+			filesJson = gson.fromJson(new FileReader("./3934469268158881738/repository/8555781317612585347"), FilesJson.class);
+			System.out.println("Carlos's Json:\n" + filesJson.toString());
+			System.out.println("Carlos");
 			scan.close();
 		} catch (NoSuchElementException ex) {
 			filesJson = new FilesJson();
@@ -462,7 +472,7 @@ public class DFS {
 	 * @param fileName
 	 * @param component
 	 * @throws Exception 
-	 */
+	 
 	public void deleteComponent(String fileName, String[] component) throws Exception {
 		FilesJson retrievedMetadata = this.readMetaData();
 		int index=0;
@@ -516,7 +526,7 @@ public class DFS {
 				}	
 			}
 		}
-	}
+	}*/
 		
 	
 	

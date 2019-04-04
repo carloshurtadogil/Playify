@@ -5,9 +5,6 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
-import application.DFS.DFS;
-import application.DFS.DFS.FileJson;
-import application.DFS.DFS.FilesJson;
 import application.Models.User;
 import application.Models.UserResponse;
 
