@@ -1,11 +1,9 @@
 package application;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +11,6 @@ import org.json.simple.parser.ParseException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-
 import application.Models.Playlist;
 import application.Models.Song;
 import application.Models.User;
@@ -33,8 +30,6 @@ import javafx.stage.Stage;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
-//import javazoom.jl.player.*;
-//import javazoom.jl.decoder.JavaLayerException;
 
 public class HomeController {
 	@FXML
@@ -259,33 +254,7 @@ public class HomeController {
 			System.out.println("An exception has occurred");
 		}
 	}
-	
-	/**
-	 * Go to the DFS controller
-	 * @param event The button-clicked event that will trigger the code
-	 */
-	public void GoToDFS(ActionEvent event) {
-		System.out.println("Reached1");
-		try {
-			FXMLLoader dfsLoader = new FXMLLoader();
-			dfsLoader.setLocation(getClass().getResource("/application/DFS.fxml"));
-			System.out.println("Reached2");
-			Parent root = dfsLoader.load();
-			System.out.println("Reached3");
-			Scene dfsScene = new Scene(root);
 
-			// Obtain the controller to set the selected user
-			DFSController dfsControl = dfsLoader.getController();
-			dfsControl.setLoggedUser(selectedUser);
-
-			// Load the current stage to prevent from generating a new window/popup
-			Stage createPlaylistStage = (Stage) temporaryLabel.getScene().getWindow();
-			createPlaylistStage.setScene(dfsScene);
-			createPlaylistStage.show();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
 	/**
 	 * Prepares the client request for calling the song removal from a playlist method
@@ -300,8 +269,7 @@ public class HomeController {
 		String [] param = new String[3];
 		param[0] = selectedUser.getUsername();
 		param[1] = selectedPlaylist.getPlaylistName();
-		System.out.println(selectedSong.getSongDetails().getSongId());
-		param[2] = selectedSong.getSongDetails().getSongId();
+		param[2] = selectedSong.getSongDetails().getTitle();
 		
 		JsonObject result = proxy.synchExecution("removeSongFromPlaylist", param);
 		Playlist playlistFromResult = new Gson().fromJson(result, Playlist.class);

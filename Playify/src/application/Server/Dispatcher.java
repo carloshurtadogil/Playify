@@ -19,27 +19,24 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-
 import application.DFS.DFS;
 import application.DFS.DFS.FileJson;
 import application.DFS.DFS.FilesJson;
 
 
-
 @SuppressWarnings("unused")
 public class Dispatcher implements DispatcherInterface {
     HashMap<String, Object> ListOfObjects;
+    static DFS dfsInstance;
     
-    public static DFS dfs;
-    
+
     public Dispatcher()
     {
-    	
         ListOfObjects = new HashMap<String, Object>();
         try {
-			dfs = new DFS(5000);
+			dfsInstance = new DFS(5000);
 			System.out.println("DFS Call Complete");
-			FilesJson mfiles = dfs.readMetaData();
+			FilesJson mfiles = dfsInstance.readMetaData();
 			List<FileJson> fileslist = mfiles.getFiles();
 			System.out.println(mfiles.toString());
 		} catch (Exception e) {
@@ -47,9 +44,20 @@ public class Dispatcher implements DispatcherInterface {
 			e.printStackTrace();
 		}
     }
+    
+    /**
+     * Returns a DFS instance that was created in the Dispatcher constructor
+     * @return
+     */
+    public DFS getDFSInstance() {
+    	return dfsInstance;
+    }
+    
 
-    @SuppressWarnings("rawtypes")
-	public String dispatch(String request)
+    /**
+     * Analyzes the client request and determines the type of dispatcher and methods to execute.
+     */
+    public String dispatch(String request)
     {
         JsonObject jsonReturn = new JsonObject();
         JsonParser parser = new JsonParser();

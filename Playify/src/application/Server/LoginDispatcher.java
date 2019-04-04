@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import application.DFS.DFS;
 import application.DFS.DFS.FileJson;
 import application.DFS.DFS.FilesJson;
-import application.DFS.DFS.PagesJson;
 import application.Models.Playlist;
 import application.Models.User;
 
@@ -21,22 +20,15 @@ public class LoginDispatcher {
 	 * @return JSON message that contains an error message or username/password credentials
 	 */
 	public String verifyLoginInformation(String username, String password) throws Exception {
-		dfs = Dispatcher.dfs;
+		dfs = Dispatcher.dfsInstance;
 		
 		System.out.println("Called LoginDispatcher.Carlos");
 		Gson theGson = new Gson();
-		Gson gson = new Gson();
-		/*
-		DFS dfs = new DFS(0);
+		
 		FilesJson metaData = dfs.readMetaData();
-		FileJson chordUsersJsonFile = metaData.getFiles().get(0);*/
-		//User foundUser = chordUsersJsonFile.searchForUserInPage(username);
-		
-		dfs.readMetaData();
-		
-		UserDB db = new UserDB();
-		User foundUser = db.getParticularUser(username);
-		
+		FileJson chordUsersJsonFile = metaData.getFiles().get(0);
+		User foundUser = chordUsersJsonFile.searchForUserInPage(username, dfs);
+
 		//If the page has been found, then return the user processed as JSON data
 		if(foundUser != null) {
 			List<Playlist> userPlaylists = foundUser.getPlaylists();

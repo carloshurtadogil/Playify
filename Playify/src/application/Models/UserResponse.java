@@ -22,4 +22,13 @@ public class UserResponse {
 	public void setUsersList(List<User> list) {
 		this.usersList = list;
 	}
+	//Searches for a user in the list of all users
+	public User findUser(String username) {
+		for(int i=0; i<usersList.size(); i++) {
+			if(usersList.get(i).getUsername().equals(username)) {
+				return usersList.get(i);
+			}
+		}
+		return null;
+	}
 }
