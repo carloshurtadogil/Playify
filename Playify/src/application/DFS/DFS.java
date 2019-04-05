@@ -15,6 +15,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import application.Models.Playlist;
 import application.Models.Song;
+import application.Models.SongResponse;
 import application.Models.User;
 import application.Models.UserResponse;
 
@@ -121,9 +122,10 @@ public class DFS {
 			while (scan.hasNext()) {
 				strUserResponse += scan.next();
 			}
-			UserResponse userRepository = new Gson().fromJson(strUserResponse, UserResponse.class);
-
+			scan.close();
+			
 			// retrieve the list of users on the current page
+			UserResponse userRepository = new Gson().fromJson(strUserResponse, UserResponse.class);
 			List<User> usersInPage = userRepository.getUsersList();
 			for(int i=0; i<usersInPage.size(); i++) {
 				if(usersInPage.get(i).getUsername().equals(username)) {
@@ -131,6 +133,42 @@ public class DFS {
 				}
 			}
 			return null;
+		}
+		
+		/**
+		 * Traverses each page and retrieves its songs, and checks for the appropriate song
+		 * @throws RemoteException 
+		 */
+		public List<Song> searchforSongsInPages(String searchInput, DFS dfsInstance) throws RemoteException, IOException {
+			
+			List<Song> songsFromSearchResult = new ArrayList<Song>();
+			//retrieve the pages of the file and traverse them one by one
+			List<PagesJson> pages = this.getPages();
+			for(int i=0; i<pages.size(); i++) {
+				PagesJson currentPage = pages.get(i);
+				long guid = currentPage.getGuid();
+				ChordMessageInterface peer = dfsInstance.chord.locateSuccessor(guid);
+				RemoteInputFileStream content = peer.get(guid);
+				
+				content.connect();
+				Scanner scan = new Scanner(content);
+				scan.useDelimiter("\\A");
+				String strSongResponse = "";
+				while (scan.hasNext()) {
+					strSongResponse += scan.next();
+				}
+				//retrieve all songs from a single page, and traverse the songs to find the appropriate song
+				SongResponse songRepository = new Gson().fromJson(strSongResponse, SongResponse.class);
+				for(int j=0; j<songRepository.getSongsInPage().size(); j++) {
+					Song currentSong = songRepository.getSongsInPage().get(j);
+					if(currentSong.getSongDetails().getTitle().equalsIgnoreCase(searchInput) || 
+							currentSong.getArtistDetails().getName().equalsIgnoreCase(searchInput) ||
+							currentSong.getArtistDetails().getTerms().equalsIgnoreCase(searchInput)) {
+						songsFromSearchResult.add(currentSong);
+					}
+				}
+			}
+			return songsFromSearchResult;
 		}
 
 		/**
@@ -586,23 +624,32 @@ public class DFS {
 			String fileName = components[0];
 			String userInJsonFormat = components[1];
 
-			// Retrieve the chordusers.json file to get the first page which contains all
-			// users
+			Date currentDate = new Date();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss a");
+			String formattedReadTS = dateFormat.format(currentDate);
+			
 			FileJson chordUsersFile = metadata.getFiles().get(0);
+			chordUsersFile.setReadTimeStamp(formattedReadTS);
 			PagesJson pageofUsers = chordUsersFile.getPages().get(0);
+			pageofUsers.setReadTimeStamp(formattedReadTS);
 
 			long guid = pageofUsers.getGuid();
 			ChordMessageInterface peer = chord.locateSuccessor(guid);
-			RemoteInputFileStream usersInPage = peer.get(guid);
+			RemoteInputFileStream content = peer.get(guid);
 
-			byte[] usersInByteFormat = usersInPage.buf;
-			String chordUsersFileInString = new String(usersInByteFormat);
+			content.connect();
+			Scanner scan = new Scanner(content);
+			scan.useDelimiter("\\A");
+			String strUserResponse = "";
+			while (scan.hasNext()) {
+				strUserResponse += scan.next();
+			}
+			UserResponse userRepository = new Gson().fromJson(strUserResponse, UserResponse.class);
 
-			UserResponse userRepo = new Gson().fromJson(chordUsersFileInString, UserResponse.class);
 			User registeredUser = new Gson().fromJson(userInJsonFormat, User.class);
 
-			userRepo.getUsersList().add(registeredUser);
-			String userRepositoryInJson = new Gson().toJson(userRepo);
+			userRepository.getUsersList().add(registeredUser);
+			String userRepositoryInJson = new Gson().toJson(userRepository);
 
 			peer.put(guid, userRepositoryInJson);
 

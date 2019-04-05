@@ -17,7 +17,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -25,16 +24,20 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-
 import application.OsUtils;
+import application.DFS.DFS;
+import application.DFS.DFS.FileJson;
+import application.DFS.DFS.FilesJson;
+import application.DFS.DFS.PagesJson;
 import application.Models.Song;
-
 import java.io.FileNotFoundException;
 
 
 public class SongDispatcher
 {
+	public static DFS dfs;
     static final int FRAGMENT_SIZE = 8192; 
+    
     public SongDispatcher()
     {
         
@@ -96,22 +99,13 @@ public class SongDispatcher
     * @throws JsonSyntaxException
     * @throws FileNotFoundException
     */
-    public String searchForSongs(String searchInput) throws JsonIOException, JsonSyntaxException, FileNotFoundException {
+    public String searchForSongs(String searchInput) throws JsonIOException, JsonSyntaxException, FileNotFoundException, Exception {
     	
-    	List<Song> masterPlaylist = new Gson().fromJson(new FileReader("music.json"), new TypeToken<List<Song>>() {}.getType() );
+    	dfs = Dispatcher.dfsInstance;
+    	FilesJson allFiles = dfs.readMetaData();
+    	FileJson chordSongsFile = allFiles.getFiles().get(1);
     	
-    	List<Song> searchResults = new ArrayList<Song>();
-    	
-    	//Traverse all the songs in the master playlist
-    	for(int i=0; i<masterPlaylist.size();i++) {
-    		//Search by song name, artist name, or genre(terms)
-    		//If result is found, then add to search results
-    		if(masterPlaylist.get(i).getSongDetails().getTitle().equalsIgnoreCase(searchInput) 
-    				|| masterPlaylist.get(i).getArtistDetails().getName().equalsIgnoreCase(searchInput) 
-    				|| masterPlaylist.get(i).getArtistDetails().getTerms().equalsIgnoreCase(searchInput)) {
-    			searchResults.add(masterPlaylist.get(i));
-    		}
-    	}
+    	List<Song> searchResults = chordSongsFile.searchforSongsInPages(searchInput, dfs);
     	
     	//If more than one song has been found, then send the list of songs as a Json string
     	if(searchResults.size() >0) {
@@ -126,7 +120,7 @@ public class SongDispatcher
     	}
     	//else, return an error message stating that Login has failed
     	JsonObject errorMessage = new JsonObject();
-    	errorMessage.addProperty("errorMessage", "Incorrect username or password");
+    	errorMessage.addProperty("errorMessage", "No songs match the following criteria");
     	return errorMessage.toString();
     }
 }
