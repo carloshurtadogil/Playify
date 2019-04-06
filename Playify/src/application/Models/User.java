@@ -89,6 +89,29 @@ public class User{
 	}
 	
 	/**
+	 * <p> Removes a song from one of the user's playlists </p>
+	 * @param playlistName Playlist with song to be removed
+	 * @param songID id of the song to be removed
+	 * @return True if successful in removing the song, false otherwise
+	 */
+	public boolean removeSong(String playlistName, String songID) {
+		for(Playlist p : playlists) {
+			if(p.getPlaylistName().equals(playlistName)) {
+				List<Song> songsinp = p.getSongs();
+				int size = songsinp.size();
+				for(int i = 0; i < size; i++ ) {
+					if(p.getSongs().get(i).getSongDetails().getSongId().equals(songID)) {
+						p.getSongs().remove(i);
+						System.out.println("User SOong Found");
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * <p> Retrieve the list of playlistnames that is found in the user's list of playlists</p>
 	 * @return List of playlistsnames
 	 */
@@ -137,13 +160,14 @@ public class User{
 	 */
 	public void setPlaylists(List<Playlist> thePlaylists){
 		this.playlists = thePlaylists;
+		/*
 		try {
 			updateUserJSON();
 		} catch (IOException | ParseException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
 			System.out.println("Unable to update users.json: Users.setPlaylists()");
-		}
+		}*/
 	}
 	
 	@SuppressWarnings("unchecked")

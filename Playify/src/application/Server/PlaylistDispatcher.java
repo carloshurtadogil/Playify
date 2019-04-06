@@ -79,36 +79,61 @@ public class PlaylistDispatcher {
 	public String removeSongFromPlaylist(String username, String playlist, String songID)
 			throws JsonSyntaxException, JsonIOException, FileNotFoundException, Exception {
 
-		UserDB userDatabase = new UserDB();
-		User foundUser = userDatabase.getParticularUser(username);
+		dfs = Dispatcher.dfsInstance;
+		
+		Gson gson = new Gson();
+		
+		long guid = -1;
+		
+		FilesJson allFiles = dfs.readMetaData();
+    	FileJson chordUserFile = allFiles.getFiles().get(0);
+    	PagesJson page = chordUserFile.getPages().get(0);
+    	guid = page.getGuid();
+    	ChordMessageInterface chordobj = dfs.chord.locateSuccessor(guid);
+    	RemoteInputFileStream rifs = chordobj.get(guid);
+    	
+    	rifs.connect();
+		Scanner scan = new Scanner(rifs);
+		scan.useDelimiter("\\A");
+		String strMetaData = "";
+		while (scan.hasNext()) {
+			strMetaData += scan.next();
+		}
+		
+		UserResponse userResponseJson = gson.fromJson(strMetaData, UserResponse.class);
+		scan.close();
+		
+		User foundUser = null;
+		int index = 0;
+		int uindex = -1;
+		for(User u: userResponseJson.getUsersList()) {
+			if(u.getUsername().equals(username)) {
+				uindex = index;
+				foundUser = u;
+				System.out.println("User PD Found: " + u.getUsername());
+			}
+			index++;
+		}
 
 		// Reads the entire users.json file
 		String result = null;
 		Playlist selectedPlaylist = foundUser.getSpecificPlaylist(playlist);
 		if (selectedPlaylist != null) {
-			// Search and remove the song in the playlist
-			List<Song> songsInPlaylist = selectedPlaylist.getSongs();
-			for (int i = 0; i < songsInPlaylist.size(); i++) {
-				if (songsInPlaylist.get(i).getSongDetails().getSongId().equals(songID)) {
-					System.out.println("Found");
-					songsInPlaylist.remove(songsInPlaylist.get(i));
-					break;
-				}
-			}
+			System.out.println("PlaylistDispatcher.removeSongFromPlaylist() Good, Not Null");
+			
 
-			// Update the user's playlist
-			for (int i = 0; i < foundUser.getPlaylists().size(); i++) {
-				if (foundUser.getPlaylists().get(i).getPlaylistName().equals(selectedPlaylist.getPlaylistName())) {
-					foundUser.getPlaylists().set(i, selectedPlaylist);
-					foundUser.setPlaylists(foundUser.getPlaylists());
-					break;
-				}
+			if(uindex != -1) {//Update the file
+				userResponseJson.getUsersList().get(uindex).removeSong(playlist, songID);//Remove the song if possible
+				chordobj.put(guid, gson.toJson(userResponseJson));
+				System.out.println();
+				JsonObject successMessage = new JsonObject();
+				successMessage.addProperty("successMessage", "");
+				
+				return new Gson().toJson(userResponseJson.getUsersList().get(uindex).getSpecificPlaylist(playlist));
 			}
-			result = new Gson().toJson(selectedPlaylist);
-			return result;
 		}
 		else {
-			
+			System.out.println("PlaylistDispatcher.removeSongFromPlaylist() Failed");
 		}
 
 		return result;

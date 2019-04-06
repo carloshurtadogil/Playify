@@ -271,13 +271,13 @@ public class HomeController {
 		String [] param = new String[3];
 		param[0] = selectedUser.getUsername();
 		param[1] = selectedPlaylist.getPlaylistName();
-		param[2] = selectedSong.getSongDetails().getTitle();
+		param[2] = selectedSong.getSongDetails().getSongId();
 		
 		JsonObject result = proxy.synchExecution("removeSongFromPlaylist", param);
 		Playlist playlistFromResult = new Gson().fromJson(result, Playlist.class);
 		
 		if(playlistFromResult == null) {
-			
+			System.out.println("Is Null in Home");
 		}
 		else {
 			int index = 0;
