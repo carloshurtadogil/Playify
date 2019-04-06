@@ -105,8 +105,10 @@ public class HomeController {
 			@Override
 			public void handle(ActionEvent arg0) {
 				try {
-					if(playSongThread.isAlive()) {
-						playSongThread.stop();
+					if(playSongThread != null) {
+						if(playSongThread.isAlive()) {
+							playSongThread.stop();
+						}
 					}
 					// Load the Login.fxml page
 					FXMLLoader portalLoader = new FXMLLoader();

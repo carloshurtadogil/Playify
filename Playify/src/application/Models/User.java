@@ -7,12 +7,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
@@ -153,23 +151,6 @@ public class User{
 
 		JSONParser parsing = new JSONParser();
 		JSONObject mainObject = (JSONObject) parsing.parse(new FileReader("users.json"));
-		
-		//TESTING PURPOSES
-	/*	Gson gson1 = new Gson();
-		String json1 = gson1.toJson(mainObject);
-		System.out.println(json1);
-		
-	    JsonParser jp = new JsonParser();
-	    JsonElement root = jp.parse(json1);
-	    System.out.println(root.toString());
-	    //JsonArray rootArr = root.getAsJsonArray();
-
-	    JsonObject rootObj = rootArr.get(0).getAsJsonObject();
-	    rootObj.entrySet().forEach(entry -> System.out.println(entry.getKey()+": "+entry.getValue().getAsString()));
-
-*/
-		
-		//TESTING PURPOSES
 		
 		JSONArray userArray = (JSONArray) mainObject.get("users"); //the list of user objects found is users.json
 		

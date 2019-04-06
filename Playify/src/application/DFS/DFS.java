@@ -524,13 +524,13 @@ public class DFS {
 	}
 
 	
-	// * Deletes a component from a page in DFS, either deletes a song from a playlist
-	// * or simply deletes a playlist from a list of playlists
-	// * 
-	// * @param fileName
-	// * @param component
-	// * @throws Exception 
-	
+	/* Deletes a component from a page in DFS, either deletes a song from a playlist
+	 * or simply deletes a playlist from a list of playlists
+	 * 
+	 * @param fileName
+	 * @param component
+	 * @throws Exception 
+	*/
 //	public boolean deleteComponent(String fileName, String[] component) throws Exception {
 //		FilesJson retrievedMetadata = this.readMetaData();
 //		int index = 0;
@@ -607,6 +607,8 @@ public class DFS {
 		return null;
 	}
 
+	
+	
 	/**
 	 * Add a component to a page
 	 *
@@ -619,86 +621,52 @@ public class DFS {
 		boolean found = false;
 		FilesJson metadata = this.readMetaData();
 
+		//get the current DateTime
+		Date currentDate = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss a");
+		String formattedReadTS = dateFormat.format(currentDate);
+		//set the read timestamp accordingly on the file and its desired page
+		FileJson chordUsersFile = metadata.getFiles().get(0);
+		chordUsersFile.setReadTimeStamp(formattedReadTS);
+		PagesJson pageofUsers = chordUsersFile.getPages().get(0);
+		pageofUsers.setReadTimeStamp(formattedReadTS);
+
+		//retrieve the guid of the page to search for the Chord that contains the actual file
+		long guid = pageofUsers.getGuid();
+		ChordMessageInterface peer = chord.locateSuccessor(guid);
+		RemoteInputFileStream content = peer.get(guid);
+
+		content.connect();
+		Scanner scan = new Scanner(content);
+		scan.useDelimiter("\\A");
+		String strUserResponse = "";
+		while (scan.hasNext()) {
+			strUserResponse += scan.next();
+		}
+		
+		UserResponse userRepository = new Gson().fromJson(strUserResponse, UserResponse.class);
+		
+		
 		// Append a user to a page of users in the chordusers.json file
 		if (components.length == 2) {
+			
+			System.out.println("Lets add a user");
+			
 			String fileName = components[0];
 			String userInJsonFormat = components[1];
-
-			Date currentDate = new Date();
-			DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss a");
-			String formattedReadTS = dateFormat.format(currentDate);
 			
-			FileJson chordUsersFile = metadata.getFiles().get(0);
-			chordUsersFile.setReadTimeStamp(formattedReadTS);
-			PagesJson pageofUsers = chordUsersFile.getPages().get(0);
-			pageofUsers.setReadTimeStamp(formattedReadTS);
-
-			long guid = pageofUsers.getGuid();
-			ChordMessageInterface peer = chord.locateSuccessor(guid);
-			RemoteInputFileStream content = peer.get(guid);
-
-			content.connect();
-			Scanner scan = new Scanner(content);
-			scan.useDelimiter("\\A");
-			String strUserResponse = "";
-			while (scan.hasNext()) {
-				strUserResponse += scan.next();
-			}
-			UserResponse userRepository = new Gson().fromJson(strUserResponse, UserResponse.class);
-
 			User registeredUser = new Gson().fromJson(userInJsonFormat, User.class);
-
 			userRepository.getUsersList().add(registeredUser);
 			String userRepositoryInJson = new Gson().toJson(userRepository);
 
 			peer.put(guid, userRepositoryInJson);
-
 			this.writeMetaData(metadata);
 			return true;
 
 		}
-		// Append a newly created playlist to an existing user's list of playlists
-		else if (components.length == 3) {
-			String fileName = components[0];
-			String username = components[1];
-			String playlistInJsonFormat = components[2];
-
-			FileJson chordUsersFile = metadata.getFiles().get(0);
-			PagesJson pageofUsers = chordUsersFile.getPages().get(0);
-
-			long guid = pageofUsers.getGuid();
-			ChordMessageInterface peer = chord.locateSuccessor(guid);
-
-			RemoteInputFileStream data = peer.get(guid);
-
-			byte[] content = data.buf;
-
-			String chordUsersFileInString = new String(content, 0, content.length);
-
-			UserResponse userRepo = new Gson().fromJson(chordUsersFileInString, UserResponse.class);
-			Playlist playlistToBeAdded = new Gson().fromJson(playlistInJsonFormat, Playlist.class);
-
-			int index = 0;
-			User currentUser = null;
-			for (int i = 0; i < userRepo.getUsersList().size(); i++) {
-				currentUser = userRepo.getUsersList().get(i);
-				if (currentUser.getUsername().equals(username)) {
-					currentUser.getPlaylists().add(playlistToBeAdded);
-					index++;
-					break;
-				}
-			}
-
-			if (currentUser != null) {
-				userRepo.getUsersList().set(index, currentUser);
-				String userRepositoryInJson = new Gson().toJson(userRepo);
-				return true;
-			}
-
-			return false;
-
-		}
+		
 		return false;
+		
 	}
 
 }
