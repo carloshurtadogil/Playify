@@ -324,7 +324,7 @@ public class DFS {
 	}
 
 	int port;
-	Chord chord;
+	public Chord chord;
 
 	private long md5(String objectName) {
 		try {
@@ -405,8 +405,6 @@ public class DFS {
 			}
 			filesJson = gson.fromJson(strMetaData,
 					FilesJson.class);
-			System.out.println("Carlos's Json:\n" + filesJson.toString());
-			System.out.println("Carlos");
 			scan.close();
 		} catch (NoSuchElementException ex) {
 			filesJson = new FilesJson();

@@ -7,32 +7,23 @@
           "songs": [
             {
               "song": {
-                "id": "SOMZWCG12A8C13C480",
-                "title": "I Didn't Mean To"
+                "id": "SOEKGLO12A8C1363DE",
+                "title": "When You Wish Upon A Star"
               },
               "artist": {
-                "terms": "hip hop",
-                "name": "Casual"
+                "terms": "vocal jazz",
+                "name": "Cliff Edwards/Disney Studio Chorus"
               },
               "release": {
-                "name": "Fear Itself",
-                "id": 300848
+                "name": "Julie Andrews Selects Her Favourite Disney Songs",
+                "id": 151155
               }
-            },
-            {
-              "song": {
-                "id": "SOCIWDW12A8C13D406",
-                "title": "Soul Deep"
-              },
-              "artist": {
-                "terms": "blue-eyed soul",
-                "name": "The Box Tops"
-              },
-              "release": {
-                "name": "Dimensions",
-                "id": 300822
-              }
-            },
+            }
+          ],
+          "playlistname": "MyPlaylist"
+        },
+        {
+          "songs": [
             {
               "song": {
                 "id": "SOXVLOJ12AB0189215",
@@ -48,40 +39,7 @@
               }
             }
           ],
-          "playlistname": "NewPlaylist"
-        },
-        {
-          "songs": [
-            {
-              "song": {
-                "id": "SOEKGLO12A8C1363DE",
-                "title": "When You Wish Upon A Star"
-              },
-              "artist": {
-                "terms": "vocal jazz",
-                "name": "Cliff Edwards/Disney Studio Chorus"
-              },
-              "release": {
-                "name": "Julie Andrews Selects Her Favourite Disney Songs",
-                "id": 151155
-              }
-            },
-            {
-              "song": {
-                "id": "SOIVRUS12A8C133164",
-                "title": "Blame Canada ( From: South Park )"
-              },
-              "artist": {
-                "terms": "soundtrack",
-                "name": "Marc Shaiman"
-              },
-              "release": {
-                "name": "The Bucket List",
-                "id": 190811
-              }
-            }
-          ],
-          "playlistname": "Favorites"
+          "playlistname": "time"
         }
       ],
       "username": "time"
