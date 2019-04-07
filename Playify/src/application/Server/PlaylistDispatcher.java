@@ -1,18 +1,12 @@
 package application.Server;
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
-
-import application.DFS.Chord;
 import application.DFS.ChordMessageInterface;
 import application.DFS.DFS;
 import application.DFS.DFS.FileJson;
@@ -20,7 +14,6 @@ import application.DFS.DFS.FilesJson;
 import application.DFS.DFS.PagesJson;
 import application.DFS.RemoteInputFileStream;
 import application.Models.Playlist;
-import application.Models.Song;
 import application.Models.User;
 import application.Models.UserResponse;
 
@@ -129,12 +122,12 @@ public class PlaylistDispatcher {
     	rifs.connect();
 		Scanner scan = new Scanner(rifs);
 		scan.useDelimiter("\\A");
-		String strMetaData = "";
+		String strUserResponse = "";
 		while (scan.hasNext()) {
-			strMetaData += scan.next();
+			strUserResponse += scan.next();
 		}
 		
-		UserResponse userResponseJson = gson.fromJson(strMetaData, UserResponse.class);
+		UserResponse userResponseJson = gson.fromJson(strUserResponse, UserResponse.class);
 		scan.close();
 		
 		User foundUser = null;
