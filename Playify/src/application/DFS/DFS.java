@@ -608,7 +608,7 @@ public class DFS {
 	
 	
 	/**
-	 * Add a component to a page
+	 * Add a component to a page (e.g. adding a newly signed up user)
 	 *
 	 * @param filename
 	 *            Name of the file
@@ -664,6 +664,53 @@ public class DFS {
 		}
 		
 		return false;
+		
+	}
+	
+	/**
+	 * Append a page to a file
+	 * @param fileName
+	 * @param data
+	 * @throws Exception 
+	 */
+	public void append(String fileName, RemoteInputFileStream data) throws Exception {
+		Gson gson = new Gson();
+		FilesJson allFiles = this.readMetaData();
+		FileJson foundFile = null;
+		
+		int index=0;
+		for(int i=0; i<allFiles.getFiles().size(); i++) {
+			if(allFiles.getFiles().get(i).getName().equals(fileName)) {
+				foundFile = allFiles.getFiles().get(i);
+				
+				data.connect();
+				Scanner scan = new Scanner(data);
+				scan.useDelimiter("\\A");
+				String strPageData = "";
+				while (scan.hasNext()) {
+					strPageData += scan.next();
+				}
+				
+				//get the current DateTime
+				Date currentDate = new Date();
+				DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss a");
+				String formattedReadTS = dateFormat.format(currentDate);
+				
+				PagesJson newPage = gson.fromJson(strPageData, PagesJson.class);
+				foundFile.getPages().add(newPage);
+				foundFile.setReadTimeStamp(formattedReadTS);
+				allFiles.getFiles().set(i, foundFile);
+				
+				ChordMessageInterface peer = chord.locateSuccessor(newPage.getGuid());
+				peer.put(newPage.getGuid(), gson.toJson(newPage));
+				
+				this.writeMetaData(allFiles);
+				
+				break;
+				
+			}
+		}
+		
 		
 	}
 

@@ -36,28 +36,62 @@ public class PlaylistDispatcher {
 	 * @throws JsonSyntaxException 
 	 */
 	public String removePlaylist(String username, String playlistName) throws JsonSyntaxException, JsonIOException, FileNotFoundException, Exception {
+		
+		//Read the metadata that is kept in the DFS
 		dfs = Dispatcher.dfsInstance;
 		Gson gson = new Gson();
-		System.out.println();
 		FilesJson allFiles = dfs.readMetaData();
+		
+		//Retrieve the chord songs file to obtain its first page
     	FileJson chordSongsFile = allFiles.getFiles().get(0);
-    	System.out.println(chordSongsFile.toString());
+    	PagesJson pageOfUsers = chordSongsFile.getPages().get(0);
+    	long guid = pageOfUsers.getGuid();
+    	
+    	//Traverse the Chord system to find the actual physical page contents
+    	ChordMessageInterface peer = dfs.chord.locateSuccessor(guid);
+    	RemoteInputFileStream content = peer.get(guid);
+    	content.connect();
 		
-		UserDB userDatabase = new UserDB();
-		User foundUser = userDatabase.getParticularUser(username);
-		Playlist particularPlaylist = foundUser.getSpecificPlaylist(playlistName);
-		
-		if(particularPlaylist == null) {
-			JsonObject errorMessage = new JsonObject();
-			errorMessage.addProperty("errorMessage", "");
-			return errorMessage.toString();
+    	Scanner scan = new Scanner(content);
+		scan.useDelimiter("\\A");
+		String strUserResponse = "";
+		while (scan.hasNext()) {
+			strUserResponse += scan.next();
 		}
-		else {
-			foundUser.getPlaylists().remove(particularPlaylist);
-			foundUser.setPlaylists(foundUser.getPlaylists());
+		scan.close();
+
+		UserResponse userResponseJson = gson.fromJson(strUserResponse, UserResponse.class);
+		List<User> allUsers = userResponseJson.getUsersList();
+		
+		//traverse the users list to find the specified user, and then attempt to delete the playlist
+		boolean playlistRemoved = false;
+		for(int i=0; i< allUsers.size(); i++) {
+			User currentUser = allUsers.get(i);
+			if(currentUser.getUsername().equals(username)) {
+				for(int j=0; j<currentUser.getPlaylists().size(); j++) {
+					if(currentUser.getPlaylists().get(j).getPlaylistName().equals(playlistName)) {
+						currentUser.getPlaylists().remove(j);
+						currentUser.setPlaylists(currentUser.getPlaylists());
+						allUsers.set(i, currentUser);
+						userResponseJson.setUsersList(allUsers);
+						playlistRemoved = true;
+						break;
+					}
+				}
+			}
+		}
+		
+    	//update the page in the Chord system if the playlist has been found
+		if(playlistRemoved) {
+			peer.put(guid, gson.toJson(userResponseJson));
 			JsonObject successMessage = new JsonObject();
 			successMessage.addProperty("successMessage", "");
 			return successMessage.toString();
+		}
+		else {
+			JsonObject errorMessage = new JsonObject();
+			errorMessage.addProperty("errorMessage", "");
+			return errorMessage.toString();
 		}
 
 	}
@@ -173,14 +207,13 @@ public class PlaylistDispatcher {
     	rifs.connect();
 		Scanner scan = new Scanner(rifs);
 		scan.useDelimiter("\\A");
-		String strMetaData = "";
+		String strUserResponse = "";
 		while (scan.hasNext()) {
-			strMetaData += scan.next();
+			strUserResponse += scan.next();
 		}
 		
-		UserResponse userResponseJson = gson.fromJson(strMetaData, UserResponse.class);
+		UserResponse userResponseJson = gson.fromJson(strUserResponse, UserResponse.class);
 		scan.close();
-    	
     	
 		boolean addPlaylist = true;
 		
@@ -221,12 +254,9 @@ public class PlaylistDispatcher {
 				JsonObject successMessage = new JsonObject();
 				successMessage.addProperty("successMessage", "");
 				return successMessage.toString();
-			}
-			
-			
-		
-		
-		} //else, generate an error message
+			} 
+		}
+		//else, generate an error message
 		System.out.println("failing to add new playlist now....");
 		// else, return an error message stating that creating a dispatcher has failed
 		JsonObject errorMessage = new JsonObject();
