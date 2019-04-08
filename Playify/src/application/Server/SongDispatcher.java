@@ -10,12 +10,15 @@ package application.Server;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.io.FileReader;
 import java.io.FileInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -100,12 +103,20 @@ public class SongDispatcher
     * @throws FileNotFoundException
     */
     public String searchForSongs(String searchInput) throws JsonIOException, JsonSyntaxException, FileNotFoundException, Exception {
+    	Date currentDate = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss a");
+		String formattedReadTS = dateFormat.format(currentDate);
     	
     	dfs = Dispatcher.dfsInstance;
     	FilesJson allFiles = dfs.readMetaData();
+    	
     	FileJson chordSongsFile = allFiles.getFiles().get(1);
+    	chordSongsFile.setReadTimeStamp(formattedReadTS);
+    	allFiles.getFiles().set(1, chordSongsFile);
     	
     	List<Song> searchResults = chordSongsFile.searchforSongsInPages(searchInput, dfs);
+    	
+    	dfs.writeMetaData(allFiles);
     	
     	//If more than one song has been found, then send the list of songs as a Json string
     	if(searchResults.size() >0) {

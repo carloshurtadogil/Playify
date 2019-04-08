@@ -1,6 +1,9 @@
 package application.Server;
 
 import java.io.FileNotFoundException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import com.google.gson.Gson;
@@ -112,8 +115,13 @@ public class PlaylistDispatcher {
 		
 		long guid = -1;
 		
+		Date currentDate = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss a");
+		String formattedReadTS = dateFormat.format(currentDate);
+		
 		FilesJson allFiles = dfs.readMetaData();
     	FileJson chordUserFile = allFiles.getFiles().get(0);
+    	chordUserFile.setReadTimeStamp(formattedReadTS);
     	PagesJson page = chordUserFile.getPages().get(0);
     	guid = page.getGuid();
     	ChordMessageInterface chordobj = dfs.chord.locateSuccessor(guid);
@@ -190,8 +198,13 @@ public class PlaylistDispatcher {
 		
 		long guid = -1;
 		
+		Date currentDate = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss a");
+		String formattedReadTS = dateFormat.format(currentDate);
+		
 		FilesJson allFiles = dfs.readMetaData();
     	FileJson chordUserFile = allFiles.getFiles().get(0);
+    	chordUserFile.setReadTimeStamp(formattedReadTS);
     	PagesJson page = chordUserFile.getPages().get(0);
     	guid = page.getGuid();
     	ChordMessageInterface chordobj = dfs.chord.locateSuccessor(guid);
@@ -243,6 +256,7 @@ public class PlaylistDispatcher {
 			if(uindex != -1) {
 				userResponseJson.getUsersList().get(uindex).addPlaylist(thePlaylist);
 				chordobj.put(guid, gson.toJson(userResponseJson));
+				dfs.writeMetaData(allFiles);
 				System.out.println();
 				JsonObject successMessage = new JsonObject();
 				successMessage.addProperty("successMessage", "");

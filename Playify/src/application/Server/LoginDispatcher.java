@@ -1,11 +1,15 @@
 package application.Server;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import application.DFS.DFS;
 import application.DFS.DFS.FileJson;
 import application.DFS.DFS.FilesJson;
+import application.Models.DateTime;
 import application.Models.Playlist;
 import application.Models.User;
 
@@ -20,6 +24,8 @@ public class LoginDispatcher {
 	 * @return JSON message that contains an error message or username/password credentials
 	 */
 	public String verifyLoginInformation(String username, String password) throws Exception {
+		//Retrieve the current date
+		String formattedReadTS = DateTime.retrieveCurrentDate();
 		dfs = Dispatcher.dfsInstance;
 		
 		System.out.println("Called LoginDispatcher.Carlos");
@@ -27,7 +33,11 @@ public class LoginDispatcher {
 		
 		FilesJson metaData = dfs.readMetaData();
 		FileJson chordUsersJsonFile = metaData.getFiles().get(0);
+		chordUsersJsonFile.setReadTimeStamp(formattedReadTS);
 		User foundUser = chordUsersJsonFile.searchForUserInPage(username, dfs);
+		
+		metaData.getFiles().set(0, chordUsersJsonFile);
+		dfs.writeMetaData(metaData);
 
 		//If the page has been found, then return the user processed as JSON data
 		if(foundUser != null) {

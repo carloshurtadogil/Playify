@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import application.Models.DateTime;
 import application.Models.Playlist;
 import application.Models.Song;
 import application.Models.SongResponse;
@@ -99,22 +101,29 @@ public class DFS {
 		/**
 		 * Searches for a user by traversing all users in a single page
 		 * 
-		 * @return
-		 * @throws RemoteException
+		 * @return User             the found user or null
+		 * @throws RemoteException  
 		 */
 		public User searchForUserInPage(String username, DFS dfsInstance) throws RemoteException, IOException, Exception {
 			User foundUser = null;
-			
+
+			String formattedReadTS = DateTime.retrieveCurrentDate();
+	    	
+			//Retrieve a page from the file, that contains metadata about the users
 			PagesJson pageOfUsers = getPages().get(0);
-			
+			pageOfUsers.setReadTimeStamp(formattedReadTS);
+
 			long guid = pageOfUsers.getGuid();
 			System.out.println("GUID is " + guid);
 			
 			System.out.println(dfsInstance.chord);
 			
+			//Use the page guid to obtain the physical file's content that contains actual
+			//information about users
 			ChordMessageInterface peer = dfsInstance.chord.locateSuccessor(guid);
 			RemoteInputFileStream content = peer.get(guid);
 			
+			//Traverse the content and then save it
 			content.connect();
 			Scanner scan = new Scanner(content);
 			scan.useDelimiter("\\A");
@@ -145,7 +154,10 @@ public class DFS {
 			//retrieve the pages of the file and traverse them one by one
 			List<PagesJson> pages = this.getPages();
 			for(int i=0; i<pages.size(); i++) {
+				String formattedTimeStamp = DateTime.retrieveCurrentDate();
+		    	
 				PagesJson currentPage = pages.get(i);
+				currentPage.setReadTimeStamp(formattedTimeStamp);
 				long guid = currentPage.getGuid();
 				ChordMessageInterface peer = dfsInstance.chord.locateSuccessor(guid);
 				RemoteInputFileStream content = peer.get(guid);
@@ -425,7 +437,7 @@ public class DFS {
 	}
 
 	/**
-	 * Change Name
+	 * Changes the name of the file
 	 *
 	 */
 	public void move(String oldName, String newName) throws Exception {
@@ -475,13 +487,22 @@ public class DFS {
 	}
 
 	/**
-	 * create an empty file
+	 * Creates an empty file
 	 *
 	 * @param filename
 	 *            Name of the file
 	 */
 	public void create(String fileName) throws Exception {
+		
+		String formattedTS = DateTime.retrieveCurrentDate();
+		
+		//Set the creation, read, write time stamps accordingly
 		FileJson newFile = new FileJson();
+		newFile.setCreationTimeStamp(formattedTS);
+		newFile.setReadTimeStamp(formattedTS);
+		newFile.setWriteTimeStamp(formattedTS);
+		
+		//Add the file to the metadata
 		FilesJson retrievedMetadata = this.readMetaData();
 		retrievedMetadata.getFiles().add(newFile);
 		this.writeMetaData(retrievedMetadata);
@@ -521,85 +542,6 @@ public class DFS {
 		this.writeMetaData(retrievedMetadata);
 	}
 
-	
-	/* Deletes a component from a page in DFS, either deletes a song from a playlist
-	 * or simply deletes a playlist from a list of playlists
-	 * 
-	 * @param fileName
-	 * @param component
-	 * @throws Exception 
-	*/
-//	public boolean deleteComponent(String fileName, String[] component) throws Exception {
-//		FilesJson retrievedMetadata = this.readMetaData();
-//		int index = 0;
-//		// traverse all the files in the metadata to see if the desired file is in the
-//		// list of files
-//		for (int i = 0; i < retrievedMetadata.getFiles().size(); i++) {
-//			if (retrievedMetadata.getFiles().get(i).equals(fileName)) {
-//				FileJson foundFileJson = retrievedMetadata.getFiles().get(i);
-//				// indicates that a playlist must be deleted from the user's list of playlists
-//				if (component.length == 3) {
-//					String username = component[1];
-//					String playlistName = component[2];
-//					PagesJson pageofUsers = foundFileJson.getPages().get(0);
-//					
-//					long guid = pageofUsers.getGuid();
-//					ChordMessageInterface peer = chord.locateSuccessor(guid);
-//					RemoteInputFileStream data = peer.get(guid);
-//					
-//					byte[] dataContext = data.buf;
-//					
-//					String chordUsersFileInString = new String(dataContext, 0, dataContext.length);
-//					
-//					UserResponse userRepo = new Gson().fromJson(chordUsersFileInString, UserResponse.class);
-//					for(int j=0; j<userRepo.getUsersList().size();j++) {
-//						User currentUser = userRepo.getUsersList().get(j);
-//						if(currentUser.getUsername().equals(username)) {
-//							currentUser.removePlaylist(playlistName);
-//							userRepo.getUsersList().set(j, currentUser);
-//							
-//							String userRepositoryInJsonFormat = new Gson().toJson(userRepo);
-//							peer.put(guid, userRepositoryInJsonFormat);
-//							this.writeMetaData(retrievedMetadata);
-//						}
-//					}
-//					
-//				}
-//				// indicates that a song must be deleted from a playlist
-//				else if (component.length == 4) {
-//					String username = component[1];
-//					String playlistName = component[2];
-//					String songName = component[3];		
-//					
-//					
-//					PagesJson pageofUsers = foundFileJson.getPages().get(0);
-//					
-//					long guid = pageofUsers.getGuid();
-//					ChordMessageInterface peer = chord.locateSuccessor(guid);
-//					RemoteInputFileStream data = peer.get(guid);
-//					
-//					byte[] dataContext = data.buf;
-//					
-//					String chordUsersFileInString = new String(dataContext, 0, dataContext.length);
-//					
-//					UserResponse allUsers = new Gson().fromJson(chordUsersFileInString, UserResponse.class);
-//					User foundUser = allUsers.findUser(username);
-//					Playlist foundPlaylist = foundUser.getSpecificPlaylist(playlistName);
-//					
-//					for(int j=0; j<foundPlaylist.getSongs().size();j++) {
-//						if(foundPlaylist.getSongs().get(j).getSongDetails().getTitle().equals(songName)) {
-//							
-//						}
-//					}
-//					
-//					
-//				}
-//			}
-//		}
-//
-//	}
-
-	
 
 	public FileInputStream read(String fileName, int pageNumber) throws Exception {
 		return null;
@@ -657,6 +599,8 @@ public class DFS {
 			userRepository.getUsersList().add(registeredUser);
 			String userRepositoryInJson = new Gson().toJson(userRepository);
 
+			chordUsersFile.getPages().set(0, pageofUsers);
+			metadata.getFiles().set(0, chordUsersFile);
 			peer.put(guid, userRepositoryInJson);
 			this.writeMetaData(metadata);
 			return true;
@@ -694,11 +638,12 @@ public class DFS {
 				//get the current DateTime
 				Date currentDate = new Date();
 				DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss a");
-				String formattedReadTS = dateFormat.format(currentDate);
+				String formattedTS = dateFormat.format(currentDate);
 				
 				PagesJson newPage = gson.fromJson(strPageData, PagesJson.class);
 				foundFile.getPages().add(newPage);
-				foundFile.setReadTimeStamp(formattedReadTS);
+				foundFile.setReadTimeStamp(formattedTS);
+				foundFile.setWriteTimeStamp(formattedTS);
 				allFiles.getFiles().set(i, foundFile);
 				
 				ChordMessageInterface peer = chord.locateSuccessor(newPage.getGuid());

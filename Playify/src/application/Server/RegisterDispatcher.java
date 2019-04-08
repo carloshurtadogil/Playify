@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import application.DFS.DFS;
 import application.DFS.DFS.FileJson;
 import application.DFS.DFS.FilesJson;
+import application.Models.DateTime;
 import application.Models.Playlist;
 import application.Models.User;
 
@@ -76,8 +77,11 @@ public class RegisterDispatcher {
 	 */
 	public boolean checkIfUsernameExists(String username) throws Exception {
 
+		String formattedTimeStamp = DateTime.retrieveCurrentDate();
+		
 		FilesJson metaData = dfs.readMetaData();
 		FileJson chordUsersJsonFile = metaData.getFiles().get(0);
+		chordUsersJsonFile.setReadTimeStamp(formattedTimeStamp);
 		User foundUser = chordUsersJsonFile.searchForUserInPage(username, dfs);
 
 		if (foundUser != null) {
