@@ -176,10 +176,11 @@ public class CreatePlaylistController {
 				for(Song song: searchResults) {
 					if(songName.getSongDetails().getTitle().equals(song.getSongDetails().getTitle())) {
 						theSongs.add(song);
-						
+						newSongs.add(song);
 					}
 				}
 				if(mySongs != null) {
+					System.out.println("whoops");
 					for(Song s : mySongs) {
 						if(s.getSongDetails().getTitle().equals(songName.getSongDetails().getTitle())) {
 							newSongs.add(s);

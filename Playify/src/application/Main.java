@@ -68,41 +68,8 @@ public class Main extends Application {
 	
 	public static void main(String[] args) throws IOException {
 		
-//		List<Song> allSongs = new Gson().fromJson(new FileReader("music.json"), new TypeToken<List<Song>>(){}.getType());
-//		List<Song> tempSongs = new ArrayList<Song>();
-//		int stopAt=0;
-//		int fileIndex=1;
-//		
-//		for(int i=0; i<allSongs.size(); i++) {
-//			tempSongs.add(allSongs.get(i));
-//			if(stopAt==49) {
-//				System.out.println(fileIndex);
-//				SongResponse sr = new SongResponse();
-//				sr.setSongsInPage(tempSongs);
-//				File f = new File("C:\\Users\\mtome\\Documents\\Playify\\8150617422953629580\\" + fileIndex);
-//				
-//				
-//				Gson gson = new GsonBuilder().create();
-//				FileWriter fWriter = new FileWriter(f.getPath());
-//				
-//				fWriter.write(gson.toJson(sr));
-//				fWriter.flush();
-//				System.out.println(sr.getSongsInPage().size());
-//				System.out.println(new Gson().toJson(tempSongs));
-//				
-//				for(int j=0; j<sr.getSongsInPage().size(); j++) {
-//					System.out.println(sr.getSongsInPage().get(j).getSongDetails().getTitle() + " " + sr.getSongsInPage().get(j).getArtistDetails().getName());
-//				}
-//				
-//				tempSongs = new ArrayList<Song>();
-//				fileIndex++;
-//				stopAt = 0;
-//			}
-//			else {
-//				stopAt++;
-//			}
-//		}
-//		
+		
+		
 
 		launch(args);
 	}
