@@ -115,9 +115,7 @@ public class SongDispatcher
     	allFiles.getFiles().set(1, chordSongsFile);
     	
     	List<Song> searchResults = chordSongsFile.searchforSongsInPages(searchInput, dfs);
-    	
-    	dfs.writeMetaData(allFiles);
-    	
+
     	//If more than one song has been found, then send the list of songs as a Json string
     	if(searchResults.size() >0) {
 

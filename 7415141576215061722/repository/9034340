@@ -13,6 +13,22 @@
 				"name": "Julie Andrews Selects Her Favourite Disney Songs",
 				"id": 151155
 			}
+		},
+		{
+			"song": {
+				"id": "SOMUYGI12AB0188633",
+				"title": "La Culpa"
+			},
+			"artist": {
+				"terms": "bachata",
+				"name": "Andy Andy"
+			},
+			"release": {
+				"name": "Placer & Castigo",
+				"id": 575792
+			}
 		}
+		
+		
 	]
 }

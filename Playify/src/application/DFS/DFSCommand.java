@@ -35,6 +35,17 @@ public class DFSCommand
             {
                 dfs.leave();     
             }
+            
+            if(result[0].equals("delete")) {
+            	dfs.delete(result[1]);
+            }
+            if(result[0].equals("append")) {
+            	RemoteInputFileStream data = new RemoteInputFileStream(result[2]);
+            	dfs.append(result[1], data);
+            }
+            if(result[0].equals("move")) {
+            	//dfs.move(result[1], result[2]);
+            }
             line=buffer.readLine();  
         }
             // User interface:

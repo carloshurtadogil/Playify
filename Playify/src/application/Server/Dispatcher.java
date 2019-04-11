@@ -36,9 +36,6 @@ public class Dispatcher implements DispatcherInterface {
         try {
 			dfsInstance = new DFS(5000);
 			System.out.println("DFS Call Complete");
-			FilesJson mfiles = dfsInstance.readMetaData();
-			List<FileJson> fileslist = mfiles.getFiles();
-			System.out.println(mfiles.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

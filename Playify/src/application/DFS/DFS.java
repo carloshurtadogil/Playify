@@ -149,22 +149,20 @@ public class DFS {
 		 * @throws RemoteException 
 		 */
 		public List<Song> searchforSongsInPages(String searchInput, DFS dfsInstance) throws RemoteException, IOException {
-			
+			String modifiedSearchInput = searchInput.replaceAll("\\s+", "");
 			List<Song> songsFromSearchResult = new ArrayList<Song>();
 			//retrieve the pages of the file and traverse them one by one
 			List<PagesJson> pages = this.getPages();
 			for(int i=0; i<pages.size(); i++) {
 				String formattedTimeStamp = DateTime.retrieveCurrentDate();
-		    	
-				PagesJson currentPage = pages.get(i);
-				currentPage.setReadTimeStamp(formattedTimeStamp);
-				long guid = currentPage.getGuid();
+		    	System.out.println(pages.get(i).getGuid() + " this is the best right now");
+				pages.get(i).setReadTimeStamp(formattedTimeStamp);
+				long guid = pages.get(i).getGuid();
 				ChordMessageInterface peer = dfsInstance.chord.locateSuccessor(guid);
 				RemoteInputFileStream content = peer.get(guid);
 				
 				content.connect();
 				Scanner scan = new Scanner(content);
-				scan.useDelimiter("\\A");
 				String strSongResponse = "";
 				while (scan.hasNext()) {
 					strSongResponse += scan.next();
@@ -173,10 +171,15 @@ public class DFS {
 				SongResponse songRepository = new Gson().fromJson(strSongResponse, SongResponse.class);
 				for(int j=0; j<songRepository.getSongsInPage().size(); j++) {
 					Song currentSong = songRepository.getSongsInPage().get(j);
-					if(currentSong.getSongDetails().getTitle().equalsIgnoreCase(searchInput) || 
-							currentSong.getArtistDetails().getName().equalsIgnoreCase(searchInput) ||
-							currentSong.getArtistDetails().getTerms().equalsIgnoreCase(searchInput)) {
+					System.out.println(currentSong.getSongDetails().getTitle());
+					if(currentSong.getSongDetails().getTitle().equalsIgnoreCase(modifiedSearchInput) || 
+							currentSong.getArtistDetails().getName().equalsIgnoreCase(modifiedSearchInput) ||
+							currentSong.getArtistDetails().getTerms().equalsIgnoreCase(modifiedSearchInput)) {
+						
+						currentSong.getSongDetails().setTitle(searchInput);
 						songsFromSearchResult.add(currentSong);
+						System.out.println("Found");
+							return songsFromSearchResult;
 					}
 				}
 			}
@@ -275,7 +278,7 @@ public class DFS {
 
 		@SerializedName("referenceCount")
 		@Expose
-		Long referenceCount;
+		String referenceCount;
 
 		public void setGuid(long guid) {
 			this.guid = guid;
@@ -317,11 +320,11 @@ public class DFS {
 			return writeTimeStamp;
 		}
 
-		public void setReferenceCount(Long referenceCount) {
+		public void setReferenceCount(String referenceCount) {
 			this.referenceCount = referenceCount;
 		}
 
-		public Long getReferenceCount() {
+		public String getReferenceCount() {
 			return referenceCount;
 		}
 
@@ -444,6 +447,8 @@ public class DFS {
 
 		// Retrieve the current metadata data structure
 		FilesJson retrievedMetadata = this.readMetaData();
+		FileJson foundFile = null;
+		int index=0;
 		// traverse all files until the particular file is found
 		for (FileJson file : retrievedMetadata.getFiles()) {
 			// change the name of the file
@@ -454,10 +459,17 @@ public class DFS {
 				file.setName(newName);
 				file.setReadTimeStamp(formattedReadTS);
 				file.setWriteTimeStamp(formattedReadTS);
+				foundFile = file;
+				
+				
 				// Write to the metadata data structure
 				this.writeMetaData(retrievedMetadata);
 				break;
 			}
+			index++;
+		}
+		if(foundFile !=null) {
+			retrievedMetadata.getFiles().set(index, foundFile);
 		}
 	}
 
