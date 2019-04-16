@@ -11,10 +11,14 @@ import org.json.simple.parser.ParseException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+
+import application.Models.BasicSongDetails;
 import application.Models.Playlist;
 import application.Models.Song;
+import application.Models.Song.SongDetails;
 import application.Models.User;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -56,6 +60,8 @@ public class HomeController {
 	private Button removeSongButton;
 	@FXML
 	private Slider volumeSlider;
+	@FXML
+	private ListView<String> detailsListView;
 
 	private User selectedUser;
 	private List<Song> mySongs;
@@ -140,6 +146,15 @@ public class HomeController {
 
 		allSongsView.setOnMouseClicked(event -> {
 			if (event.getClickCount() == 1) {
+				Song detes = allSongsView.getSelectionModel().getSelectedItem();
+				
+				ArrayList<String> songDetes = new ArrayList<String>();
+				songDetes.add("Title: " + detes.getSongDetails().getTitle());
+				songDetes.add("by: " + detes.getArtistDetails().getName());
+				songDetes.add("Release: " + detes.getRelease().getReleaseName());
+				songDetes.add("Genre: " + detes.getArtistDetails().getTerms());
+				detailsListView.setItems(FXCollections.observableList(songDetes));
+				
 				playButton.setOnAction((buttonPressed) -> {
 					String name = allSongsView.getSelectionModel().getSelectedItem().getSongDetails().getTitle();
 					String id = allSongsView.getSelectionModel().getSelectedItem().getSongDetails().getSongId();
@@ -170,8 +185,8 @@ public class HomeController {
 					//showcase all songs in a playlist if playlist is selected
 					if(playlistView.getSelectionModel().getSelectedItem() != null){
 						String playlistname = playlistView.getSelectionModel().getSelectedItem().getPlaylistName();
-						allSongsView.setItems(
-								FXCollections.observableList(someUser.getSpecificPlaylist(playlistname).getSongs()));
+						allSongsView.setItems( FXCollections.observableList(someUser.getSpecificPlaylist(playlistname).getSongs()));
+						
 						removeSongButton.setVisible(true);
 					}
 					//indicate this is a null playlist
