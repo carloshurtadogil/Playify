@@ -29,9 +29,9 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import application.OsUtils;
 import application.DFS.DFS;
-import application.DFS.DFS.FileJson;
-import application.DFS.DFS.FilesJson;
-import application.DFS.DFS.PagesJson;
+import application.DFS.FileJson;
+import application.DFS.FilesJson;
+import application.DFS.PagesJson;
 import application.Models.Song;
 import java.io.FileNotFoundException;
 
