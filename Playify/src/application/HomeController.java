@@ -11,14 +11,10 @@ import org.json.simple.parser.ParseException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-
-import application.Models.BasicSongDetails;
 import application.Models.Playlist;
 import application.Models.Song;
-import application.Models.Song.SongDetails;
 import application.Models.User;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;

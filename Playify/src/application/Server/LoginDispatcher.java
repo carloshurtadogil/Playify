@@ -7,8 +7,8 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import application.DFS.DFS;
-import application.DFS.DFS.FileJson;
-import application.DFS.DFS.FilesJson;
+import application.DFS.FileJson;
+import application.DFS.FilesJson;
 import application.Models.DateTime;
 import application.Models.Playlist;
 import application.Models.User;
@@ -18,7 +18,9 @@ public class LoginDispatcher {
 	public static DFS dfs;
 	
 	/* 
+	 * <p>
 	 * verifyLoginInformation: Verifies if a user has entered correct login credentials
+	 * </p>
 	 * @param username: Submitted username
 	 * @param password: Submitted password 
 	 * @return JSON message that contains an error message or username/password credentials

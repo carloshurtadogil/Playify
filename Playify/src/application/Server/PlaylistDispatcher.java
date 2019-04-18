@@ -12,9 +12,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import application.DFS.ChordMessageInterface;
 import application.DFS.DFS;
-import application.DFS.DFS.FileJson;
-import application.DFS.DFS.FilesJson;
-import application.DFS.DFS.PagesJson;
+import application.DFS.FileJson;
+import application.DFS.FilesJson;
+import application.DFS.PagesJson;
 import application.DFS.RemoteInputFileStream;
 import application.Models.Playlist;
 import application.Models.User;
@@ -95,8 +95,9 @@ public class PlaylistDispatcher {
 	
 	
 	/**
+	 * <p>
 	 * Remove a specific song from a specific playlist for a specific user
-	 * 
+	 * </p>
 	 * @param username
 	 *            The user's whose list of playlists is to be updated
 	 * @param playlist
