@@ -26,56 +26,53 @@ import application.Models.UserResponse;
 @SuppressWarnings("unused")
 public class DFS {
 
-	
+	public class FilesJson {
+		@SerializedName("files")
+		@Expose
+		List<FileJson> files;
 
-public class FilesJson {
-	@SerializedName("files")
-	@Expose
-	List<FileJson> files;
+		/**
+		 * <p>
+		 * Default Constructor
+		 * </p>
+		 */
+		public FilesJson() {
 
-	/**
-	 * <p>
-	 * Default Constructor
-	 * </p>
-	 */
-	public FilesJson() {
-
-	}
-
-	/**
-	 * <p>
-	 * Set the current instance of the files ArrayList with a new instance
-	 * </p>
-	 * 
-	 * @param files
-	 *            Files to be added
-	 */
-	public void setFiles(ArrayList<FileJson> files) {
-		this.files = files;
-	}
-
-	/**
-	 * <p>
-	 * Retrieve the current list of files
-	 * </p>
-	 * 
-	 * @return The current list of files
-	 */
-	public List<FileJson> getFiles() {
-		return files;
-	}
-
-	@Override
-	public String toString() {
-		String str = "";
-		for (FileJson j : files) {
-			str += j.toString();
 		}
-		return str;
+
+		/**
+		 * <p>
+		 * Set the current instance of the files ArrayList with a new instance
+		 * </p>
+		 * 
+		 * @param files
+		 *            Files to be added
+		 */
+		public void setFiles(ArrayList<FileJson> files) {
+			this.files = files;
+		}
+
+		/**
+		 * <p>
+		 * Retrieve the current list of files
+		 * </p>
+		 * 
+		 * @return The current list of files
+		 */
+		public List<FileJson> getFiles() {
+			return files;
+		}
+
+		@Override
+		public String toString() {
+			String str = "";
+			for (FileJson j : files) {
+				str += j.toString();
+			}
+			return str;
+		}
 	}
-}
-	
-	
+
 	public class FileJson {
 		@SerializedName("name")
 		@Expose
@@ -106,29 +103,30 @@ public class FilesJson {
 		/**
 		 * Searches for a user by traversing all users in a single page
 		 * 
-		 * @return User             the found user or null
-		 * @throws RemoteException  
+		 * @return User the found user or null
+		 * @throws RemoteException
 		 */
-		public User searchForUserInPage(String username, DFS dfsInstance) throws RemoteException, IOException, Exception {
+		public User searchForUserInPage(String username, DFS dfsInstance)
+				throws RemoteException, IOException, Exception {
 			User foundUser = null;
 
 			String formattedReadTS = DateTime.retrieveCurrentDate();
-	    	
-			//Retrieve a page from the file, that contains metadata about the users
+
+			// Retrieve a page from the file, that contains metadata about the users
 			PagesJson pageOfUsers = getPages().get(0);
 			pageOfUsers.setReadTimeStamp(formattedReadTS);
 
 			long guid = pageOfUsers.getGuid();
 			System.out.println("GUID is " + guid);
-			
+
 			System.out.println(dfsInstance.chord);
-			
-			//Use the page guid to obtain the physical file's content that contains actual
-			//information about users
+
+			// Use the page guid to obtain the physical file's content that contains actual
+			// information about users
 			ChordMessageInterface peer = dfsInstance.chord.locateSuccessor(guid);
 			RemoteInputFileStream content = peer.get(guid);
-			
-			//Traverse the content and then save it
+
+			// Traverse the content and then save it
 			content.connect();
 			Scanner scan = new Scanner(content);
 			scan.useDelimiter("\\A");
@@ -137,54 +135,58 @@ public class FilesJson {
 				strUserResponse += scan.next();
 			}
 			scan.close();
-			
+
 			// retrieve the list of users on the current page
 			UserResponse userRepository = new Gson().fromJson(strUserResponse, UserResponse.class);
 			List<User> usersInPage = userRepository.getUsersList();
-			for(int i=0; i<usersInPage.size(); i++) {
-				if(usersInPage.get(i).getUsername().equals(username)) {
+			for (int i = 0; i < usersInPage.size(); i++) {
+				if (usersInPage.get(i).getUsername().equals(username)) {
 					return usersInPage.get(i);
 				}
 			}
 			return null;
 		}
-		
+
 		/**
-		 * Traverses each page and retrieves its songs, and checks for the appropriate song
-		 * @throws RemoteException 
+		 * Traverses each page and retrieves its songs, and checks for the appropriate
+		 * song
+		 * 
+		 * @throws RemoteException
 		 */
-		public List<Song> searchforSongsInPages(String searchInput, DFS dfsInstance) throws RemoteException, IOException {
+		public List<Song> searchforSongsInPages(String searchInput, DFS dfsInstance)
+				throws RemoteException, IOException {
 			String modifiedSearchInput = searchInput.replaceAll("\\s+", "");
 			List<Song> songsFromSearchResult = new ArrayList<Song>();
-			//retrieve the pages of the file and traverse them one by one
+			// retrieve the pages of the file and traverse them one by one
 			List<PagesJson> pages = this.getPages();
-			for(int i=0; i<pages.size(); i++) {
+			for (int i = 0; i < pages.size(); i++) {
 				String formattedTimeStamp = DateTime.retrieveCurrentDate();
-		    	System.out.println(pages.get(i).getGuid() + " this is the best right now");
+				System.out.println(pages.get(i).getGuid() + " this is the best right now");
 				pages.get(i).setReadTimeStamp(formattedTimeStamp);
 				long guid = pages.get(i).getGuid();
 				ChordMessageInterface peer = dfsInstance.chord.locateSuccessor(guid);
 				RemoteInputFileStream content = peer.get(guid);
-				
+
 				content.connect();
 				Scanner scan = new Scanner(content);
 				String strSongResponse = "";
 				while (scan.hasNext()) {
 					strSongResponse += scan.next();
 				}
-				//retrieve all songs from a single page, and traverse the songs to find the appropriate song
+				// retrieve all songs from a single page, and traverse the songs to find the
+				// appropriate song
 				SongResponse songRepository = new Gson().fromJson(strSongResponse, SongResponse.class);
-				for(int j=0; j<songRepository.getSongsInPage().size(); j++) {
+				for (int j = 0; j < songRepository.getSongsInPage().size(); j++) {
 					Song currentSong = songRepository.getSongsInPage().get(j);
 					System.out.println(currentSong.getSongDetails().getTitle());
-					if(currentSong.getSongDetails().getTitle().equalsIgnoreCase(modifiedSearchInput) || 
-							currentSong.getArtistDetails().getName().equalsIgnoreCase(modifiedSearchInput) ||
-							currentSong.getArtistDetails().getTerms().equalsIgnoreCase(modifiedSearchInput)) {
-						
+					if (currentSong.getSongDetails().getTitle().equalsIgnoreCase(modifiedSearchInput)
+							|| currentSong.getArtistDetails().getName().equalsIgnoreCase(modifiedSearchInput)
+							|| currentSong.getArtistDetails().getTerms().equalsIgnoreCase(modifiedSearchInput)) {
+
 						currentSong.getSongDetails().setTitle(searchInput);
 						songsFromSearchResult.add(currentSong);
 						System.out.println("Found");
-							return songsFromSearchResult;
+						return songsFromSearchResult;
 					}
 				}
 			}
@@ -263,8 +265,7 @@ public class FilesJson {
 		}
 
 	}
-	
-	
+
 	public class PagesJson {
 		@SerializedName("guid")
 		@Expose
@@ -333,7 +334,7 @@ public class FilesJson {
 		public String getReferenceCount() {
 			return referenceCount;
 		}
-		
+
 		@Override
 		public String toString() {
 			String result = "GUID: " + guid + "\n" + "Size: " + size + "\n" + "Creation TimeStamp: " + creationTimeStamp
@@ -341,33 +342,38 @@ public class FilesJson {
 					+ "Reference Count: " + referenceCount + "\n";
 			return result;
 		}
+		
+		/**
+		 * Adds a key value pair to the tree
+		 * @param key
+		 * @param value
+		 */
+		public void addKeyValue(String key, String value) {
+			if(!tree.containsKey(key)) {
+				JsonObject newJsonObject = new JsonObject();
+				tree.put(key, newJsonObject);
+			}
+			else {
+				JsonParser parser = new JsonParser();
+				JsonObject valueAsJson = parser.parse(value).getAsJsonObject();
+				tree.put(key, valueAsJson );
+			}
+		}
 
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	TreeMap<String, JsonObject> tree;
 	int port;
 	public Chord chord;
 
-	
 	public void setTree(TreeMap<String, JsonObject> tree) {
 		this.tree = tree;
 	}
-	
-	public TreeMap<String, JsonObject> getTree(){
+
+	public TreeMap<String, JsonObject> getTree() {
 		return tree;
 	}
-	
+
 	private long md5(String objectName) {
 		try {
 			MessageDigest m = MessageDigest.getInstance("MD5");
@@ -383,6 +389,7 @@ public class FilesJson {
 	}
 
 	public DFS(int port) throws Exception {
+		tree = new TreeMap<String, JsonObject>();
 		System.out.println("Called DFS Constructor");
 		this.port = port;
 		System.out.println("Calling GUID");
@@ -445,8 +452,7 @@ public class FilesJson {
 			while (scan.hasNext()) {
 				strMetaData += scan.next();
 			}
-			filesJson = gson.fromJson(strMetaData,
-					FilesJson.class);
+			filesJson = gson.fromJson(strMetaData, FilesJson.class);
 			scan.close();
 		} catch (NoSuchElementException ex) {
 			filesJson = new FilesJson();
@@ -475,7 +481,7 @@ public class FilesJson {
 		// Retrieve the current metadata data structure
 		FilesJson retrievedMetadata = this.readMetaData();
 		FileJson foundFile = null;
-		int index=0;
+		int index = 0;
 		// traverse all files until the particular file is found
 		for (FileJson file : retrievedMetadata.getFiles()) {
 			// change the name of the file
@@ -487,15 +493,14 @@ public class FilesJson {
 				file.setReadTimeStamp(formattedReadTS);
 				file.setWriteTimeStamp(formattedReadTS);
 				foundFile = file;
-				
-				
+
 				// Write to the metadata data structure
 				this.writeMetaData(retrievedMetadata);
 				break;
 			}
 			index++;
 		}
-		if(foundFile !=null) {
+		if (foundFile != null) {
 			retrievedMetadata.getFiles().set(index, foundFile);
 		}
 	}
@@ -532,16 +537,16 @@ public class FilesJson {
 	 *            Name of the file
 	 */
 	public void create(String fileName) throws Exception {
-		
+
 		String formattedTS = DateTime.retrieveCurrentDate();
-		
-		//Set the creation, read, write time stamps accordingly
+
+		// Set the creation, read, write time stamps accordingly
 		FileJson newFile = new FileJson();
 		newFile.setCreationTimeStamp(formattedTS);
 		newFile.setReadTimeStamp(formattedTS);
 		newFile.setWriteTimeStamp(formattedTS);
-		
-		//Add the file to the metadata
+
+		// Add the file to the metadata
 		FilesJson retrievedMetadata = this.readMetaData();
 		retrievedMetadata.getFiles().add(newFile);
 		this.writeMetaData(retrievedMetadata);
@@ -581,13 +586,10 @@ public class FilesJson {
 		this.writeMetaData(retrievedMetadata);
 	}
 
-
 	public FileInputStream read(String fileName, int pageNumber) throws Exception {
 		return null;
 	}
 
-	
-	
 	/**
 	 * Add a component to a page (e.g. adding a newly signed up user)
 	 *
@@ -600,17 +602,18 @@ public class FilesJson {
 		boolean found = false;
 		FilesJson metadata = this.readMetaData();
 
-		//get the current DateTime
+		// get the current DateTime
 		Date currentDate = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss a");
 		String formattedReadTS = dateFormat.format(currentDate);
-		//set the read timestamp accordingly on the file and its desired page
+		// set the read timestamp accordingly on the file and its desired page
 		FileJson chordUsersFile = metadata.getFiles().get(0);
 		chordUsersFile.setReadTimeStamp(formattedReadTS);
 		PagesJson pageofUsers = chordUsersFile.getPages().get(0);
 		pageofUsers.setReadTimeStamp(formattedReadTS);
 
-		//retrieve the guid of the page to search for the Chord that contains the actual file
+		// retrieve the guid of the page to search for the Chord that contains the
+		// actual file
 		long guid = pageofUsers.getGuid();
 		ChordMessageInterface peer = chord.locateSuccessor(guid);
 		RemoteInputFileStream content = peer.get(guid);
@@ -622,18 +625,17 @@ public class FilesJson {
 		while (scan.hasNext()) {
 			strUserResponse += scan.next();
 		}
-		
+
 		UserResponse userRepository = new Gson().fromJson(strUserResponse, UserResponse.class);
-		
-		
+
 		// Append a user to a page of users in the chordusers.json file
 		if (components.length == 2) {
-			
+
 			System.out.println("Lets add a user");
-			
+
 			String fileName = components[0];
 			String userInJsonFormat = components[1];
-			
+
 			User registeredUser = new Gson().fromJson(userInJsonFormat, User.class);
 			userRepository.getUsersList().add(registeredUser);
 			String userRepositoryInJson = new Gson().toJson(userRepository);
@@ -645,27 +647,28 @@ public class FilesJson {
 			return true;
 
 		}
-		
+
 		return false;
-		
+
 	}
-	
+
 	/**
 	 * Append a page to a file
+	 * 
 	 * @param fileName
 	 * @param data
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void append(String fileName, RemoteInputFileStream data) throws Exception {
 		Gson gson = new Gson();
 		FilesJson allFiles = this.readMetaData();
 		FileJson foundFile = null;
-		
-		int index=0;
-		for(int i=0; i<allFiles.getFiles().size(); i++) {
-			if(allFiles.getFiles().get(i).getName().equals(fileName)) {
+
+		int index = 0;
+		for (int i = 0; i < allFiles.getFiles().size(); i++) {
+			if (allFiles.getFiles().get(i).getName().equals(fileName)) {
 				foundFile = allFiles.getFiles().get(i);
-				
+
 				data.connect();
 				Scanner scan = new Scanner(data);
 				scan.useDelimiter("\\A");
@@ -673,44 +676,40 @@ public class FilesJson {
 				while (scan.hasNext()) {
 					strPageData += scan.next();
 				}
-				
-				//get the current DateTime
+
+				// get the current DateTime
 				Date currentDate = new Date();
 				DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss a");
 				String formattedTS = dateFormat.format(currentDate);
-				
+
 				PagesJson newPage = gson.fromJson(strPageData, PagesJson.class);
 				foundFile.getPages().add(newPage);
 				foundFile.setReadTimeStamp(formattedTS);
 				foundFile.setWriteTimeStamp(formattedTS);
 				allFiles.getFiles().set(i, foundFile);
-				
+
 				ChordMessageInterface peer = chord.locateSuccessor(newPage.getGuid());
 				peer.put(newPage.getGuid(), gson.toJson(newPage));
-				
+
 				this.writeMetaData(allFiles);
-				
+
 				break;
-				
+
 			}
 		}
-		
+
 	}
 
-	
-	
 	/**
-	 * 
+	 * Emits all the pages contained in the file by adding their key value mappings
 	 * @param key
 	 * @param value
 	 * @param file
 	 */
 	public void emit(String key, String value, FileJson file) {
-		for(int i=0; i<file.getPages().size();i++) {
-			
+		for (int i = 0; i < file.getPages().size(); i++) {
+			file.getPages().get(i).addKeyValue(key, value);
 		}
 	}
-	
-	
 
 }
