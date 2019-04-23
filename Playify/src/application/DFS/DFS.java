@@ -25,7 +25,7 @@ import application.Models.UserResponse;
 
 @SuppressWarnings("unused")
 public class DFS {
-
+	
 	public class FilesJson {
 		@SerializedName("files")
 		@Expose
@@ -54,6 +54,19 @@ public class DFS {
 
 		/**
 		 * <p>
+		 * Return the file found at a given index
+		 * </p>
+		 * @return FileJson object found
+		 */
+		public FileJson getFileJsonAt(int i) {
+			if(i < files.size()) {
+				return files.get(i);
+			}
+			return new FileJson();
+		}
+		
+		/**
+		 * <p>
 		 * Retrieve the current list of files
 		 * </p>
 		 * 
@@ -61,6 +74,16 @@ public class DFS {
 		 */
 		public List<FileJson> getFiles() {
 			return files;
+		}
+		
+		/**
+		 * <p>
+		 * Return the size of the files List
+		 * </p>
+		 * @return List size
+		 */
+		public int getSize() {
+			return files.size();
 		}
 
 		@Override
@@ -390,6 +413,7 @@ public class DFS {
 
 	public DFS(int port) throws Exception {
 		tree = new TreeMap<String, JsonObject>();
+		
 		System.out.println("Called DFS Constructor");
 		this.port = port;
 		System.out.println("Calling GUID");
@@ -701,7 +725,9 @@ public class DFS {
 	}
 
 	/**
+	 * <p>
 	 * Emits all the pages contained in the file by adding their key value mappings
+	 * </p>
 	 * @param key
 	 * @param value
 	 * @param file
@@ -709,6 +735,38 @@ public class DFS {
 	public void emit(String key, String value, FileJson file) {
 		for (int i = 0; i < file.getPages().size(); i++) {
 			file.getPages().get(i).addKeyValue(key, value);
+		}
+	}
+	
+	
+	public void createFile(String file, int interval, int size) throws Exception {
+		int lower = 0;
+		create(file);
+		for(int i = 0; i < (size-1); i++) {
+			long page = md5(file + i);
+			double lowerBoundInterval = (Math.floor(lower/38)) + (lower%38);
+			//appendEmptyPage(file, page, lowerBoundInterval);
+			lower+=interval;
+		}
+		
+	}
+	
+	
+	public void bulkTree(String file, DFS dfsInstance) throws Exception {
+		int size = 0;
+		FilesJson filesJson = readMetaData();
+		for(int i = 0; i < filesJson.getSize(); i++) {
+			if(filesJson.getFileJsonAt(i).getName().equalsIgnoreCase(file)) {
+				ArrayList<PagesJson> pagesList = filesJson.getFileJsonAt(i).getPages();
+				PagesJson pagesRead = pagesList.get(i);
+				long pageGuid = pagesRead.getGuid();
+				long page = md5(file + i);
+				ChordMessageInterface peer = chord.locateSuccessor(pageGuid);
+				//peer.bulk(page);
+				
+			}
+			PagesJson page = new PagesJson();
+			dfsInstance.chord.locateSuccessor(page.guid);
 		}
 	}
 
