@@ -388,6 +388,7 @@ public class DFS {
 	TreeMap<String, JsonObject> tree;
 	int port;
 	public Chord chord;
+	HashMap<String, Integer> mapReducePages;
 
 	public void setTree(TreeMap<String, JsonObject> tree) {
 		this.tree = tree;
@@ -736,6 +737,13 @@ public class DFS {
 		for (int i = 0; i < file.getPages().size(); i++) {
 			file.getPages().get(i).addKeyValue(key, value);
 		}
+	}
+	public void onPageCompleted(String file)
+	{
+		
+		int value = mapReducePages.get(file);
+		value--;
+		mapReducePages.put(file, value);
 	}
 	
 	

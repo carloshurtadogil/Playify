@@ -521,7 +521,7 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 	 * The function is used to debug if the ring is correctly formed
 	 * </p>
 	 */
-	void print() {
+	public void print() {
 		int i;
 		try {
 			if (successor != null)
@@ -540,4 +540,26 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 			System.out.println("Cannot retrive id of successor or predecessor");
 		}
 	}
+	public int onNetworkSize(long source, int n) throws Exception
+	{
+		while(guid!=locateSuccessor(guid).getId()) {
+			
+		}
+		return n;
+	}
+	
+	public void onChordSize(long source, int n)
+	{
+		if(source != guid)
+		{
+			successor.onNetworkSize(source, n++);
+						
+		}
+		else
+		{
+			int size = n;
+		}
+	}
 }
+
+
