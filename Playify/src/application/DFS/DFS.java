@@ -11,6 +11,8 @@ import java.security.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.Expose;
@@ -22,6 +24,8 @@ import application.Models.Song;
 import application.Models.SongResponse;
 import application.Models.User;
 import application.Models.UserResponse;
+
+import application.MapReduce.Mapper;
 
 @SuppressWarnings("unused")
 public class DFS {
@@ -721,61 +725,6 @@ public class DFS {
 				break;
 
 			}
-		}
-
+		}	
 	}
-
-	/**
-	 * <p>
-	 * Emits all the pages contained in the file by adding their key value mappings
-	 * </p>
-	 * @param key
-	 * @param value
-	 * @param file
-	 */
-	public void emit(String key, String value, FileJson file) {
-		for (int i = 0; i < file.getPages().size(); i++) {
-			file.getPages().get(i).addKeyValue(key, value);
-		}
-	}
-	public void onPageCompleted(String file)
-	{
-		
-		int value = mapReducePages.get(file);
-		value--;
-		mapReducePages.put(file, value);
-	}
-	
-	
-	public void createFile(String file, int interval, int size) throws Exception {
-		int lower = 0;
-		create(file);
-		for(int i = 0; i < (size-1); i++) {
-			long page = md5(file + i);
-			double lowerBoundInterval = (Math.floor(lower/38)) + (lower%38);
-			//appendEmptyPage(file, page, lowerBoundInterval);
-			lower+=interval;
-		}
-		
-	}
-	
-	
-	public void bulkTree(String file, DFS dfsInstance) throws Exception {
-		int size = 0;
-		FilesJson filesJson = readMetaData();
-		for(int i = 0; i < filesJson.getSize(); i++) {
-			if(filesJson.getFileJsonAt(i).getName().equalsIgnoreCase(file)) {
-				ArrayList<PagesJson> pagesList = filesJson.getFileJsonAt(i).getPages();
-				PagesJson pagesRead = pagesList.get(i);
-				long pageGuid = pagesRead.getGuid();
-				long page = md5(file + i);
-				ChordMessageInterface peer = chord.locateSuccessor(pageGuid);
-				//peer.bulk(page);
-				
-			}
-			PagesJson page = new PagesJson();
-			dfsInstance.chord.locateSuccessor(page.guid);
-		}
-	}
-
 }
