@@ -14,9 +14,18 @@ import java.rmi.server.*;
 import java.net.*;
 import java.util.*;
 
+import org.json.simple.JSONObject;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import application.ClientCommunicationModule;
 import application.Proxy;
 import application.ProxyInterface;
+import application.MapReduce.Mapper;
 import application.Server.ServerCommunicationModule;
 
 import java.io.*;
@@ -559,6 +568,55 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 		{
 			int size = n;
 		}
+	}
+	
+	public void mapContext (PagesJson page, Mapper mapper, DFS coordinator, String file) throws IOException {
+		//Get the page associated with the guid.
+		long guid = page.getGuid();
+		ChordMessageInterface peer = coordinator.chord.locateSuccessor(guid);
+		RemoteInputFileStream content = peer.get(guid);
+		
+		//Read content from the page and store it as a string.
+		content.connect();
+		Scanner scan = new Scanner(content);
+		scan.useDelimiter("\\A");	//What does this do? Do I need it?
+		String pageDataString = "";
+		while (scan.hasNext()) {
+			pageDataString += scan.next();
+		}
+		scan.close();
+		
+		//Parse string as a JsonObject
+		JsonParser parser = new JsonParser();
+		JsonObject object = parser.parse(pageDataString).getAsJsonObject();
+		
+		//Acess the JsonArray that is within the JsonObject
+		JsonArray array = object.getAsJsonArray("songsInPage");
+		
+		//Iterate through the arrays elements.
+		for (JsonElement item : array) {
+			//Convert each element into a JsonObject.
+			JSONObject innerObject = new Gson().fromJson(item.getAsString(), JSONObject.class);
+			
+			mapper.map("key", innerObject, coordinator, file);
+		}
+		
+		coordinator.chord.onPageCompleted(file);
+		/*
+		 * for each JsonObject in page
+		 * 		let (index, value) in JsonObject
+		 * 		mapper.map(index, value, this, file)
+		 * coordinator.onPageCompleted(file)
+		 */
+		
+	}
+	
+	public void reduceContext(PagesJson page, Mapper reducer, DFS coordinator, FileJson file) {
+		/*
+		 * for each (key, value) in page //Note that values are a set
+		 * 		reducer.reduce(key, value, this, file)
+		 * coordinator.onPageCompleted(file)
+		 */
 	}
 }
 
