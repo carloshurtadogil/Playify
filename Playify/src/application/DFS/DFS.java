@@ -394,7 +394,7 @@ public class DFS {
 	TreeMap<String, JsonObject> tree;
 	int port;
 	public Chord chord;
-	HashMap<String, Integer> mapReducePages;
+	HashMap<String, Integer> counter;
 
 	public void setTree(TreeMap<String, JsonObject> tree) {
 		this.tree = tree;
@@ -817,9 +817,9 @@ public class DFS {
 	
 	public void onPageCompleted(String file)
 	{	
-		int value = mapReducePages.get(file);
+		int value = counter.get(file);
 		value--;
-		mapReducePages.put(file, value);
+		counter.put(file, value);
 	}
 
 }
