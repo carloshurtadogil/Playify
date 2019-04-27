@@ -17,7 +17,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
+import application.MapReduce.Mapper;
 import application.Models.DateTime;
 import application.Models.Playlist;
 import application.Models.Song;
@@ -727,4 +729,97 @@ public class DFS {
 			}
 		}	
 	}
+	
+
+	/**
+	 * <p>
+	 * Emits all the pages contained in the file by adding their key value mappings
+	 * </p>
+	 * @param key
+	 * @param value
+	 * @param file
+	 */
+	public void emit(String key, String value, FileJson file) {
+		for (int i = 0; i < file.getPages().size(); i++) {
+			file.getPages().get(i).addKeyValue(key, value);
+		}
+	}
+	
+	
+	
+	public void createFile(String file, int interval, int size) throws Exception {
+		int lower = 0;
+		create(file);
+		for(int i = 0; i < (size-1); i++) {
+			long page = md5(file + i);
+			double lowerBoundInterval = (Math.floor(lower/38)) + (lower%38);
+			//appendEmptyPage(file, page, lowerBoundInterval);
+			lower+=interval;
+		}
+		
+	}
+	
+	
+	public void bulkTree(String file, DFS dfsInstance) throws Exception {
+		int size = 0;
+		FilesJson filesJson = readMetaData();
+		for(int i = 0; i < filesJson.getSize(); i++) {
+			if(filesJson.getFileJsonAt(i).getName().equalsIgnoreCase(file)) {
+				ArrayList<PagesJson> pagesList = filesJson.getFileJsonAt(i).getPages();
+				PagesJson pagesRead = pagesList.get(i);
+				long pageGuid = pagesRead.getGuid();
+				long page = md5(file + i);
+				ChordMessageInterface peer = chord.locateSuccessor(pageGuid);
+				//peer.bulk(page);
+				
+			}
+			PagesJson page = new PagesJson();
+			dfsInstance.chord.locateSuccessor(page.guid);
+		}
+	}
+
+	
+	/**
+	 * Runs the map reduce algorithm on a set of distributed file system
+	 * @param fileInput
+	 * @param fileOutput
+	 * @throws Exception
+	 */
+	public void runMapReduce(String fileInput, String fileOutput) throws Exception {
+		long currGuid = chord.guid;
+		int size=0;
+		int networkSize = 0;
+		//int networkSize = chord.successor.onNetworkSize();
+		
+		Mapper mapper = new Mapper();
+		Mapper reducer = new Mapper();
+		if(networkSize >0) {
+			double interval = 1936/size;
+			//createFile();
+			List<PagesJson> pagesInFile = new Gson().fromJson(fileInput, new TypeToken<List<PagesJson>>(){}.getType());
+			for(int i=0;i<pagesInFile.size();i++) {
+				//pages[fileInput] = ++;
+				ChordMessageInterface peer = chord.locateSuccessor(pagesInFile.get(i).getGuid());
+				//peer.mapContext(pagesInFile.get(i), mapper, this, fileOutput + ".map");
+			}
+			bulkTree(fileOutput + ".map", this);
+			//createFile(fileOutput, interval, size);
+			
+			List<PagesJson> pagesFromOutputFile = new Gson().fromJson(fileOutput, new TypeToken<List<PagesJson>>(){}.getType());
+			for(int j=0; j<pagesFromOutputFile.size(); j++) {
+				//pages[fileOutput]++;
+				ChordMessageInterface peer = chord.locateSuccessor(pagesFromOutputFile.get(j).getGuid());
+				//peer.reduceContext(pagesFromOutputFile.get(j), reducer, this, fileOutput);
+			}
+			bulkTree(fileOutput, this);
+		}
+	}
+	
+	public void onPageCompleted(String file)
+	{	
+		int value = mapReducePages.get(file);
+		value--;
+		mapReducePages.put(file, value);
+	}
+
 }

@@ -25,6 +25,8 @@ import com.google.gson.JsonParser;
 import application.ClientCommunicationModule;
 import application.Proxy;
 import application.ProxyInterface;
+import application.DFS.DFS.FileJson;
+import application.DFS.DFS.PagesJson;
 import application.MapReduce.Mapper;
 import application.Server.ServerCommunicationModule;
 
@@ -549,6 +551,7 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 			System.out.println("Cannot retrive id of successor or predecessor");
 		}
 	}
+	
 	public int onNetworkSize(long source, int n) throws Exception
 	{
 		while(guid!=locateSuccessor(guid).getId()) {
@@ -561,7 +564,7 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 	{
 		if(source != guid)
 		{
-			successor.onNetworkSize(source, n++);
+			//successor.onNetworkSize(source, n++);
 						
 		}
 		else
@@ -601,7 +604,7 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 			mapper.map("key", innerObject, coordinator, file);
 		}
 		
-		coordinator.chord.onPageCompleted(file);
+		coordinator.onPageCompleted(file);
 		/*
 		 * for each JsonObject in page
 		 * 		let (index, value) in JsonObject
@@ -611,6 +614,17 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 		
 	}
 	
+	
+	/**
+	 * Decrements the number associated with a particular file located in the
+	 * mapReducesPages hashmap
+	 * @param file
+	 */
+	
+	
+	
+	
+	
 	public void reduceContext(PagesJson page, Mapper reducer, DFS coordinator, FileJson file) {
 		/*
 		 * for each (key, value) in page //Note that values are a set
@@ -619,5 +633,4 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 		 */
 	}
 }
-
 
