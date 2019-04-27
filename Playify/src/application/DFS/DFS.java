@@ -391,7 +391,7 @@ public class DFS {
 
 	}
 
-	TreeMap<String, JsonObject> tree;
+	public TreeMap<String, JsonObject> tree;
 	int port;
 	public Chord chord;
 	HashMap<String, Integer> counter;
@@ -759,7 +759,8 @@ public class DFS {
 		
 	}
 	
-	
+	/**
+	 */
 	public void bulkTree(String file, DFS dfsInstance) throws Exception {
 		int size = 0;
 		FilesJson filesJson = readMetaData();

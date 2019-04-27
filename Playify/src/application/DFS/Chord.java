@@ -615,16 +615,16 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 	}
 	
 	
+	public void bulk(long page, TreeMap<String, JsonObject> tree)
+	{
+		System.out.println(page + " : " + tree.values().toString());
+	}
+	
 	/**
 	 * Decrements the number associated with a particular file located in the
 	 * mapReducesPages hashmap
 	 * @param file
 	 */
-	
-	
-	
-	
-	
 	public void reduceContext(PagesJson page, Mapper reducer, DFS coordinator, FileJson file) {
 		/*
 		 * for each (key, value) in page //Note that values are a set
