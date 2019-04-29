@@ -13,6 +13,7 @@ import java.rmi.registry.*;
 import java.rmi.server.*;
 import java.net.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.json.simple.JSONObject;
 
@@ -599,12 +600,13 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 		//Iterate through the arrays elements.
 		for (JsonElement item : array) {
 			//Convert each element into a JsonObject.
-			JSONObject innerObject = new Gson().fromJson(item.getAsString(), JSONObject.class);
+			JsonObject innerObject = new Gson().fromJson(item.getAsString(), JsonObject.class);
 			
 			mapper.map("key", innerObject, coordinator, file);
 		}
 		
 		coordinator.onPageCompleted(file);
+		
 		/*
 		 * for each JsonObject in page
 		 * 		let (index, value) in JsonObject
@@ -624,8 +626,44 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 	 * Decrements the number associated with a particular file located in the
 	 * mapReducesPages hashmap
 	 * @param file
+	 * @throws IOException 
 	 */
-	public void reduceContext(PagesJson page, Mapper reducer, DFS coordinator, FileJson file) {
+	
+	
+	
+	
+	
+	public void reduceContext(PagesJson page, Mapper reducer, DFS coordinator, String file) throws IOException {
+
+		//Get the page associated with the guid.
+		long guid = page.getGuid();
+		ChordMessageInterface peer = coordinator.chord.locateSuccessor(guid);
+		RemoteInputFileStream content = peer.get(guid);
+		
+		//Read content from the page and store it as a string.
+		content.connect();
+		Scanner scan = new Scanner(content);
+		scan.useDelimiter("\\A");	//What does this do? Do I need it?
+		String pageDataString = "";
+		while (scan.hasNext()) {
+			pageDataString += scan.next();
+		}
+		scan.close();
+		
+		//Parse string as a JsonObject
+		JsonParser parser = new JsonParser();
+		JsonObject object = parser.parse(pageDataString).getAsJsonObject();
+		
+		Set<Entry<String, JsonElement>> entrySet = object.entrySet();
+		
+		for(Map.Entry<String,JsonElement> entry : entrySet){
+			String key = entry.getKey();
+			JsonObject values = new Gson().fromJson(entry.getValue().getAsString(), JsonObject.class);
+			reducer.reduce( key, values, coordinator, file);
+		}
+		
+		coordinator.onPageCompleted(file);
+		
 		/*
 		 * for each (key, value) in page //Note that values are a set
 		 * 		reducer.reduce(key, value, this, file)
