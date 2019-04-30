@@ -555,23 +555,34 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 	
 	public int onNetworkSize(long source, int n) throws Exception
 	{
-		while(guid!=locateSuccessor(guid).getId()) {
-			
+		//if the successor's next node's id is equivalent to itself, simply
+		//return 1
+		if(source == locateSuccessor(source).getId()) {
+			return 1;
+		}
+		//otherwise, traverse the entire Chord ring
+		long temp = locateSuccessor(source).getId();
+		
+		while(source!=temp) {
+			temp = locateSuccessor(temp).getId();
+			n++;
 		}
 		return n;
 	}
 	
-	public void onChordSize(long source, int n)
+	public int onChordSize(long source, int n) throws Exception
 	{
+		int size=0;
 		if(source != guid)
 		{
-			//successor.onNetworkSize(source, n++);
+			size = successor.onNetworkSize(source, n++);
 						
 		}
 		else
 		{
-			int size = n;
+			size = n;
 		}
+		return size;
 	}
 	
 	public void mapContext (PagesJson page, Mapper mapper, DFS coordinator, String file) throws IOException {
@@ -602,7 +613,7 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 			//Convert each element into a JsonObject.
 			JsonObject innerObject = new Gson().fromJson(item.getAsString(), JsonObject.class);
 			
-			mapper.map("key", innerObject, coordinator, file);
+			//mapper.map("key", innerObject, coordinator, file);
 		}
 		
 		coordinator.onPageCompleted(file);
@@ -659,7 +670,7 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 		for(Map.Entry<String,JsonElement> entry : entrySet){
 			String key = entry.getKey();
 			JsonObject values = new Gson().fromJson(entry.getValue().getAsString(), JsonObject.class);
-			reducer.reduce( key, values, coordinator, file);
+			//reducer.reduce( key, values, coordinator, file);
 		}
 		
 		coordinator.onPageCompleted(file);

@@ -379,15 +379,13 @@ public class DFS {
 		 * @param key
 		 * @param value
 		 */
-		public void addKeyValue(String key, String value) {
+		public void addKeyValue(String key, JsonObject value) {
 			if(!tree.containsKey(key)) {
 				JsonObject newJsonObject = new JsonObject();
 				tree.put(key, newJsonObject);
 			}
 			else {
-				JsonParser parser = new JsonParser();
-				JsonObject valueAsJson = parser.parse(value).getAsJsonObject();
-				tree.put(key, valueAsJson );
+				tree.put(key, value);
 			}
 		}
 
@@ -769,18 +767,31 @@ public class DFS {
 	 * Emits all the pages contained in the file by adding their key value mappings
 	 * </p>
 	 * @param key
-	 * @param value
+	 * @param values
 	 * @param file
+	 * @throws Exception 
 	 */
-	public void emit(String key, String value, FileJson file) {
-		for (int i = 0; i < file.getPages().size(); i++) {
-			file.getPages().get(i).addKeyValue(key, value);
+	public void emit(String key, JsonObject values, String file) throws Exception {
+		
+		FilesJson metadata = this.readMetaData();
+		//traverse the metadata, till we get the specified file
+		for(int j=0; j<metadata.getFiles().size(); j++) {
+			if(metadata.getFiles().get(j).getName().equalsIgnoreCase(file)) {
+				//traverse the file's pages, and call the key value mapping
+				FileJson chosenFile = metadata.getFiles().get(j);
+				for (int i = 0; i < chosenFile.getPages().size(); i++) {
+					chosenFile.getPages().get(i).addKeyValue(key, values);
+				}
+				break;
+			}
 		}
+		
+		
 	}
 	
 	
 	
-	public void createFile(String file, int interval, int size) throws Exception {
+	public void createFile(String file, double interval, int size) throws Exception {
 		int lower = 0;
 		create(file);
 		for(int i = 0; i < (size-1); i++) {
@@ -822,33 +833,51 @@ public class DFS {
 	public void runMapReduce(String fileInput, String fileOutput) throws Exception {
 		long currGuid = chord.guid;
 		int size=0;
-		int networkSize = 0;
-		//int networkSize = chord.successor.onNetworkSize();
-		
+		int networkSize = chord.successor.onNetworkSize(chord.guid, 1);
+		double interval = 0;
 		Mapper mapper = new Mapper();
 		Mapper reducer = new Mapper();
-		if(networkSize >0) {
-			double interval = 1936/size;
+		while(networkSize>0) {
+			interval = 1936/size;
 			//createFile();
 			List<PagesJson> pagesInFile = new Gson().fromJson(fileInput, new TypeToken<List<PagesJson>>(){}.getType());
 			for(int i=0;i<pagesInFile.size();i++) {
-				//pages[fileInput] = ++;
+				int currentCount = counter.get(fileInput);
+				currentCount++;
+				counter.put(fileInput, currentCount);
 				ChordMessageInterface peer = chord.locateSuccessor(pagesInFile.get(i).getGuid());
 				//peer.mapContext(pagesInFile.get(i), mapper, this, fileOutput + ".map");
 			}
+		}
+		
+		while(counter.get(fileInput)==0) {
+			
 			bulkTree(fileOutput + ".map", this);
-			//createFile(fileOutput, interval, size);
+			createFile(fileOutput, interval, size);
 			
 			List<PagesJson> pagesFromOutputFile = new Gson().fromJson(fileOutput, new TypeToken<List<PagesJson>>(){}.getType());
 			for(int j=0; j<pagesFromOutputFile.size(); j++) {
-				//pages[fileOutput]++;
+				int currentCount = counter.get(fileOutput);
+				currentCount++;
+				counter.put(fileInput, currentCount);
 				ChordMessageInterface peer = chord.locateSuccessor(pagesFromOutputFile.get(j).getGuid());
 				//peer.reduceContext(pagesFromOutputFile.get(j), reducer, this, fileOutput);
 			}
+		}
+		while(counter.get(fileInput) == 0) {
+		
+
 			bulkTree(fileOutput, this);
 		}
+			
+			
+		
 	}
 	
+	/**
+	 * Decrements the counter for a certain page
+	 * @param file
+	 */
 	public void onPageCompleted(String file)
 	{	
 		int value = counter.get(file);

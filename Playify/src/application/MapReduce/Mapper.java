@@ -18,7 +18,7 @@ public class Mapper implements MapReduceInterface{
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void map(String key, JsonObject value, DFS context, String file) throws IOException {
+	public void map(String key, JsonObject value, DFS context, String file) throws Exception {
 		// TODO Auto-generated method stub
 		
 		Gson gson = new Gson();
@@ -78,7 +78,7 @@ public class Mapper implements MapReduceInterface{
 
 	
 	@Override
-	public void reduce(Integer key, JsonObject values, DFS context, String file) throws IOException {
+	public void reduce(String key, JsonObject values, DFS context, String file) throws Exception {
 		// TODO Auto-generated method stub
 		
 		sort(values);
