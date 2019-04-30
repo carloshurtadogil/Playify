@@ -26,6 +26,8 @@ import application.Models.Song;
 import application.Models.SongResponse;
 import application.Models.User;
 import application.Models.UserResponse;
+import javafx.collections.FXCollections;
+import javafx.scene.control.ListView;
 
 import application.MapReduce.Mapper;
 
@@ -682,7 +684,35 @@ public class DFS {
 		return false;
 
 	}
-
+	
+	//Splitting files 
+	public void loadingSongsToPages () {
+		try {
+			
+			List<Song> mySongs; 
+			List<Song> songNames = new ArrayList<Song> ();
+			ListView<Song> listOfSongs = null;
+			
+			for(int i = 1; i < 101; ++i)
+			{
+				for (int j = 1; j < 101; ++i)
+				{
+					Gson gson = new Gson();
+					
+					
+					mySongs = gson.fromJson(new FileReader("music.json"), new TypeToken<List<Song>>(){}.getType());
+		
+					for(Song s : mySongs) {
+						songNames.add(s);
+				}
+			}
+			listOfSongs.setItems(FXCollections.observableList(songNames));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Append a page to a file
 	 * 
@@ -727,7 +757,10 @@ public class DFS {
 				break;
 
 			}
-		}	
+			
+			
+		}
+		
 	}
 	
 
