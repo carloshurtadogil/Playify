@@ -585,7 +585,7 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 		return size;
 	}
 	
-	public void mapContext (PagesJson page, Mapper mapper, DFS coordinator, String file) throws IOException {
+	public void mapContext (PagesJson page, Mapper mapper, DFS coordinator, String file) throws Exception {
 		//Get the page associated with the guid.
 		long guid = page.getGuid();
 		ChordMessageInterface peer = coordinator.chord.locateSuccessor(guid);
@@ -613,38 +613,38 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 			//Convert each element into a JsonObject.
 			JsonObject innerObject = new Gson().fromJson(item.getAsString(), JsonObject.class);
 			
-			//mapper.map("key", innerObject, coordinator, file);
+			mapper.map("key", innerObject, coordinator, file);
 		}
 		
 		coordinator.onPageCompleted(file);
 		
-		/*
-		 * for each JsonObject in page
-		 * 		let (index, value) in JsonObject
-		 * 		mapper.map(index, value, this, file)
-		 * coordinator.onPageCompleted(file)
-		 */
+	}
+	
+	
+	/**
+	 * Stores the page 
+	 */
+	public void bulk(long pageGuid, DFS dfsInstance) throws Exception
+	{
+		TreeMap<String, JsonObject> theTree = dfsInstance.tree;
+		JsonObject grandJsonObject = new JsonObject();
+		
+		//iterate through the tree map, place each key/value mapping to the json object that will be located
+		//on a single page
+		for (Map.Entry<String,JsonObject> entry : theTree.entrySet()) {
+			String key = entry.getKey();
+			JsonObject value = entry.getValue();
+			JsonArray arrayOfSongs = value.getAsJsonArray("songsInPage");
+			grandJsonObject.add(key, arrayOfSongs);
+		}
+		//place the entire JsonObject in the page
+		ChordMessageInterface peer = dfsInstance.chord.locateSuccessor(pageGuid);
+		peer.put(pageGuid, grandJsonObject.toString());
 		
 	}
 	
 	
-	public void bulk(long page, TreeMap<String, JsonObject> tree)
-	{
-		System.out.println(page + " : " + tree.values().toString());
-	}
-	
-	/**
-	 * Decrements the number associated with a particular file located in the
-	 * mapReducesPages hashmap
-	 * @param file
-	 * @throws IOException 
-	 */
-	
-	
-	
-	
-	
-	public void reduceContext(PagesJson page, Mapper reducer, DFS coordinator, String file) throws IOException {
+	public void reduceContext(PagesJson page, Mapper reducer, DFS coordinator, String file) throws Exception {
 
 		//Get the page associated with the guid.
 		long guid = page.getGuid();
@@ -670,16 +670,11 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 		for(Map.Entry<String,JsonElement> entry : entrySet){
 			String key = entry.getKey();
 			JsonObject values = new Gson().fromJson(entry.getValue().getAsString(), JsonObject.class);
-			//reducer.reduce( key, values, coordinator, file);
+			reducer.reduce( key, values, coordinator, file);
 		}
 		
 		coordinator.onPageCompleted(file);
 		
-		/*
-		 * for each (key, value) in page //Note that values are a set
-		 * 		reducer.reduce(key, value, this, file)
-		 * coordinator.onPageCompleted(file)
-		 */
 	}
 }
 

@@ -317,6 +317,10 @@ public class DFS {
 		@SerializedName("referenceCount")
 		@Expose
 		String referenceCount;
+		
+		public PagesJson(String text) {
+			
+		}
 
 		public void setGuid(long guid) {
 			this.guid = guid;
@@ -580,6 +584,7 @@ public class DFS {
 		// Add the file to the metadata
 		FilesJson retrievedMetadata = this.readMetaData();
 		retrievedMetadata.getFiles().add(newFile);
+		System.out.println("WHAT THE HECK");
 		this.writeMetaData(retrievedMetadata);
 	}
 
@@ -815,10 +820,10 @@ public class DFS {
 				long pageGuid = pagesRead.getGuid();
 				long page = md5(file + i);
 				ChordMessageInterface peer = chord.locateSuccessor(pageGuid);
-				//peer.bulk(page);
+				peer.bulk(page, this);
 				
 			}
-			PagesJson page = new PagesJson();
+			PagesJson page = this.new PagesJson("");
 			dfsInstance.chord.locateSuccessor(page.guid);
 		}
 	}
@@ -837,19 +842,33 @@ public class DFS {
 		double interval = 0;
 		Mapper mapper = new Mapper();
 		Mapper reducer = new Mapper();
+		
+		FilesJson retrievedMetadata = this.readMetaData();
+		
+		//wait until the network size is above 0, this is obtained after a full cycle
 		while(networkSize>0) {
 			interval = 1936/size;
-			//createFile();
-			List<PagesJson> pagesInFile = new Gson().fromJson(fileInput, new TypeToken<List<PagesJson>>(){}.getType());
-			for(int i=0;i<pagesInFile.size();i++) {
-				int currentCount = counter.get(fileInput);
-				currentCount++;
-				counter.put(fileInput, currentCount);
-				ChordMessageInterface peer = chord.locateSuccessor(pagesInFile.get(i).getGuid());
-				//peer.mapContext(pagesInFile.get(i), mapper, this, fileOutput + ".map");
+			createFile(fileOutput + ".map", interval, size);
+		
+			//traverse the files of the metadata, until the particular file is found
+			for(int j=0; j<retrievedMetadata.getFiles().size(); j++) {
+				if(retrievedMetadata.getFiles().get(j).getName().equals(fileInput)) {
+					List<PagesJson> pagesFromInputFile = retrievedMetadata.getFiles().get(j).getPages();
+					//traverse every page, increment the counter by 1, and call the mapContext method
+					for(int i=0;i<pagesFromInputFile.size();i++) {
+						int currentCount = counter.get(fileInput);
+						currentCount++;
+						counter.put(fileInput, currentCount);
+						ChordMessageInterface peer = chord.locateSuccessor(pagesFromInputFile.get(i).getGuid());
+						peer.mapContext(pagesFromInputFile.get(i), mapper, this, fileOutput + ".map");
+					}
+					break;
+				}
 			}
+			
 		}
 		
+		//wait until the value of the key in the counter hashmap is equal to 0
 		while(counter.get(fileInput)==0) {
 			
 			bulkTree(fileOutput + ".map", this);
@@ -861,15 +880,14 @@ public class DFS {
 				currentCount++;
 				counter.put(fileInput, currentCount);
 				ChordMessageInterface peer = chord.locateSuccessor(pagesFromOutputFile.get(j).getGuid());
-				//peer.reduceContext(pagesFromOutputFile.get(j), reducer, this, fileOutput);
+				peer.reduceContext(pagesFromOutputFile.get(j), reducer, this, fileOutput);
 			}
 		}
 		while(counter.get(fileInput) == 0) {
-		
-
+			Thread.sleep(10);
 			bulkTree(fileOutput, this);
 		}
-			
+		
 			
 		
 	}
