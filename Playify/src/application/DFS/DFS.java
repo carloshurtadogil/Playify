@@ -192,7 +192,7 @@ public class DFS {
 			List<PagesJson> pages = this.getPages();
 			for (int i = 0; i < pages.size(); i++) {
 				String formattedTimeStamp = DateTime.retrieveCurrentDate();
-				System.out.println(pages.get(i).getGuid() + " this is the best right now");
+				
 				pages.get(i).setReadTimeStamp(formattedTimeStamp);
 				long guid = pages.get(i).getGuid();
 				ChordMessageInterface peer = dfsInstance.chord.locateSuccessor(guid);
@@ -206,18 +206,20 @@ public class DFS {
 				}
 				// retrieve all songs from a single page, and traverse the songs to find the
 				// appropriate song
-				SongResponse songRepository = new Gson().fromJson(strSongResponse, SongResponse.class);
-				for (int j = 0; j < songRepository.getSongsInPage().size(); j++) {
-					Song currentSong = songRepository.getSongsInPage().get(j);
-					System.out.println(currentSong.getSongDetails().getTitle());
-					if (currentSong.getSongDetails().getTitle().equalsIgnoreCase(modifiedSearchInput)
-							|| currentSong.getArtistDetails().getName().equalsIgnoreCase(modifiedSearchInput)
-							|| currentSong.getArtistDetails().getTerms().equalsIgnoreCase(modifiedSearchInput)) {
-
-						currentSong.getSongDetails().setTitle(searchInput);
-						songsFromSearchResult.add(currentSong);
-						System.out.println("Found");
-						return songsFromSearchResult;
+				JsonObject songRepository = new Gson().fromJson(strSongResponse, JsonObject.class);
+				
+				Set<Map.Entry<String, JsonElement>> entries = songRepository.entrySet();
+				for(Map.Entry<String, JsonElement> entry :entries) {
+					if(searchInput.contains(entry.getKey())) {
+						JsonElement songsArray = entry.getValue();
+						JsonObject songsArrayVersionTwo = songsArray.getAsJsonObject();
+						SongResponse songResponse = new Gson().fromJson(songsArrayVersionTwo, SongResponse.class);
+						List<Song> songsFromResponse = songResponse.getSongsInPage();
+						
+						//iterate through the songs retrieved and place them in the search results
+						for(int j=0; j<songsFromResponse.size(); j++) {
+							songsFromSearchResult.add(songsFromResponse.get(j));
+						}
 					}
 				}
 			}
@@ -313,10 +315,15 @@ public class DFS {
 		@SerializedName("writeTS")
 		@Expose
 		String writeTimeStamp;
-
 		@SerializedName("referenceCount")
 		@Expose
 		String referenceCount;
+		@SerializedName("upperBound")
+		@Expose
+		String upperBound;
+		@SerializedName("lowerBound")
+		@Expose
+		String lowerBound;
 		
 		public PagesJson(String text) {
 			
@@ -368,6 +375,22 @@ public class DFS {
 
 		public String getReferenceCount() {
 			return referenceCount;
+		}
+		
+		public void setUpperBoundInterval(String upperBound) {
+			this.upperBound = upperBound;
+		}
+		
+		public String getUpperBound() {
+			return upperBound;
+		}
+		
+		public void setLowerBound(String lowerBound) {
+			this.lowerBound = lowerBound;
+		}
+		
+		public String getLowerBound() {
+			return lowerBound;
 		}
 
 		@Override
@@ -798,7 +821,19 @@ public class DFS {
 	
 	public void createFile(String file, double interval, int size) throws Exception {
 		int lower = 0;
-		create(file);
+		String formattedTS = DateTime.retrieveCurrentDate();
+
+		// Set the creation, read, write time stamps accordingly
+		FileJson newFile = new FileJson();
+		newFile.setCreationTimeStamp(formattedTS);
+		newFile.setReadTimeStamp(formattedTS);
+		newFile.setWriteTimeStamp(formattedTS);
+		
+		List<PagesJson> pages = new ArrayList<PagesJson>();
+
+		// Add the file to the metadata
+		FilesJson retrievedMetadata = this.readMetaData();
+		retrievedMetadata.getFiles().add(newFile);
 		for(int i = 0; i < (size-1); i++) {
 			long page = md5(file + i);
 			double lowerBoundInterval = (Math.floor(lower/38)) + (lower%38);

@@ -634,8 +634,7 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 		for (Map.Entry<String,JsonObject> entry : theTree.entrySet()) {
 			String key = entry.getKey();
 			JsonObject value = entry.getValue();
-			JsonArray arrayOfSongs = value.getAsJsonArray("songsInPage");
-			grandJsonObject.add(key, arrayOfSongs);
+			grandJsonObject.add(key, value);
 		}
 		//place the entire JsonObject in the page
 		ChordMessageInterface peer = dfsInstance.chord.locateSuccessor(pageGuid);
