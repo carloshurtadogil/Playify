@@ -186,46 +186,82 @@ public class DFS {
 		 */
 		public List<Song> searchforSongsInPages(String searchInput, DFS dfsInstance)
 				throws RemoteException, IOException {
-			String modifiedSearchInput = searchInput.replaceAll("\\s+", "");
+			
 			List<Song> songsFromSearchResult = new ArrayList<Song>();
 			// retrieve the pages of the file and traverse them one by one
 			List<PagesJson> pages = this.getPages();
-			for (int i = 0; i < pages.size(); i++) {
-				String formattedTimeStamp = DateTime.retrieveCurrentDate();
+			
+			
+			HashMap<Integer, String> pageIntervalMappings = new HashMap<Integer, String>();
+			
+			String [] tokens = searchInput.split(" ");
+			
+			
+			for(int j=0; j<tokens.length; j++) {
+				PagesJson selectedPage = null;
+				char firstChar = tokens[j].charAt(0);
 				
-				pages.get(i).setReadTimeStamp(formattedTimeStamp);
-				long guid = pages.get(i).getGuid();
-				ChordMessageInterface peer = dfsInstance.chord.locateSuccessor(guid);
-				RemoteInputFileStream content = peer.get(guid);
-
-				content.connect();
-				Scanner scan = new Scanner(content);
-				String strSongResponse = "";
-				while (scan.hasNext()) {
-					strSongResponse += scan.next();
+				if(firstChar >= 'A' && firstChar <= 'E' ) {
+					selectedPage = pages.get(0);
 				}
-				// retrieve all songs from a single page, and traverse the songs to find the
-				// appropriate song
-				JsonObject songRepository = new Gson().fromJson(strSongResponse, JsonObject.class);
+				else if(firstChar >= 'F' && firstChar <='J') {
+					selectedPage = pages.get(1);
+				}
+				else if(firstChar >= 'K' && firstChar <= 'O') {
+					selectedPage = pages.get(2);
+				}
+				else if(firstChar >= 'P' && firstChar <= 'T') {
+					selectedPage = pages.get(3);
+				}
+				else if(firstChar >='U' && firstChar <= 'Z') {
+					selectedPage = pages.get(4);
+				}
 				
-				Set<Map.Entry<String, JsonElement>> entries = songRepository.entrySet();
-				for(Map.Entry<String, JsonElement> entry :entries) {
-					if(searchInput.contains(entry.getKey())) {
-						JsonElement songsArray = entry.getValue();
-						JsonObject songsArrayVersionTwo = songsArray.getAsJsonObject();
-						SongResponse songResponse = new Gson().fromJson(songsArrayVersionTwo, SongResponse.class);
-						List<Song> songsFromResponse = songResponse.getSongsInPage();
-						
-						//iterate through the songs retrieved and place them in the search results
-						for(int j=0; j<songsFromResponse.size(); j++) {
-							songsFromSearchResult.add(songsFromResponse.get(j));
+				if(selectedPage ==null) {
+					continue;
+				}
+				else {
+					String formattedTimeStamp = DateTime.retrieveCurrentDate();
+					
+					selectedPage.setReadTimeStamp(formattedTimeStamp);
+					long guid = selectedPage.getGuid();
+					ChordMessageInterface peer = dfsInstance.chord.locateSuccessor(guid);
+					RemoteInputFileStream content = peer.get(guid);
+
+					content.connect();
+					Scanner scan = new Scanner(content);
+					scan.useDelimiter("\\A");
+					String strSongResponse = "";
+					while (scan.hasNext()) {
+						strSongResponse += scan.next();
+					}
+					// retrieve all songs from a single page, and traverse the songs to find the
+					// appropriate song
+					JsonObject songRepository = new Gson().fromJson(strSongResponse, JsonObject.class);
+					
+					Set<Map.Entry<String, JsonElement>> entries = songRepository.entrySet();
+					
+					for(Map.Entry<String, JsonElement> entry : entries) {
+						if(tokens[j].equals(entry.getKey())) {
+							System.out.println(tokens[j]+  " " + entry.getKey());
+							SongResponse songResponse = new Gson().fromJson((entry.getValue()).getAsJsonObject(), SongResponse.class);
+							List<Song> songs = songResponse.getSongsInPage();
+							for(int k=0; k< songs.size(); k++) {
+								songsFromSearchResult.add(songs.get(k));
+								System.out.println(songs.get(k).getSongDetails().getTitle() + " cool thing bro");
+							}
+							break;
 						}
 					}
+					
 				}
 			}
+			
+		
 			return songsFromSearchResult;
 		}
-
+		
+		
 		/**
 		 * 
 		 */
@@ -834,7 +870,7 @@ public class DFS {
 		// Add the file to the metadata
 		FilesJson retrievedMetadata = this.readMetaData();
 		retrievedMetadata.getFiles().add(newFile);
-		for(int i = 0; i < (size-1); i++) {
+		for(int i = 0; i < 5; i++) {
 			long page = md5(file + i);
 			double lowerBoundInterval = (Math.floor(lower/38)) + (lower%38);
 			//appendEmptyPage(file, page, lowerBoundInterval);
@@ -882,42 +918,48 @@ public class DFS {
 		
 		//wait until the network size is above 0, this is obtained after a full cycle
 		while(networkSize>0) {
-			interval = 1936/size;
-			createFile(fileOutput + ".map", interval, size);
-		
-			//traverse the files of the metadata, until the particular file is found
-			for(int j=0; j<retrievedMetadata.getFiles().size(); j++) {
-				if(retrievedMetadata.getFiles().get(j).getName().equals(fileInput)) {
-					List<PagesJson> pagesFromInputFile = retrievedMetadata.getFiles().get(j).getPages();
-					//traverse every page, increment the counter by 1, and call the mapContext method
-					for(int i=0;i<pagesFromInputFile.size();i++) {
-						int currentCount = counter.get(fileInput);
-						currentCount++;
-						counter.put(fileInput, currentCount);
-						ChordMessageInterface peer = chord.locateSuccessor(pagesFromInputFile.get(i).getGuid());
-						peer.mapContext(pagesFromInputFile.get(i), mapper, this, fileOutput + ".map");
-					}
-					break;
-				}
-			}
+			
 			
 		}
+		
+		interval = 1936/size;
+		createFile(fileOutput + ".map", interval, size);
+	
+		//traverse the files of the metadata, until the particular file is found
+		for(int j=0; j<retrievedMetadata.getFiles().size(); j++) {
+			if(retrievedMetadata.getFiles().get(j).getName().equals(fileInput)) {
+				List<PagesJson> pagesFromInputFile = retrievedMetadata.getFiles().get(j).getPages();
+				//traverse every page, increment the counter by 1, and call the mapContext method
+				for(int i=0;i<pagesFromInputFile.size();i++) {
+					int currentCount = counter.get(fileInput);
+					currentCount++;
+					counter.put(fileInput, currentCount);
+					ChordMessageInterface peer = chord.locateSuccessor(pagesFromInputFile.get(i).getGuid());
+					peer.mapContext(pagesFromInputFile.get(i), mapper, this, fileOutput + ".map");
+				}
+				break;
+			}
+		}
+		
 		
 		//wait until the value of the key in the counter hashmap is equal to 0
 		while(counter.get(fileInput)==0) {
 			
-			bulkTree(fileOutput + ".map", this);
-			createFile(fileOutput, interval, size);
 			
-			List<PagesJson> pagesFromOutputFile = new Gson().fromJson(fileOutput, new TypeToken<List<PagesJson>>(){}.getType());
-			for(int j=0; j<pagesFromOutputFile.size(); j++) {
-				int currentCount = counter.get(fileOutput);
-				currentCount++;
-				counter.put(fileInput, currentCount);
-				ChordMessageInterface peer = chord.locateSuccessor(pagesFromOutputFile.get(j).getGuid());
-				peer.reduceContext(pagesFromOutputFile.get(j), reducer, this, fileOutput);
-			}
 		}
+		
+		bulkTree(fileOutput + ".map", this);
+		createFile(fileOutput, interval, size);
+		
+		List<PagesJson> pagesFromOutputFile = new Gson().fromJson(fileOutput, new TypeToken<List<PagesJson>>(){}.getType());
+		for(int j=0; j<pagesFromOutputFile.size(); j++) {
+			int currentCount = counter.get(fileOutput);
+			currentCount++;
+			counter.put(fileInput, currentCount);
+			ChordMessageInterface peer = chord.locateSuccessor(pagesFromOutputFile.get(j).getGuid());
+			peer.reduceContext(pagesFromOutputFile.get(j), reducer, this, fileOutput);
+		}
+		
 		while(counter.get(fileInput) == 0) {
 			Thread.sleep(10);
 			bulkTree(fileOutput, this);

@@ -109,9 +109,9 @@ public class SongDispatcher
     	dfs = Dispatcher.dfsInstance;
     	FilesJson allFiles = dfs.readMetaData();
     	
-    	FileJson chordSongsFile = allFiles.getFiles().get(1);
+    	FileJson chordSongsFile = allFiles.getFiles().get(2);
     	chordSongsFile.setReadTimeStamp(formattedReadTS);
-    	allFiles.getFiles().set(1, chordSongsFile);
+    	allFiles.getFiles().set(2, chordSongsFile);
     	
     	List<Song> searchResults = chordSongsFile.searchforSongsInPages(searchInput, dfs);
 
