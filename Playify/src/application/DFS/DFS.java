@@ -229,6 +229,7 @@ public class DFS {
 					RemoteInputFileStream content = peer.get(guid);
 
 					content.connect();
+					@SuppressWarnings("resource")
 					Scanner scan = new Scanner(content);
 					scan.useDelimiter("\\A");
 					String strSongResponse = "";
@@ -714,6 +715,7 @@ public class DFS {
 		RemoteInputFileStream content = peer.get(guid);
 
 		content.connect();
+		@SuppressWarnings("resource")
 		Scanner scan = new Scanner(content);
 		scan.useDelimiter("\\A");
 		String strUserResponse = "";
@@ -748,6 +750,7 @@ public class DFS {
 	}
 	
 	//Splitting files 
+	@SuppressWarnings("null")
 	public void loadingSongsToPages () {
 		try {
 			
@@ -815,7 +818,7 @@ public class DFS {
 				peer.put(newPage.getGuid(), gson.toJson(newPage));
 
 				this.writeMetaData(allFiles);
-
+				scan.close();
 				break;
 
 			}
@@ -880,6 +883,8 @@ public class DFS {
 	}
 	
 	/**
+	 * @param file File to store
+	 * @param dfsInstance Instance of the DFS Class with the treemap information to store
 	 */
 	public void bulkTree(String file, DFS dfsInstance) throws Exception {
 		int size = 0;
@@ -892,7 +897,6 @@ public class DFS {
 				long page = md5(file + i);
 				ChordMessageInterface peer = chord.locateSuccessor(pageGuid);
 				peer.bulk(page, this);
-				
 			}
 			PagesJson page = this.new PagesJson("");
 			dfsInstance.chord.locateSuccessor(page.guid);
