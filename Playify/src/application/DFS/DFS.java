@@ -484,6 +484,7 @@ public class DFS {
 
 	public DFS(int port) throws Exception {
 		tree = new TreeMap<String, JsonObject>();
+		counter = new HashMap<String, Integer>();
 		
 		System.out.println("Called DFS Constructor");
 		this.port = port;
@@ -911,23 +912,23 @@ public class DFS {
 	 * @throws Exception
 	 */
 	public void runMapReduce(String fileInput, String fileOutput) throws Exception {
+		
+		
 		long currGuid = chord.guid;
-		int size=0;
-		int networkSize = chord.successor.onNetworkSize(chord.guid, 1);
+		int size=1;
+		int networkSize = 1;
 		double interval = 0;
 		Mapper mapper = new Mapper();
 		Mapper reducer = new Mapper();
 		
 		FilesJson retrievedMetadata = this.readMetaData();
-		
+		counter.put(fileInput, 1);
 		//wait until the network size is above 0, this is obtained after a full cycle
-		while(networkSize>0) {
-			
-			
-		}
 		
 		interval = 1936/size;
 		createFile(fileOutput + ".map", interval, size);
+		
+		System.out.println("File created!!!!");
 	
 		//traverse the files of the metadata, until the particular file is found
 		for(int j=0; j<retrievedMetadata.getFiles().size(); j++) {

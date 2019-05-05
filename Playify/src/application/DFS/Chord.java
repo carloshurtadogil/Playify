@@ -29,6 +29,8 @@ import application.ProxyInterface;
 import application.DFS.DFS.FileJson;
 import application.DFS.DFS.PagesJson;
 import application.MapReduce.Mapper;
+import application.Models.Song;
+import application.Models.SongResponse;
 import application.Server.ServerCommunicationModule;
 
 import java.io.*;
@@ -602,21 +604,25 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 		scan.close();
 		
 		//Parse string as a JsonObject
-		JsonParser parser = new JsonParser();
-		JsonObject object = parser.parse(pageDataString).getAsJsonObject();
 		
-		//Acess the JsonArray that is within the JsonObject
-		JsonArray array = object.getAsJsonArray("songsInPage");
+		JsonObject songArray = new Gson().fromJson(pageDataString, JsonObject.class);
+		System.out.println(songArray.toString());
 		
-		//Iterate through the arrays elements.
-		for (JsonElement item : array) {
-			//Convert each element into a JsonObject.
-			JsonObject innerObject = new Gson().fromJson(item.getAsString(), JsonObject.class);
-			
-			mapper.map("key", innerObject, coordinator, file);
+		JsonArray array = songArray.getAsJsonArray("songsInPage");
+		System.out.println(array.toString());
+		
+		for(JsonElement currElement : array) {
+			JsonObject songAsJsonObject = currElement.getAsJsonObject();
+			System.out.println(songAsJsonObject.toString());
+			mapper.map(songAsJsonObject, coordinator, file);
 		}
 		
 		coordinator.onPageCompleted(file);
+		System.out.println("sweet");
+		while(true) {
+			
+		}
+		
 		
 	}
 	

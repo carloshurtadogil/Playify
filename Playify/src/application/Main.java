@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import application.DFS.DFS;
 import application.Models.Song;
 import application.Models.SongResponse;
 import javafx.application.Application;
@@ -53,6 +54,8 @@ public class Main extends Application {
 //			}
 			
 			
+			DFS dfs = new DFS(5000);
+			dfs.runMapReduce("chordmusic.json", "mapreducemusic.json");
 			
 			
 			Parent root = FXMLLoader.load(getClass().getResource("/application/Login.fxml"));

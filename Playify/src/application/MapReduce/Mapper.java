@@ -18,7 +18,7 @@ public class Mapper implements MapReduceInterface{
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void map(String key, JsonObject value, DFS context, String file) throws Exception {
+	public void map(JsonObject value, DFS context, String file) throws Exception {
 		// TODO Auto-generated method stub
 		
 		Gson gson = new Gson();
@@ -61,7 +61,7 @@ public class Mapper implements MapReduceInterface{
 		
 		String tokenKey;
 		//Tokenize string key
-		 StringTokenizer st = new StringTokenizer(key);
+		 StringTokenizer st = new StringTokenizer(newKey);
 	     while (st.hasMoreTokens()) {
 	    
 	    	//setting each token as a key value
