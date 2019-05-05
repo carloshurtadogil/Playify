@@ -33,7 +33,7 @@ import application.MapReduce.Mapper;
 
 @SuppressWarnings("unused")
 public class DFS {
-	
+
 	public class FilesJson {
 		@SerializedName("files")
 		@Expose
@@ -64,15 +64,16 @@ public class DFS {
 		 * <p>
 		 * Return the file found at a given index
 		 * </p>
+		 * 
 		 * @return FileJson object found
 		 */
 		public FileJson getFileJsonAt(int i) {
-			if(i < files.size()) {
+			if (i < files.size()) {
 				return files.get(i);
 			}
 			return new FileJson();
 		}
-		
+
 		/**
 		 * <p>
 		 * Retrieve the current list of files
@@ -83,11 +84,12 @@ public class DFS {
 		public List<FileJson> getFiles() {
 			return files;
 		}
-		
+
 		/**
 		 * <p>
 		 * Return the size of the files List
 		 * </p>
+		 * 
 		 * @return List size
 		 */
 		public int getSize() {
@@ -186,43 +188,36 @@ public class DFS {
 		 */
 		public List<Song> searchforSongsInPages(String searchInput, DFS dfsInstance)
 				throws RemoteException, IOException {
-			
+
 			List<Song> songsFromSearchResult = new ArrayList<Song>();
 			// retrieve the pages of the file and traverse them one by one
 			List<PagesJson> pages = this.getPages();
-			
-			
+
 			HashMap<Integer, String> pageIntervalMappings = new HashMap<Integer, String>();
-			
-			String [] tokens = searchInput.split(" ");
-			
-			
-			for(int j=0; j<tokens.length; j++) {
+
+			String[] tokens = searchInput.split(" ");
+
+			for (int j = 0; j < tokens.length; j++) {
 				PagesJson selectedPage = null;
 				char firstChar = tokens[j].charAt(0);
-				
-				if(firstChar >= 'A' && firstChar <= 'E' ) {
+
+				if (firstChar >= 'A' && firstChar <= 'E') {
 					selectedPage = pages.get(0);
-				}
-				else if(firstChar >= 'F' && firstChar <='J') {
+				} else if (firstChar >= 'F' && firstChar <= 'J') {
 					selectedPage = pages.get(1);
-				}
-				else if(firstChar >= 'K' && firstChar <= 'O') {
+				} else if (firstChar >= 'K' && firstChar <= 'O') {
 					selectedPage = pages.get(2);
-				}
-				else if(firstChar >= 'P' && firstChar <= 'T') {
+				} else if (firstChar >= 'P' && firstChar <= 'T') {
 					selectedPage = pages.get(3);
-				}
-				else if(firstChar >='U' && firstChar <= 'Z') {
+				} else if (firstChar >= 'U' && firstChar <= 'Z') {
 					selectedPage = pages.get(4);
 				}
-				
-				if(selectedPage ==null) {
+
+				if (selectedPage == null) {
 					continue;
-				}
-				else {
+				} else {
 					String formattedTimeStamp = DateTime.retrieveCurrentDate();
-					
+
 					selectedPage.setReadTimeStamp(formattedTimeStamp);
 					long guid = selectedPage.getGuid();
 					ChordMessageInterface peer = dfsInstance.chord.locateSuccessor(guid);
@@ -239,30 +234,29 @@ public class DFS {
 					// retrieve all songs from a single page, and traverse the songs to find the
 					// appropriate song
 					JsonObject songRepository = new Gson().fromJson(strSongResponse, JsonObject.class);
-					
+
 					Set<Map.Entry<String, JsonElement>> entries = songRepository.entrySet();
-					
-					for(Map.Entry<String, JsonElement> entry : entries) {
-						if(tokens[j].equals(entry.getKey())) {
-							System.out.println(tokens[j]+  " " + entry.getKey());
-							SongResponse songResponse = new Gson().fromJson((entry.getValue()).getAsJsonObject(), SongResponse.class);
+
+					for (Map.Entry<String, JsonElement> entry : entries) {
+						if (tokens[j].equals(entry.getKey())) {
+							System.out.println(tokens[j] + " " + entry.getKey());
+							SongResponse songResponse = new Gson().fromJson((entry.getValue()).getAsJsonObject(),
+									SongResponse.class);
 							List<Song> songs = songResponse.getSongsInPage();
-							for(int k=0; k< songs.size(); k++) {
+							for (int k = 0; k < songs.size(); k++) {
 								songsFromSearchResult.add(songs.get(k));
 								System.out.println(songs.get(k).getSongDetails().getTitle() + " cool thing bro");
 							}
 							break;
 						}
 					}
-					
+
 				}
 			}
-			
-		
+
 			return songsFromSearchResult;
 		}
-		
-		
+
 		/**
 		 * 
 		 */
@@ -361,9 +355,9 @@ public class DFS {
 		@SerializedName("lowerBound")
 		@Expose
 		String lowerBound;
-		
+
 		public PagesJson(String text) {
-			
+
 		}
 
 		public void setGuid(long guid) {
@@ -413,19 +407,19 @@ public class DFS {
 		public String getReferenceCount() {
 			return referenceCount;
 		}
-		
-		public void setUpperBoundInterval(String upperBound) {
+
+		public void setUpperBound(String upperBound) {
 			this.upperBound = upperBound;
 		}
-		
+
 		public String getUpperBound() {
 			return upperBound;
 		}
-		
+
 		public void setLowerBound(String lowerBound) {
 			this.lowerBound = lowerBound;
 		}
-		
+
 		public String getLowerBound() {
 			return lowerBound;
 		}
@@ -437,19 +431,19 @@ public class DFS {
 					+ "Reference Count: " + referenceCount + "\n";
 			return result;
 		}
-		
+
 		/**
 		 * Adds a key value pair to the tree
+		 * 
 		 * @param key
 		 * @param value
 		 */
-		public void addKeyValue(String key, JsonObject value) {
-			if(!tree.containsKey(key)) {
+		public void addKeyValue(String key, JsonObject value, DFS instance) {
+			if (!instance.tree.containsKey(key)) {
 				JsonObject newJsonObject = new JsonObject();
-				tree.put(key, newJsonObject);
-			}
-			else {
-				tree.put(key, value);
+				instance.tree.put(key, newJsonObject);
+			} else {
+				instance.tree.put(key, value);
 			}
 		}
 
@@ -485,7 +479,7 @@ public class DFS {
 	public DFS(int port) throws Exception {
 		tree = new TreeMap<String, JsonObject>();
 		counter = new HashMap<String, Integer>();
-		
+
 		System.out.println("Called DFS Constructor");
 		this.port = port;
 		System.out.println("Calling GUID");
@@ -749,36 +743,34 @@ public class DFS {
 		return false;
 
 	}
-	
-	//Splitting files 
+
+	// Splitting files
 	@SuppressWarnings("null")
-	public void loadingSongsToPages () {
+	public void loadingSongsToPages() {
 		try {
-			
-			List<Song> mySongs; 
-			List<Song> songNames = new ArrayList<Song> ();
+
+			List<Song> mySongs;
+			List<Song> songNames = new ArrayList<Song>();
 			ListView<Song> listOfSongs = null;
-			
-			for(int i = 1; i < 101; ++i)
-			{
-				for (int j = 1; j < 101; ++i)
-				{
+
+			for (int i = 1; i < 101; ++i) {
+				for (int j = 1; j < 101; ++i) {
 					Gson gson = new Gson();
-					
-					
-					mySongs = gson.fromJson(new FileReader("music.json"), new TypeToken<List<Song>>(){}.getType());
-		
-					for(Song s : mySongs) {
+
+					mySongs = gson.fromJson(new FileReader("music.json"), new TypeToken<List<Song>>() {
+					}.getType());
+
+					for (Song s : mySongs) {
 						songNames.add(s);
+					}
 				}
-			}
-			listOfSongs.setItems(FXCollections.observableList(songNames));
+				listOfSongs.setItems(FXCollections.observableList(songNames));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Append a page to a file
 	 * 
@@ -823,75 +815,109 @@ public class DFS {
 				break;
 
 			}
-			
-			
+
 		}
-		
+
 	}
-	
 
 	/**
 	 * <p>
 	 * Emits all the pages contained in the file by adding their key value mappings
 	 * </p>
+	 * 
 	 * @param key
 	 * @param values
 	 * @param file
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void emit(String key, JsonObject values, String file) throws Exception {
-		
+
 		FilesJson metadata = this.readMetaData();
-		//traverse the metadata, till we get the specified file
-		for(int j=0; j<metadata.getFiles().size(); j++) {
-			if(metadata.getFiles().get(j).getName().equalsIgnoreCase(file)) {
-				//traverse the file's pages, and call the key value mapping
+		// traverse the metadata, till we get the specified file
+
+		System.out.println(metadata.getFiles().size());
+		for (int j = 0; j < metadata.getFiles().size(); j++) {
+			if (metadata.getFiles().get(j).getName().equalsIgnoreCase(file)) {
+				// traverse the file's pages, and call the key value mapping
 				FileJson chosenFile = metadata.getFiles().get(j);
 				for (int i = 0; i < chosenFile.getPages().size(); i++) {
-					chosenFile.getPages().get(i).addKeyValue(key, values);
+					chosenFile.getPages().get(i).addKeyValue(key, values, this);
 				}
 				break;
 			}
 		}
-		
-		
+
 	}
-	
-	
-	
+
 	public void createFile(String file, double interval, int size) throws Exception {
 		int lower = 0;
 		String formattedTS = DateTime.retrieveCurrentDate();
 
 		// Set the creation, read, write time stamps accordingly
 		FileJson newFile = new FileJson();
+		newFile.setName(file);
 		newFile.setCreationTimeStamp(formattedTS);
 		newFile.setReadTimeStamp(formattedTS);
 		newFile.setWriteTimeStamp(formattedTS);
-		
-		List<PagesJson> pages = new ArrayList<PagesJson>();
+
+		ArrayList<PagesJson> pages = new ArrayList<PagesJson>();
 
 		// Add the file to the metadata
 		FilesJson retrievedMetadata = this.readMetaData();
-		retrievedMetadata.getFiles().add(newFile);
-		for(int i = 0; i < 5; i++) {
-			long page = md5(file + i);
-			double lowerBoundInterval = (Math.floor(lower/38)) + (lower%38);
-			//appendEmptyPage(file, page, lowerBoundInterval);
-			lower+=interval;
-		}
 		
+		//for every newly created file, create associated pages to it
+		for (int i = 0; i < 5; i++) {
+			PagesJson newPage = this.new PagesJson("");
+			long thePageGuid = md5(file + i);
+			newPage.setGuid(thePageGuid);
+			newPage.setCreationTimeStamp(formattedTS);
+			newPage.setReadTimeStamp(formattedTS);
+			newPage.setWriteTimeStamp(formattedTS);
+
+			switch (i) {
+			case 0:
+				newPage.setLowerBound("A");
+				newPage.setUpperBound("E");
+				break;
+			case 1:
+				newPage.setLowerBound("F");
+				newPage.setUpperBound("J");
+				break;
+			case 2:
+				newPage.setLowerBound("K");
+				newPage.setUpperBound("O");
+				break;
+			case 3:
+				newPage.setLowerBound("P");
+				newPage.setUpperBound("T");
+				break;
+			case 4:
+				newPage.setLowerBound("U");
+				newPage.setUpperBound("Z");
+				break;
+
+			}
+			pages.add(newPage);
+		}
+		//Set the newly created pages to the file, and add the recently made file to the metadata
+		newFile.setPages(pages);
+		retrievedMetadata.getFiles().add(newFile);
+		//write to the metadata
+		this.writeMetaData(retrievedMetadata);
+
 	}
-	
+
 	/**
-	 * @param file File to store
-	 * @param dfsInstance Instance of the DFS Class with the treemap information to store
+	 * @param file
+	 *            File to store
+	 * @param dfsInstance
+	 *            Instance of the DFS Class with the treemap information to store
 	 */
 	public void bulkTree(String file, DFS dfsInstance) throws Exception {
 		int size = 0;
 		FilesJson filesJson = readMetaData();
-		for(int i = 0; i < filesJson.getSize(); i++) {
-			if(filesJson.getFileJsonAt(i).getName().equalsIgnoreCase(file)) {
+		for (int i = 0; i < filesJson.getSize(); i++) {
+			if (filesJson.getFileJsonAt(i).getName().equalsIgnoreCase(file)) {
 				ArrayList<PagesJson> pagesList = filesJson.getFileJsonAt(i).getPages();
 				PagesJson pagesRead = pagesList.get(i);
 				long pageGuid = pagesRead.getGuid();
@@ -904,38 +930,38 @@ public class DFS {
 		}
 	}
 
-	
 	/**
 	 * Runs the map reduce algorithm on a set of distributed file system
+	 * 
 	 * @param fileInput
 	 * @param fileOutput
 	 * @throws Exception
 	 */
 	public void runMapReduce(String fileInput, String fileOutput) throws Exception {
-		
-		
+
 		long currGuid = chord.guid;
-		int size=1;
+		int size = 1;
 		int networkSize = 1;
 		double interval = 0;
 		Mapper mapper = new Mapper();
 		Mapper reducer = new Mapper();
-		
+
 		FilesJson retrievedMetadata = this.readMetaData();
 		counter.put(fileInput, 1);
-		//wait until the network size is above 0, this is obtained after a full cycle
-		
-		interval = 1936/size;
+		// wait until the network size is above 0, this is obtained after a full cycle
+
+		interval = 1936 / size;
 		createFile(fileOutput + ".map", interval, size);
-		
+
 		System.out.println("File created!!!!");
-	
-		//traverse the files of the metadata, until the particular file is found
-		for(int j=0; j<retrievedMetadata.getFiles().size(); j++) {
-			if(retrievedMetadata.getFiles().get(j).getName().equals(fileInput)) {
+
+		// traverse the files of the metadata, until the particular file is found
+		for (int j = 0; j < retrievedMetadata.getFiles().size(); j++) {
+			if (retrievedMetadata.getFiles().get(j).getName().equals(fileInput)) {
 				List<PagesJson> pagesFromInputFile = retrievedMetadata.getFiles().get(j).getPages();
-				//traverse every page, increment the counter by 1, and call the mapContext method
-				for(int i=0;i<pagesFromInputFile.size();i++) {
+				// traverse every page, increment the counter by 1, and call the mapContext
+				// method
+				for (int i = 0; i < pagesFromInputFile.size(); i++) {
 					int currentCount = counter.get(fileInput);
 					currentCount++;
 					counter.put(fileInput, currentCount);
@@ -946,40 +972,44 @@ public class DFS {
 			}
 		}
 		
-		
-		//wait until the value of the key in the counter hashmap is equal to 0
-		while(counter.get(fileInput)==0) {
-			
-			
+		System.out.println("From the top of TreeMap");
+		for(Map.Entry<String, JsonObject> entry: this.tree.entrySet()) {
+			System.out.println(entry.getKey() + " " + entry.getValue());
 		}
 		
-		bulkTree(fileOutput + ".map", this);
-		createFile(fileOutput, interval, size);
 		
-		List<PagesJson> pagesFromOutputFile = new Gson().fromJson(fileOutput, new TypeToken<List<PagesJson>>(){}.getType());
-		for(int j=0; j<pagesFromOutputFile.size(); j++) {
-			int currentCount = counter.get(fileOutput);
-			currentCount++;
-			counter.put(fileInput, currentCount);
-			ChordMessageInterface peer = chord.locateSuccessor(pagesFromOutputFile.get(j).getGuid());
-			peer.reduceContext(pagesFromOutputFile.get(j), reducer, this, fileOutput);
-		}
-		
-		while(counter.get(fileInput) == 0) {
-			Thread.sleep(10);
-			bulkTree(fileOutput, this);
-		}
-		
-			
-		
+//
+//		// wait until the value of the key in the counter hashmap is equal to 0
+//		while (counter.get(fileInput) == 0) {
+//
+//		}
+//
+//		bulkTree(fileOutput + ".map", this);
+//		createFile(fileOutput, interval, size);
+//
+//		List<PagesJson> pagesFromOutputFile = new Gson().fromJson(fileOutput, new TypeToken<List<PagesJson>>() {
+//		}.getType());
+//		for (int j = 0; j < pagesFromOutputFile.size(); j++) {
+//			int currentCount = counter.get(fileOutput);
+//			currentCount++;
+//			counter.put(fileInput, currentCount);
+//			ChordMessageInterface peer = chord.locateSuccessor(pagesFromOutputFile.get(j).getGuid());
+//			peer.reduceContext(pagesFromOutputFile.get(j), reducer, this, fileOutput);
+//		}
+//
+//		while (counter.get(fileInput) == 0) {
+//			Thread.sleep(10);
+//			bulkTree(fileOutput, this);
+//		}
+//
 	}
-	
+
 	/**
 	 * Decrements the counter for a certain page
+	 * 
 	 * @param file
 	 */
-	public void onPageCompleted(String file)
-	{	
+	public void onPageCompleted(String file) {
 		int value = counter.get(file);
 		value--;
 		counter.put(file, value);

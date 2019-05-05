@@ -603,13 +603,10 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 		}
 		scan.close();
 		
-		//Parse string as a JsonObject
-		
+		//Parse string as a JsonObject that contains all songs for the page
 		JsonObject songArray = new Gson().fromJson(pageDataString, JsonObject.class);
-		System.out.println(songArray.toString());
-		
+		//retrieve the songs in the page which are stored in a JsonArray
 		JsonArray array = songArray.getAsJsonArray("songsInPage");
-		System.out.println(array.toString());
 		
 		for(JsonElement currElement : array) {
 			JsonObject songAsJsonObject = currElement.getAsJsonObject();
@@ -617,12 +614,12 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 			mapper.map(songAsJsonObject, coordinator, file);
 		}
 		
-		coordinator.onPageCompleted(file);
-		System.out.println("sweet");
-		while(true) {
-			
+		System.out.println("time to read treemap");
+		for(Map.Entry<String, JsonObject> entry: coordinator.tree.entrySet()) {
+			System.out.println(entry.getKey() + " " + entry.getValue());
 		}
 		
+		//coordinator.onPageCompleted(file);
 		
 	}
 	

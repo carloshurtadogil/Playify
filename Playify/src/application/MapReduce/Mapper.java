@@ -19,38 +19,14 @@ public class Mapper implements MapReduceInterface{
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void map(JsonObject value, DFS context, String file) throws Exception {
-		// TODO Auto-generated method stub
-		
 		Gson gson = new Gson();
-		Map unsortMap = new HashMap();
+		Map<String, JsonObject> unsortMap = new HashMap<String, JsonObject>();
 		
-		//value is json object which contains one song
-		
-		//Parsing music.json
-		//JsonObject jsonObject = gson.fromJson(new FileReader("music.json"), JsonObject.class);
-        //Object obj = new JSONParser().parse(new FileReader("music.json")); 
-		
-		JsonObject artist = value.getAsJsonObject("artist");
 		JsonObject song = value.getAsJsonObject("song");
-		JsonObject release = value.getAsJsonObject("release");
-		
 		//creating new key
 		String newKey = song.get("title").getAsString();
 		
-		//creating a new json object newValue
-		String artistName = artist.get("name").getAsString();
-		Integer year = song.get("year").getAsInt();
-		String albumName = release.get("name").getAsString();
-		String songID = song.get("id").getAsString();
-			
-		//create a rank? 
-		JsonObject newValue = new JsonObject();
-		newValue.addProperty("artistName", artistName);	
-		newValue.addProperty("year", year);	
-		newValue.addProperty("albumName", albumName);
-		newValue.addProperty("songID", songID);
-		
-		
+		//create an arraylist of unwanted keywords that should be ignored
 		ArrayList<String> unwanted = new ArrayList<String>(); 
 		unwanted.add("is");
 		unwanted.add("the");
@@ -58,23 +34,25 @@ public class Mapper implements MapReduceInterface{
 		unwanted.add("of");
 		unwanted.add("at");
 		
-		
 		String tokenKey;
 		//Tokenize string key
-		 StringTokenizer st = new StringTokenizer(newKey);
-	     while (st.hasMoreTokens()) {
+		StringTokenizer st = new StringTokenizer(newKey);
+	    while (st.hasMoreTokens()) {
 	    
 	    	//setting each token as a key value
 	    	 tokenKey = st.nextToken();
-	    	 if(unwanted.contains(tokenKey))
+	    	 if(unwanted.contains(tokenKey)) {
 	    		 continue;
-	    	 else
+	    	 }
+	    	 else {
 	    		 //unsorted hashmap to map new tokenized key and value
-	   	         unsortMap.put(tokenKey, newValue);
+	   	         unsortMap.put(tokenKey, value);
+	    	 }
 	     }
 	    
-		context.emit(newKey, newValue, file);
-	}
+
+	    context.emit(newKey, value, file);
+	 }
 
 	
 	@Override
