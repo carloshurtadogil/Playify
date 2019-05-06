@@ -439,10 +439,17 @@ public class DFS {
 		 * @param value
 		 */
 		public void addKeyValue(String key, JsonObject value, DFS instance) {
+			
 			if (!instance.tree.containsKey(key)) {
-				JsonObject newJsonObject = new JsonObject();
-				instance.tree.put(key, newJsonObject);
+				instance.tree.put(key, value);
 			} else {
+				
+				JsonObject treeEntryContent = instance.tree.get(key);
+				JsonArray arrayOfSongs = treeEntryContent.getAsJsonArray("songsInPage");
+				
+				JsonArray songsInValueJson = value.getAsJsonArray("songsInPage");
+				songsInValueJson.addAll(arrayOfSongs);
+				value.add("songsInPage", songsInValueJson);
 				instance.tree.put(key, value);
 			}
 		}
@@ -532,7 +539,6 @@ public class DFS {
 		try {
 			Gson gson = new Gson();
 			long guid = md5("Metadata");
-			System.out.println("GUID From ReadMetadata: " + guid);
 			ChordMessageInterface peer = chord.locateSuccessor(guid);
 			RemoteInputFileStream metadataraw = peer.get(guid);
 			metadataraw.connect();
@@ -966,7 +972,9 @@ public class DFS {
 					currentCount++;
 					counter.put(fileInput, currentCount);
 					ChordMessageInterface peer = chord.locateSuccessor(pagesFromInputFile.get(i).getGuid());
+					System.out.println("come on");
 					peer.mapContext(pagesFromInputFile.get(i), mapper, this, fileOutput + ".map");
+					System.out.println("what!!");
 				}
 				break;
 			}
@@ -974,6 +982,7 @@ public class DFS {
 		
 		System.out.println("From the top of TreeMap");
 		for(Map.Entry<String, JsonObject> entry: this.tree.entrySet()) {
+			System.out.println("COME ON");
 			System.out.println(entry.getKey() + " " + entry.getValue());
 		}
 		

@@ -608,17 +608,14 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 		//retrieve the songs in the page which are stored in a JsonArray
 		JsonArray array = songArray.getAsJsonArray("songsInPage");
 		
+		System.out.println("LEGGO");
+		
 		for(JsonElement currElement : array) {
 			JsonObject songAsJsonObject = currElement.getAsJsonObject();
-			System.out.println(songAsJsonObject.toString());
 			mapper.map(songAsJsonObject, coordinator, file);
 		}
 		
-		System.out.println("time to read treemap");
-		for(Map.Entry<String, JsonObject> entry: coordinator.tree.entrySet()) {
-			System.out.println(entry.getKey() + " " + entry.getValue());
-		}
-		
+
 		//coordinator.onPageCompleted(file);
 		
 	}
