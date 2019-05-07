@@ -438,34 +438,30 @@ public class DFS {
 		 * @param key
 		 * @param value
 		 */
-		public void addKeyValue(String key, JsonObject value, DFS instance) {
+		public void addKeyValue(String key, List<JsonObject> value, DFS instance) {
 			
-			if (!instance.tree.containsKey(key)) {
+			if(!instance.tree.containsKey(key)) {
 				instance.tree.put(key, value);
-			} else {
-				
-				JsonObject treeEntryContent = instance.tree.get(key);
-				JsonArray arrayOfSongs = treeEntryContent.getAsJsonArray("songsInPage");
-				
-				JsonArray songsInValueJson = value.getAsJsonArray("songsInPage");
-				songsInValueJson.addAll(arrayOfSongs);
-				value.add("songsInPage", songsInValueJson);
-				instance.tree.put(key, value);
+			}
+			else {
+				List<JsonObject> contents = instance.tree.get(key);
+				contents.addAll(value);
+				instance.tree.put(key, contents);
 			}
 		}
 
 	}
 
-	public TreeMap<String, JsonObject> tree;
+	public TreeMap<String, List<JsonObject>> tree;
 	int port;
 	public Chord chord;
 	HashMap<String, Integer> counter;
 
-	public void setTree(TreeMap<String, JsonObject> tree) {
+	public void setTree(TreeMap<String, List<JsonObject>> tree) {
 		this.tree = tree;
 	}
 
-	public TreeMap<String, JsonObject> getTree() {
+	public TreeMap<String, List<JsonObject>> getTree() {
 		return tree;
 	}
 
@@ -484,7 +480,7 @@ public class DFS {
 	}
 
 	public DFS(int port) throws Exception {
-		tree = new TreeMap<String, JsonObject>();
+		tree = new TreeMap<String, List<JsonObject>>();
 		counter = new HashMap<String, Integer>();
 
 		System.out.println("Called DFS Constructor");
@@ -836,18 +832,21 @@ public class DFS {
 	 * @param file
 	 * @throws Exception
 	 */
-	public void emit(String key, JsonObject values, String file) throws Exception {
+	public void emit(String key, List<JsonObject> values, String file) throws Exception {
 
 		FilesJson metadata = this.readMetaData();
 		// traverse the metadata, till we get the specified file
 
-		System.out.println(metadata.getFiles().size());
 		for (int j = 0; j < metadata.getFiles().size(); j++) {
 			if (metadata.getFiles().get(j).getName().equalsIgnoreCase(file)) {
 				// traverse the file's pages, and call the key value mapping
 				FileJson chosenFile = metadata.getFiles().get(j);
-				for (int i = 0; i < chosenFile.getPages().size(); i++) {
-					chosenFile.getPages().get(i).addKeyValue(key, values, this);
+				for (int i = 0; i < chosenFile.getPages().size()-1; i++) {
+					if(chosenFile.getPages().get(i).getLowerBound().compareTo(key) <=0 &&
+						key.compareTo(chosenFile.getPages().get(i+1).getLowerBound())<0) {
+						chosenFile.getPages().get(i).addKeyValue(key, values, this);
+					}
+					
 				}
 				break;
 			}
@@ -855,6 +854,13 @@ public class DFS {
 
 	}
 
+	/**
+	 * Creates a new file with five pages, and then updates the current metadata
+	 * @param file
+	 * @param interval
+	 * @param size
+	 * @throws Exception
+	 */
 	public void createFile(String file, double interval, int size) throws Exception {
 		int lower = 0;
 		String formattedTS = DateTime.retrieveCurrentDate();
@@ -931,8 +937,7 @@ public class DFS {
 				ChordMessageInterface peer = chord.locateSuccessor(pageGuid);
 				peer.bulk(page, this);
 			}
-			PagesJson page = this.new PagesJson("");
-			dfsInstance.chord.locateSuccessor(page.guid);
+			
 		}
 	}
 
@@ -972,20 +977,20 @@ public class DFS {
 					currentCount++;
 					counter.put(fileInput, currentCount);
 					ChordMessageInterface peer = chord.locateSuccessor(pagesFromInputFile.get(i).getGuid());
-					System.out.println("come on");
 					peer.mapContext(pagesFromInputFile.get(i), mapper, this, fileOutput + ".map");
 					System.out.println("what!!");
+					
+					System.out.println(tree.size());
 				}
 				break;
 			}
 		}
 		
-		System.out.println("From the top of TreeMap");
-		for(Map.Entry<String, JsonObject> entry: this.tree.entrySet()) {
-			System.out.println("COME ON");
-			System.out.println(entry.getKey() + " " + entry.getValue());
+		for(Map.Entry<String, List<JsonObject>> entry: tree.entrySet()) {
+			System.out.println(entry.getKey() + " " + entry.getValue().toString());
 		}
 		
+		System.out.println("From the top of TreeMap");
 		
 //
 //		// wait until the value of the key in the counter hashmap is equal to 0

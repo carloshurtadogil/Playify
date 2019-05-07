@@ -10,6 +10,7 @@ import org.json.simple.parser.JSONParser;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import application.DFS.DFS;
 import application.Models.Song;
@@ -21,60 +22,19 @@ public class Mapper implements MapReduceInterface {
 	@Override
 	public void map(JsonObject value, DFS context, String file) throws Exception {
 		
-		System.out.println("in map method");
+		List<JsonObject> listOfJsonObjects = new ArrayList<JsonObject>();
+		listOfJsonObjects.add(value);
 		Gson gson = new Gson();
 		Map<String, JsonObject> unsortMap = new HashMap<String, JsonObject>();
 
 		JsonObject song = value.getAsJsonObject("song");
 		// creating new key
 		String newKey = song.get("title").getAsString();
-
-		// create an arraylist of unwanted keywords that should be ignored
-		ArrayList<String> unwanted = new ArrayList<String>();
-		unwanted.add("is");
-		unwanted.add("the");
-		unwanted.add("and");
-		unwanted.add("of");
-		unwanted.add("at");
-
-		String tokenKey;
-		// Tokenize string key
-		StringTokenizer st = new StringTokenizer(newKey);
-		while (st.hasMoreTokens()) {
-
-			// setting each token as a key value
-			tokenKey = st.nextToken();
-			if (unwanted.contains(tokenKey)) {
-				continue;
-			} else {
-				// unsorted hashmap to map new tokenized key and value
-				unsortMap.put(tokenKey, value);
-			}
-		}
-		
-		
-		for(Map.Entry<String, JsonObject> entry: unsortMap.entrySet()) {
-			JsonArray arrayOfSongs = new JsonArray();
-			arrayOfSongs.add(entry.getValue());
-			
-			
-			JsonObject songsCollection = new JsonObject();
-			
-			songsCollection.add("songsInPage", arrayOfSongs);
-			
-			context.emit(entry.getKey(), songsCollection, file);
-			
-		}
-		
-		System.out.println("Finished mapping one page");
-		
-		
-		
-
+		context.emit(newKey, listOfJsonObjects, file);
 	}
 
 	@Override
-	public void reduce(String key, JsonObject values, DFS context, String file) throws Exception {
+	public void reduce(String key, List<JsonObject> values, DFS context, String file) throws Exception {
 		// TODO Auto-generated method stub
 
 		sort(values);
@@ -82,19 +42,33 @@ public class Mapper implements MapReduceInterface {
 
 	}
 
-	public void sort(JsonObject values) throws IOException {
+	public void sort(List<JsonObject> values) throws IOException {
 
-		// sort by the ArtistName
-		// SortedMap<String, JsonObject> sortedMap = new TreeMap<>();
-
-		// values is one JsonObject which contains a bunch of values
-		SongResponse songResponse = new Gson().fromJson(values, SongResponse.class);
-		List<Song> songs = songResponse.getSongsInPage();
-
-		// List songValues = new ArrayList();
-		// songValues.add(values);
-
+		List<Song> songs= new Gson().fromJson(values.toString(), new TypeToken<List<Song>>(){}.getType());
 		Collections.sort(songs, new SortbyAlbum());
+
+		values = new ArrayList<JsonObject>();
+		for(Song s: songs) {
+			JsonObject releaseDetails = new JsonObject();
+			releaseDetails.addProperty("name", s.getRelease().getReleaseName());
+			releaseDetails.addProperty("id", s.getRelease().getReleaseID());
+			
+			JsonObject artistDetails = new JsonObject();
+			artistDetails.addProperty("terms", s.getArtistDetails().getTerms());
+			artistDetails.addProperty("name", s.getArtistDetails().getName());
+			
+			JsonObject songDetails = new JsonObject();
+			songDetails.addProperty("title", s.getSongDetails().getTitle());
+			songDetails.addProperty("id", s.getSongDetails().getSongId());
+		
+			JsonObject songObject = new JsonObject();
+			songObject.add("release", releaseDetails);
+			songObject.add("artist", artistDetails);
+			songObject.add("song", songDetails);
+			
+			values.add(songObject);
+		}
+		
 
 	}
 

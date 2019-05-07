@@ -608,8 +608,7 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 		//retrieve the songs in the page which are stored in a JsonArray
 		JsonArray array = songArray.getAsJsonArray("songsInPage");
 		
-		System.out.println("LEGGO");
-		
+		//Iterate through the JsonArray to pass in an individual song
 		for(JsonElement currElement : array) {
 			JsonObject songAsJsonObject = currElement.getAsJsonObject();
 			mapper.map(songAsJsonObject, coordinator, file);
@@ -626,14 +625,25 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 	 */
 	public void bulk(long pageGuid, DFS dfsInstance) throws Exception
 	{
-		TreeMap<String, JsonObject> theTree = dfsInstance.tree;
+		TreeMap<String, List<JsonObject>> theTree = dfsInstance.tree;
 		JsonObject grandJsonObject = new JsonObject();
 		
 		//iterate through the tree map, place each key/value mapping to the json object that will be located
 		//on a single page
-		for (Map.Entry<String,JsonObject> entry : theTree.entrySet()) {
+		for (Map.Entry<String,List<JsonObject>> entry : theTree.entrySet()) {
 			String key = entry.getKey();
-			JsonObject value = entry.getValue();
+			JsonObject value = new JsonObject();
+			
+			List<JsonObject> songsAssocToKeyword = entry.getValue();
+			
+			JsonArray arrayOfSongs = new JsonArray();
+			
+			for(int i=0; i< songsAssocToKeyword.size(); i++) {
+				arrayOfSongs.add(songsAssocToKeyword.get(i));
+			}
+			
+			value.add("songsInPage", arrayOfSongs);
+			
 			grandJsonObject.add(key, value);
 		}
 		//place the entire JsonObject in the page
@@ -645,6 +655,7 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 	
 	public void reduceContext(PagesJson page, Mapper reducer, DFS coordinator, String file) throws Exception {
 
+		List<JsonObject> values = new ArrayList<JsonObject>();
 		//Get the page associated with the guid.
 		long guid = page.getGuid();
 		ChordMessageInterface peer = coordinator.chord.locateSuccessor(guid);
@@ -660,15 +671,17 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 		}
 		scan.close();
 		
-		//Parse string as a JsonObject
-		JsonParser parser = new JsonParser();
-		JsonObject object = parser.parse(pageDataString).getAsJsonObject();
 		
-		Set<Entry<String, JsonElement>> entrySet = object.entrySet();
-		
-		for(Map.Entry<String,JsonElement> entry : entrySet){
+		//Parse string as a JsonObject that contains all songs for the page
+		JsonObject songArray = new Gson().fromJson(pageDataString, JsonObject.class);
+				
+		for(Map.Entry<String,JsonElement> entry : songArray.entrySet()){
 			String key = entry.getKey();
-			JsonObject values = new Gson().fromJson(entry.getValue().getAsString(), JsonObject.class);
+			JsonObject songsAssociatedToKeyComponent = entry.getValue().getAsJsonObject();
+			JsonArray songsAssociatedToKey = songsAssociatedToKeyComponent.getAsJsonArray("songsInPage");
+			for(JsonElement element : songsAssociatedToKey) {
+				values.add(element.getAsJsonObject());
+			}
 			reducer.reduce( key, values, coordinator, file);
 		}
 		
