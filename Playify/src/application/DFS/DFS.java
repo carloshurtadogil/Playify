@@ -438,7 +438,7 @@ public class DFS {
 		 * @param key
 		 * @param value
 		 */
-		public void addKeyValue(String key, List<JsonObject> value, DFS instance) {
+/*		public void addKeyValue(String key, List<JsonObject> value, DFS instance) {
 			
 			if(!instance.tree.containsKey(key)) {
 				instance.tree.put(key, value);
@@ -448,7 +448,7 @@ public class DFS {
 				contents.addAll(value);
 				instance.tree.put(key, contents);
 			}
-		}
+		}*/
 
 	}
 
@@ -832,7 +832,7 @@ public class DFS {
 	 * @param file
 	 * @throws Exception
 	 */
-	public void emit(String key, List<JsonObject> values, String file) throws Exception {
+	public void emit(String key, JsonObject values, String file) throws Exception {
 
 		FilesJson metadata = this.readMetaData();
 		// traverse the metadata, till we get the specified file
@@ -844,7 +844,10 @@ public class DFS {
 				for (int i = 0; i < chosenFile.getPages().size()-1; i++) {
 					if(chosenFile.getPages().get(i).getLowerBound().compareTo(key) <=0 &&
 						key.compareTo(chosenFile.getPages().get(i+1).getLowerBound())<0) {
-						chosenFile.getPages().get(i).addKeyValue(key, values, this);
+						Long guid = chosenFile.getPages().get(i).getGuid();
+						ChordMessageInterface c = chord.locateSuccessor(guid);
+						c.addKeyValue(key, values);
+						break;
 					}
 					
 				}
@@ -977,10 +980,10 @@ public class DFS {
 					currentCount++;
 					counter.put(fileInput, currentCount);
 					ChordMessageInterface peer = chord.locateSuccessor(pagesFromInputFile.get(i).getGuid());
-					peer.mapContext(pagesFromInputFile.get(i), mapper, this, fileOutput + ".map");
+					peer.mapContext(pagesFromInputFile.get(i).getGuid(), mapper, this, fileOutput + ".map");
 					System.out.println("what!!");
 					
-					System.out.println(tree.size());
+					System.out.println(currentCount);
 				}
 				break;
 			}
@@ -998,8 +1001,8 @@ public class DFS {
 //
 //		}
 //
-//		bulkTree(fileOutput + ".map", this);
-//		createFile(fileOutput, interval, size);
+		bulkTree(fileOutput + ".map", this);
+		createFile(fileOutput, interval, size);
 //
 //		List<PagesJson> pagesFromOutputFile = new Gson().fromJson(fileOutput, new TypeToken<List<PagesJson>>() {
 //		}.getType());

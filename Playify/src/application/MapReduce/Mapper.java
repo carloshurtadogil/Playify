@@ -21,7 +21,6 @@ public class Mapper implements MapReduceInterface {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void map(JsonObject value, DFS context, String file) throws Exception {
-		
 		List<JsonObject> listOfJsonObjects = new ArrayList<JsonObject>();
 		listOfJsonObjects.add(value);
 		Gson gson = new Gson();
@@ -30,7 +29,7 @@ public class Mapper implements MapReduceInterface {
 		JsonObject song = value.getAsJsonObject("song");
 		// creating new key
 		String newKey = song.get("title").getAsString();
-		context.emit(newKey, listOfJsonObjects, file);
+		context.emit(newKey, value, file);
 	}
 
 	@Override
@@ -38,7 +37,7 @@ public class Mapper implements MapReduceInterface {
 		// TODO Auto-generated method stub
 
 		sort(values);
-		context.emit(key, values, file);
+		//context.emit(key, values, file);
 
 	}
 

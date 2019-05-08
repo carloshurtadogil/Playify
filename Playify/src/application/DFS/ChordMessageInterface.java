@@ -1,6 +1,7 @@
 package application.DFS;
 
 import java.rmi.*;
+import java.util.List;
 import java.util.TreeMap;
 
 import com.google.gson.JsonObject;
@@ -27,8 +28,9 @@ public interface ChordMessageInterface extends Remote
     public RemoteInputFileStream get(long guidObject) throws IOException, RemoteException;   
     public byte[] get(long guidObject, long offset, int len) throws IOException, RemoteException;  
     public void delete(long guidObject) throws IOException, RemoteException;
-	public void bulk(long page, DFS dfsInstance) throws Exception;
-	public void mapContext(PagesJson pagesJson, Mapper mapper, DFS dfs, String file) throws Exception;
-	public void reduceContext(PagesJson pagesJson, Mapper reducer, DFS dfs, String fileOutput) throws Exception;
-    
+	public void bulk(long page, DFS dfsInstance) throws RemoteException;
+	public void mapContext(Long id, Mapper mapper, DFS dfs, String file) throws RemoteException, IOException;
+	public void reduceContext(PagesJson pagesJson, Mapper reducer, DFS dfs, String fileOutput) throws RemoteException, IOException;
+	public void addKeyValue(String key, JsonObject value) throws RemoteException;
+	public int onChordSize(long source, int n) throws RemoteException;
 }
