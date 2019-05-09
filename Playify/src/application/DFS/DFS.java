@@ -773,6 +773,20 @@ public class DFS {
 		}
 	}
 
+	
+	FileJson getFile(String fileName) 
+	{
+		FilesJson metadata = this.readMetaData();
+		FileJson foundFile = null;
+
+		for (int i = 0; i < metadata.getFiles().size(); i++) {
+			if (metadata.getFiles().get(i).getName().equals(fileName)) {
+				return metadata.getFiles().get(i);
+			}	
+		}
+		return fileJson;
+	}
+	
 	/**
 	 * Append a page to a file
 	 * 
@@ -782,14 +796,10 @@ public class DFS {
 	 */
 	public void append(String fileName, RemoteInputFileStream data) throws Exception {
 		Gson gson = new Gson();
-		FilesJson allFiles = this.readMetaData();
-		FileJson foundFile = null;
+		FileJson foundFile = getFile(fileName);
 
 		int index = 0;
-		for (int i = 0; i < allFiles.getFiles().size(); i++) {
-			if (allFiles.getFiles().get(i).getName().equals(fileName)) {
-				foundFile = allFiles.getFiles().get(i);
-
+	
 				data.connect();
 				Scanner scan = new Scanner(data);
 				scan.useDelimiter("\\A");
@@ -834,13 +844,10 @@ public class DFS {
 	 */
 	public void emit(String key, JsonObject values, String file) throws Exception {
 
-		FilesJson metadata = this.readMetaData();
 		// traverse the metadata, till we get the specified file
+		FileJson chosenFile  = getFile(file);
 
-		for (int j = 0; j < metadata.getFiles().size(); j++) {
-			if (metadata.getFiles().get(j).getName().equalsIgnoreCase(file)) {
 				// traverse the file's pages, and call the key value mapping
-				FileJson chosenFile = metadata.getFiles().get(j);
 				for (int i = 0; i < chosenFile.getPages().size()-1; i++) {
 					if(chosenFile.getPages().get(i).getLowerBound().compareTo(key) <=0 &&
 						key.compareTo(chosenFile.getPages().get(i+1).getLowerBound())<0) {
@@ -850,10 +857,7 @@ public class DFS {
 						break;
 					}
 					
-				}
-				break;
 			}
-		}
 
 	}
 
@@ -932,14 +936,21 @@ public class DFS {
 		int size = 0;
 		FilesJson filesJson = readMetaData();
 		for (int i = 0; i < filesJson.getSize(); i++) {
+			// Search the file
 			if (filesJson.getFileJsonAt(i).getName().equalsIgnoreCase(file)) {
+				// File found
 				ArrayList<PagesJson> pagesList = filesJson.getFileJsonAt(i).getPages();
-				PagesJson pagesRead = pagesList.get(i);
-				long pageGuid = pagesRead.getGuid();
-				long page = md5(file + i);
-				ChordMessageInterface peer = chord.locateSuccessor(pageGuid);
-				peer.bulk(page, this);
+				for (int j=0; j< pagesList.size()  ; j++)
+				{
+					PagesJson pagesRead = pagesList.get(j);
+					long pageGuid = pagesRead.getGuid();
+					long page = md5(file + j);
+					ChordMessageInterface peer = chord.locateSuccessor(pageGuid);
+					peer.bulk(page, this);
+				}
+				break;
 			}
+			
 			
 		}
 	}
@@ -975,7 +986,7 @@ public class DFS {
 				List<PagesJson> pagesFromInputFile = retrievedMetadata.getFiles().get(j).getPages();
 				// traverse every page, increment the counter by 1, and call the mapContext
 				// method
-				for (int i = 0; i < pagesFromInputFile.size(); i++) {
+				for (int i = 0; i < 10; i++) {
 					int currentCount = counter.get(fileInput);
 					currentCount++;
 					counter.put(fileInput, currentCount);
